@@ -393,7 +393,7 @@ class CUP$Parser$actions {
             {
               Object RESULT =null;
 		//@@CUPDBG3
-System.out.println("programma1");
+System.out.println("programma2");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Programma",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

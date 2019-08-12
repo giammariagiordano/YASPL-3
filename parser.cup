@@ -71,7 +71,7 @@ precedence nonassoc GT, GE, LT, LE, EQ;
 precedence left UMINUS, NOT, COMMA;	
 
 /* The grammar rules */
-Programma ::= HEAD Decls START Statements 	{:System.out.println("programma1");:}		
+Programma ::= HEAD Decls START Statements 	{:System.out.println("programma2");:}		
 			;
 
 Decls ::= Var_decl  Decls 													
