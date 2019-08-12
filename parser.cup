@@ -1,0 +1,177 @@
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+//import syntax.*;
+
+parser code {:
+  protected Lexer lexer;
+:}
+
+/* define how to connect to the scanner! */
+init with {:
+  ComplexSymbolFactory f = new ComplexSymbolFactory();
+  symbolFactory = f;
+  File file = new File("input.txt");
+  FileInputStream fis = null;
+  try {
+    fis = new FileInputStream(file);
+  } catch (IOException e) {
+    e.printStackTrace();
+  } 
+  lexer = new Lexer(f,fis);
+:};
+scan with {: return lexer.next_token(); :};
+
+
+/* Terminals (tokens returned by the scanner). */
+terminal String  HEAD, START, INT, BOOL, DOUBLE, STRING, CHAR, DEF,  TRUE, FALSE, IF, THEN, ELSE, WHILE, DO, IN, OUT, INOUT, SEMI, RPAR, LGPAR,
+RGPAR, COMMA, PLUS, MINUS,  TIMES, DIV, LT, GT, ASSIGN, EQ, LE, GE, UMINUS,
+NOT, AND, OR, READ, WRITE;
+terminal String LPAR;
+terminal  Integer  INT_CONST;        // our scanner provides numbers as integers
+terminal Double DOUBLE_CONST;
+terminal String STRING_CONST;
+terminal  Character CHAR_CONST;
+terminal String ID;
+
+/* Non terminals */
+non terminal String Arith_op,Bool_op,Rel_op;
+
+      // used to store evaluated subexpressions
+
+non terminal  Programma;
+non terminal  Decls;
+non terminal Statements;
+non terminal Var_decl;
+non terminal  Def_decl;
+non terminal  Stat;
+non terminal  Type;
+non terminal  Var_decls_init;
+non terminal Var_init_value;
+non terminal  Expr;
+non terminal  Vars;
+non terminal  Par_decls;
+non terminal  Body;
+non terminal  Var_decls;
+non terminal  Par_type;
+non terminal  Args;
+non terminal  Bool_Expr;
+non terminal  Comp_stat;
+/* Precedences */
+
+precedence nonassoc  ELSE; 
+precedence left PLUS,MINUS,OR;
+precedence left TIMES,DIV,AND;
+precedence nonassoc GT, GE, LT, LE, EQ; 
+precedence left UMINUS, NOT, COMMA;	
+
+/* The grammar rules */
+Programma ::= HEAD Decls START Statements 	{:System.out.println("programma1");:}		
+			;
+
+Decls ::= Var_decl  Decls 													
+			| Def_decl Decls 				
+			| 											 
+			;
+			
+Statements ::= Stat Statements 					
+			|											
+			;
+
+Var_decl ::= Type Var_decls_init SEMI 										
+			;
+		
+Type ::=  INT								
+		| BOOL 										
+		| DOUBLE 										
+		| STRING 										
+		| CHAR 										
+		;
+			
+Var_decls_init ::= ID Var_init_value  COMMA Var_decls_init 							
+				|  ID  Var_init_value					
+			 	;
+			 
+Var_init_value ::= ASSIGN  Expr
+				|  										
+				;
+				
+Vars ::= ID COMMA Vars 							
+		| ID								
+		;
+		
+Def_decl ::= DEF ID LPAR Par_decls RPAR Body 
+			|  DEF ID LPAR RPAR Body 						
+			;
+			
+Var_decls ::=  Var_decl Var_decls 									
+			| 														
+			;
+
+Par_decls ::= Par_type Type ID COMMA Par_decls 					
+			| 	 Par_type Type ID 											
+			;
+
+Par_type ::= IN								
+			| OUT 												
+			| INOUT 											
+			;
+
+Body ::= LGPAR Var_decls Statements RGPAR 
+		;
+		
+Stat ::= Vars READ SEMI 										
+		| Args WRITE SEMI 										
+		| ID ASSIGN Expr SEMI 								
+		| ID LPAR Args RPAR SEMI 							
+		| ID LPAR RPAR SEMI 										
+ 		| IF LPAR Expr RPAR THEN Comp_stat ELSE Comp_stat
+ 		| IF LPAR Expr RPAR THEN Comp_stat 															
+		| WHILE LPAR Expr RPAR DO Comp_stat 
+			;	
+
+Args ::= Expr COMMA Args 			
+		| Expr 						
+		;
+		
+Comp_stat ::= LGPAR Statements RGPAR 	
+			;
+			
+Expr ::= Expr Arith_op Expr 		
+		|Expr Bool_op Expr 		
+		|Expr Rel_op Expr 		
+		| MINUS Expr					 
+		%prec UMINUS
+		| NOT Expr
+		| LPAR Expr RPAR
+		| TRUE												
+		| FALSE		 					
+		| ID 							 
+		| INT_CONST 						
+		| DOUBLE_CONST 														
+		| CHAR_CONST 					
+		| STRING_CONST 												
+			;
+			
+Arith_op ::= PLUS 								
+			|MINUS
+			|TIMES 									
+			|DIV 								
+			;
+		
+Bool_op ::= AND 										
+		|	OR 										
+		;
+		
+Rel_op	::= GE 												
+		|	GT 																						
+		|	LE 										
+		|	LT										
+		| 	EQ
+		;
+       
