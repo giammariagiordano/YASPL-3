@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
+import syntax.*;
+import otherOperationExpression.*;
+import statOperation.*;
+import binaryOperationExpression.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
@@ -391,9 +395,18 @@ class CUP$Parser$actions {
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 0: // Programma ::= HEAD Decls START Statements 
             {
-              Object RESULT =null;
+              Program RESULT =null;
+		Location hxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location hxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		String h = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location declsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location declsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ArrayList<Declarations> decls = (ArrayList<Declarations>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location statementsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location statementsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<StatementsNode> statements = (ArrayList<StatementsNode>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG3
-System.out.println("programma2");
+RESULT = new Program(hxleft,hxright,decls,statements);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Programma",3, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -404,7 +417,7 @@ System.out.println("programma2");
               Object RESULT =null;
 		Location start_valxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
 		Location start_valxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
-		Object start_val = (Object)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Program start_val = (Program)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		RESULT = start_val;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("$START",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -415,8 +428,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 2: // Decls ::= Var_decl Decls 
             {
-              Object RESULT =null;
-
+              ArrayList<Declarations> RESULT =null;
+		Location var_declxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location var_declxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		VarDeclaration var_decl = (VarDeclaration)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location declsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location declsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<Declarations> decls = (ArrayList<Declarations>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG4
+decls.add(var_decl); RESULT = decls;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Decls",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -424,8 +444,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 3: // Decls ::= Def_decl Decls 
             {
-              Object RESULT =null;
-
+              ArrayList<Declarations> RESULT =null;
+		Location def_declxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location def_declxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		DefDecl def_decl = (DefDecl)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location declsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location declsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<Declarations> decls = (ArrayList<Declarations>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG5
+decls.add(def_decl); RESULT = decls;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Decls",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -433,8 +460,9 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 4: // Decls ::= 
             {
-              Object RESULT =null;
-
+              ArrayList<Declarations> RESULT =null;
+		//@@CUPDBG6
+RESULT = new ArrayList<>();
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Decls",4, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -442,8 +470,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 5: // Statements ::= Stat Statements 
             {
-              Object RESULT =null;
-
+              ArrayList<StatementsNode> RESULT =null;
+		Location statxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location statxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		StatementsNode stat = (StatementsNode)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location statementsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location statementsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<StatementsNode> statements = (ArrayList<StatementsNode>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG7
+statements.add(stat); RESULT = statements;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Statements",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -451,8 +486,9 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 6: // Statements ::= 
             {
-              Object RESULT =null;
-
+              ArrayList<StatementsNode> RESULT =null;
+		//@@CUPDBG8
+RESULT = new ArrayList<>();
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Statements",5, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -460,8 +496,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 7: // Var_decl ::= Type Var_decls_init SEMI 
             {
-              Object RESULT =null;
-
+              VarDeclaration RESULT =null;
+		Location txleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location txright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		TypeNode t = (TypeNode)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location vdixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location vdixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		ArrayList<VarInitValueId> vdi = (ArrayList<VarInitValueId>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG9
+RESULT = new VarDeclaration(txleft,txright,t,vdi);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_decl",6, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -469,8 +512,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 8: // Type ::= INT 
             {
-              Object RESULT =null;
-
+              TypeNode RESULT =null;
+		Location ixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG10
+RESULT = new TypeNode(ixleft,ixright,"int");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Type",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -478,8 +525,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 9: // Type ::= BOOL 
             {
-              Object RESULT =null;
-
+              TypeNode RESULT =null;
+		Location bxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location bxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String b = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG11
+RESULT = new TypeNode(bxleft,bxright,"bool");;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Type",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -487,8 +538,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 10: // Type ::= DOUBLE 
             {
-              Object RESULT =null;
-
+              TypeNode RESULT =null;
+		Location dxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location dxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String d = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG12
+RESULT = new TypeNode(dxleft,dxright,"double");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Type",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -496,8 +551,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 11: // Type ::= STRING 
             {
-              Object RESULT =null;
-
+              TypeNode RESULT =null;
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG13
+RESULT = new TypeNode(sxleft,sxright,"string");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Type",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -505,8 +564,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 12: // Type ::= CHAR 
             {
-              Object RESULT =null;
-
+              TypeNode RESULT =null;
+		Location cxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location cxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String c = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG14
+RESULT = new TypeNode(cxleft,cxright,"char");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Type",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -514,8 +577,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 13: // Var_decls_init ::= ID Var_init_value COMMA Var_decls_init 
             {
-              Object RESULT =null;
-
+              ArrayList<VarInitValueId> RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location vivxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location vivxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		VarInitValue viv = (VarInitValue)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location vdixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location vdixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<VarInitValueId> vdi = (ArrayList<VarInitValueId>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG15
+vdi.add(new VarInitValueId(idxleft,idxright,id,viv)); RESULT =vdi;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_decls_init",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -523,8 +596,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 14: // Var_decls_init ::= ID Var_init_value 
             {
-              Object RESULT =null;
+              ArrayList<VarInitValueId> RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location vivxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location vivxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		VarInitValue viv = (VarInitValue)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG16
 
+																									RESULT = new ArrayList<VarInitValueId>();
+																									RESULT.add(new VarInitValueId(idxleft,idxright,id,viv));
+																								
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_decls_init",10, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -532,8 +615,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 15: // Var_init_value ::= ASSIGN Expr 
             {
-              Object RESULT =null;
-
+              VarInitValue RESULT =null;
+		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression e = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG17
+RESULT = new VarInitValue(exleft,exright,e);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_init_value",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -541,8 +628,9 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 16: // Var_init_value ::= 
             {
-              Object RESULT =null;
-
+              VarInitValue RESULT =null;
+		//@@CUPDBG18
+RESULT = new VarInitValue(null,null);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_init_value",11, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -550,8 +638,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 17: // Vars ::= ID COMMA Vars 
             {
-              Object RESULT =null;
-
+              ArrayList<IdentiferExpression> RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location varsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location varsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<IdentiferExpression> vars = (ArrayList<IdentiferExpression>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG19
+vars.add(new IdentiferExpression(idxleft,idxright,id)); RESULT = vars;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Vars",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -559,8 +654,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 18: // Vars ::= ID 
             {
-              Object RESULT =null;
+              ArrayList<IdentiferExpression> RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG20
 
+																								RESULT = new ArrayList<IdentiferExpression>();
+																								RESULT.add(new IdentiferExpression(idxleft,idxright,id));
+																								
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Vars",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -568,8 +670,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 19: // Def_decl ::= DEF ID LPAR Par_decls RPAR Body 
             {
-              Object RESULT =null;
-
+              DefDecl RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-4)).value;
+		Location pdxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location pdxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ArrayList<ParDeclsNode> pd = (ArrayList<ParDeclsNode>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location bodyxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location bodyxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		BodyNode body = (BodyNode)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG21
+RESULT = new DefFunctionWithParam(idxleft,idxright,id,pd,body);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Def_decl",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -577,8 +689,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 20: // Def_decl ::= DEF ID LPAR RPAR Body 
             {
-              Object RESULT =null;
-
+              DefDecl RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location bodyxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location bodyxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		BodyNode body = (BodyNode)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG22
+RESULT = new DefFunctionWithoutParams(idxleft,idxright,id,body);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Def_decl",7, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -586,8 +705,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 21: // Var_decls ::= Var_decl Var_decls 
             {
-              Object RESULT =null;
-
+              ArrayList<VarDeclaration> RESULT =null;
+		Location vdxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location vdxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		VarDeclaration vd = (VarDeclaration)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location vdsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location vdsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<VarDeclaration> vds = (ArrayList<VarDeclaration>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG23
+vds.add(vd); RESULT = vds;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_decls",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -595,8 +721,9 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 22: // Var_decls ::= 
             {
-              Object RESULT =null;
-
+              ArrayList<VarDeclaration> RESULT =null;
+		//@@CUPDBG24
+RESULT = new ArrayList<>();
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Var_decls",16, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -604,8 +731,21 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 23: // Par_decls ::= Par_type Type ID COMMA Par_decls 
             {
-              Object RESULT =null;
-
+              ArrayList<ParDeclsNode> RESULT =null;
+		Location ptxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).xleft;
+		Location ptxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).xright;
+		ParType pt = (ParType)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-4)).value;
+		Location typexleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location typexright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		TypeNode type = (TypeNode)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location pdsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location pdsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<ParDeclsNode> pds = (ArrayList<ParDeclsNode>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG25
+pds.add(new ParDeclsNode(ptxleft,ptxright,pt,type,id)); RESULT = pds;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Par_decls",14, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -613,8 +753,21 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 24: // Par_decls ::= Par_type Type ID 
             {
-              Object RESULT =null;
+              ArrayList<ParDeclsNode> RESULT =null;
+		Location ptxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location ptxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ParType pt = (ParType)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location typexleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location typexright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		TypeNode type = (TypeNode)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG26
 
+																								RESULT = new ArrayList<>();
+																								RESULT.add(new ParDeclsNode(ptxleft,ptxright,pt,type,id));
+																								
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Par_decls",14, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -622,8 +775,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 25: // Par_type ::= IN 
             {
-              Object RESULT =null;
-
+              ParType RESULT =null;
+		Location ixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG27
+RESULT = new ParType(ixleft,ixright,"in");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Par_type",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -631,8 +788,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 26: // Par_type ::= OUT 
             {
-              Object RESULT =null;
-
+              ParType RESULT =null;
+		Location ixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG28
+RESULT = new ParType(ixleft,ixright,"out");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Par_type",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -640,8 +801,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 27: // Par_type ::= INOUT 
             {
-              Object RESULT =null;
-
+              ParType RESULT =null;
+		Location ixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String i = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG29
+RESULT = new ParType(ixleft,ixright,"inout");
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Par_type",17, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -649,8 +814,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 28: // Body ::= LGPAR Var_decls Statements RGPAR 
             {
-              Object RESULT =null;
-
+              BodyNode RESULT =null;
+		Location vdxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location vdxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ArrayList<VarDeclaration> vd = (ArrayList<VarDeclaration>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location statementsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location statementsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		ArrayList<StatementsNode> statements = (ArrayList<StatementsNode>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG30
+RESULT = new BodyNode(vdxleft,vdxright,vd,statements);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Body",15, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -658,8 +830,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 29: // Stat ::= Vars READ SEMI 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location varsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location varsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ArrayList<IdentiferExpression> vars = (ArrayList<IdentiferExpression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		//@@CUPDBG31
+RESULT = new ReadOperation(varsxleft,varsxright,vars);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -667,8 +843,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 30: // Stat ::= Args WRITE SEMI 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location argsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location argsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ArrayList<Expression> args = (ArrayList<Expression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		//@@CUPDBG32
+RESULT = new WriteOperation(argsxleft,argsxright,args);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -676,8 +856,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 31: // Stat ::= ID ASSIGN Expr SEMI 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG33
+RESULT = new AssignOperation(idxleft,idxright,new IdentiferExpression(idxleft,idxright,id),expr);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -685,8 +872,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 32: // Stat ::= ID LPAR Args RPAR SEMI 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-4)).value;
+		Location argsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location argsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		ArrayList<Expression> args = (ArrayList<Expression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		//@@CUPDBG34
+RESULT = new CallOpParamOperation(idxleft,idxright,new IdentiferExpression(idxleft,idxright,id),args);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -694,8 +888,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 33: // Stat ::= ID LPAR RPAR SEMI 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		//@@CUPDBG35
+RESULT = new CallWithoutParam(idxleft,idxright,id);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -703,8 +901,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 34: // Stat ::= IF LPAR Expr RPAR THEN Comp_stat ELSE Comp_stat 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-5)).value;
+		Location csThenxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location csThenxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		CompStat csThen = (CompStat)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location csElsexleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location csElsexright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		CompStat csElse = (CompStat)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG36
+RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-7)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -712,8 +920,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 35: // Stat ::= IF LPAR Expr RPAR THEN Comp_stat 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location csThenxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location csThenxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		CompStat csThen = (CompStat)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG37
+RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -721,8 +936,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 36: // Stat ::= WHILE LPAR Expr RPAR DO Comp_stat 
             {
-              Object RESULT =null;
-
+              StatementsNode RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-3)).value;
+		Location csxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location csxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		CompStat cs = (CompStat)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG38
+RESULT = new WhileNode(exprxleft,exprxright,expr,cs);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-5)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -730,8 +952,15 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 37: // Args ::= Expr COMMA Args 
             {
-              Object RESULT =null;
-
+              ArrayList<Expression> RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location argsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location argsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		ArrayList<Expression> args = (ArrayList<Expression>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG39
+args.add(expr);RESULT = args;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Args",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -739,8 +968,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 38: // Args ::= Expr 
             {
-              Object RESULT =null;
-
+              ArrayList<Expression> RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG40
+RESULT = new ArrayList<>(); RESULT.add(expr);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Args",18, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -748,8 +981,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 39: // Comp_stat ::= LGPAR Statements RGPAR 
             {
-              Object RESULT =null;
-
+              CompStat RESULT =null;
+		Location csxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location csxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		ArrayList<StatementsNode> cs = (ArrayList<StatementsNode>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG41
+RESULT = new CompStat(csxleft,csxright,cs);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Comp_stat",20, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -757,8 +994,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 40: // Expr ::= Expr Arith_op Expr 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location expr1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location expr1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Expression expr1 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location aoxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location aoxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		String ao = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location expr2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location expr2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression expr2 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG42
+RESULT = new ArithOperation(expr1xleft,expr1xright,expr1,expr2,ao);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -766,8 +1013,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 41: // Expr ::= Expr Bool_op Expr 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location expr1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location expr1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Expression expr1 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location boxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location boxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		String bo = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location expr2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location expr2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression expr2 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG43
+RESULT = new BooleanExpession(expr1xleft,expr1xright,expr1,expr2,bo);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -775,8 +1032,18 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 42: // Expr ::= Expr Rel_op Expr 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location expr1xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
+		Location expr1xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
+		Expression expr1 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		Location roxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location roxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		String ro = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		Location expr2xleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location expr2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression expr2 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG44
+RESULT = new RelopExpression(expr1xleft,expr1xright,expr1,expr2,ro);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -784,8 +1051,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 43: // Expr ::= MINUS Expr 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG45
+RESULT = new MinusExpression(exprxleft,exprxright,expr);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -793,8 +1064,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 44: // Expr ::= NOT Expr 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location exprxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG46
+RESULT = new NotExpression(exprxleft,exprxright,expr);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -802,8 +1077,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 45: // Expr ::= LPAR Expr RPAR 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location exleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xleft;
+		Location exright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
+		Expression e = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
+		//@@CUPDBG47
+RESULT = e;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -811,8 +1090,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 46: // Expr ::= TRUE 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location txleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location txright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String t = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG48
+RESULT = new TrueExpression(txleft,txright);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -820,8 +1103,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 47: // Expr ::= FALSE 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location fxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location fxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String f = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG49
+RESULT = new FalseExpression(fxleft,fxright);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -829,8 +1116,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 48: // Expr ::= ID 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG50
+RESULT = new IdentiferExpression(idxleft,idxright,id);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -838,8 +1129,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 49: // Expr ::= INT_CONST 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location ixleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location ixright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Integer i = (Integer)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG51
+RESULT = new Int_Const(ixleft,ixright,i);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -847,8 +1142,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 50: // Expr ::= DOUBLE_CONST 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location dxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location dxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Double d = (Double)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG52
+RESULT = new Double_Const(dxleft,dxright,d);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -856,8 +1155,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 51: // Expr ::= CHAR_CONST 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location cxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location cxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		Character c = (Character)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG53
+RESULT = new Char_Const(cxleft,cxright,c);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -865,8 +1168,12 @@ System.out.println("programma2");
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 52: // Expr ::= STRING_CONST 
             {
-              Object RESULT =null;
-
+              Expression RESULT =null;
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG54
+RESULT = new String_Const(sxleft,sxright,s);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -875,7 +1182,11 @@ System.out.println("programma2");
           case 53: // Arith_op ::= PLUS 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG55
+RESULT = "PLUS";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Arith_op",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -884,7 +1195,11 @@ System.out.println("programma2");
           case 54: // Arith_op ::= MINUS 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG56
+RESULT = "MINUS";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Arith_op",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -893,7 +1208,11 @@ System.out.println("programma2");
           case 55: // Arith_op ::= TIMES 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG57
+RESULT = "TIMES";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Arith_op",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -902,7 +1221,11 @@ System.out.println("programma2");
           case 56: // Arith_op ::= DIV 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG58
+RESULT = "DIV";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Arith_op",0, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -911,7 +1234,11 @@ System.out.println("programma2");
           case 57: // Bool_op ::= AND 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG59
+RESULT = "and";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Bool_op",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -920,7 +1247,11 @@ System.out.println("programma2");
           case 58: // Bool_op ::= OR 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG60
+RESULT = "or";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Bool_op",1, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -929,7 +1260,11 @@ System.out.println("programma2");
           case 59: // Rel_op ::= GE 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG61
+RESULT = "GE";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Rel_op",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -938,7 +1273,11 @@ System.out.println("programma2");
           case 60: // Rel_op ::= GT 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG62
+RESULT = "GT";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Rel_op",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -947,7 +1286,11 @@ System.out.println("programma2");
           case 61: // Rel_op ::= LE 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG63
+RESULT = "LE";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Rel_op",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -956,7 +1299,11 @@ System.out.println("programma2");
           case 62: // Rel_op ::= LT 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG64
+RESULT = "LT";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Rel_op",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -965,7 +1312,11 @@ System.out.println("programma2");
           case 63: // Rel_op ::= EQ 
             {
               String RESULT =null;
-
+		Location sxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
+		Location sxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
+		String s = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		//@@CUPDBG65
+RESULT = "EQ";
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Rel_op",2, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

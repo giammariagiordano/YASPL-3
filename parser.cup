@@ -6,7 +6,12 @@ import java.io.IOException;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
-//import syntax.*;
+import syntax.*;
+import otherOperationExpression.*;
+import statOperation.*;
+import binaryOperationExpression.*;
+
+
 
 parser code {:
   protected Lexer lexer;
@@ -44,24 +49,24 @@ non terminal String Arith_op,Bool_op,Rel_op;
 
       // used to store evaluated subexpressions
 
-non terminal  Programma;
-non terminal  Decls;
-non terminal Statements;
-non terminal Var_decl;
-non terminal  Def_decl;
-non terminal  Stat;
-non terminal  Type;
-non terminal  Var_decls_init;
-non terminal Var_init_value;
-non terminal  Expr;
-non terminal  Vars;
-non terminal  Par_decls;
-non terminal  Body;
-non terminal  Var_decls;
-non terminal  Par_type;
-non terminal  Args;
+non terminal Program Programma;
+non terminal ArrayList<Declarations> Decls;
+non terminal ArrayList<StatementsNode> Statements;
+non terminal VarDeclaration Var_decl;
+non terminal  DefDecl Def_decl;
+non terminal StatementsNode Stat;
+non terminal  TypeNode Type;
+non terminal  ArrayList<VarInitValueId> Var_decls_init;
+non terminal VarInitValue Var_init_value;
+non terminal  Expression Expr;
+non terminal  ArrayList<IdentiferExpression>Vars;
+non terminal ArrayList<ParDeclsNode> Par_decls;
+non terminal BodyNode Body;
+non terminal  ArrayList<VarDeclaration>Var_decls;
+non terminal  ParType Par_type;
+non terminal ArrayList<Expression>Args;
 non terminal  Bool_Expr;
-non terminal  Comp_stat;
+non terminal  CompStat Comp_stat;
 /* Precedences */
 
 precedence nonassoc  ELSE; 
@@ -71,107 +76,116 @@ precedence nonassoc GT, GE, LT, LE, EQ;
 precedence left UMINUS, NOT, COMMA;	
 
 /* The grammar rules */
-Programma ::= HEAD Decls START Statements 	{:System.out.println("programma2");:}		
+Programma ::= HEAD:h Decls:decls START Statements:statements 	{:RESULT = new Program(hxleft,hxright,decls,statements);:}		
 			;
 
-Decls ::= Var_decl  Decls 													
-			| Def_decl Decls 				
-			| 											 
+Decls ::= Var_decl:var_decl  Decls:decls 										{:decls.add(var_decl); RESULT = decls;:}													
+			| Def_decl:def_decl Decls:decls 									{:decls.add(def_decl); RESULT = decls;:}
+			| 																	{:RESULT = new ArrayList<>();:}										 
 			;
 			
-Statements ::= Stat Statements 					
-			|											
+Statements ::= Stat:stat Statements:statements 									{:statements.add(stat); RESULT = statements;:}
+			|																	{:RESULT = new ArrayList<>();:}
 			;
 
-Var_decl ::= Type Var_decls_init SEMI 										
+Var_decl ::= Type:t Var_decls_init:vdi SEMI 									{:RESULT = new VarDeclaration(txleft,txright,t,vdi);:}										
 			;
 		
-Type ::=  INT								
-		| BOOL 										
-		| DOUBLE 										
-		| STRING 										
-		| CHAR 										
+Type ::=  INT:i																	{:RESULT = new TypeNode(ixleft,ixright,"int");:}					
+		| BOOL:b																{:RESULT = new TypeNode(bxleft,bxright,"bool");;:}						
+		| DOUBLE:d																{:RESULT = new TypeNode(dxleft,dxright,"double");:}
+		| STRING:s																{:RESULT = new TypeNode(sxleft,sxright,"string");:}
+		| CHAR:c																{:RESULT = new TypeNode(cxleft,cxright,"char");:}
 		;
 			
-Var_decls_init ::= ID Var_init_value  COMMA Var_decls_init 							
-				|  ID  Var_init_value					
+Var_decls_init ::= ID:id Var_init_value:viv  COMMA Var_decls_init:vdi 				{:vdi.add(new VarInitValueId(idxleft,idxright,id,viv)); RESULT =vdi;:}						
+				|  ID:id Var_init_value:viv										 				{:
+																									RESULT = new ArrayList<VarInitValueId>();
+																									RESULT.add(new VarInitValueId(idxleft,idxright,id,viv));
+																								:}				
 			 	;
 			 
-Var_init_value ::= ASSIGN  Expr
-				|  										
+Var_init_value ::= ASSIGN  Expr:e																{:RESULT = new VarInitValue(exleft,exright,e);:}
+				|  																				{:RESULT = new VarInitValue(null,null);:}	//bomba							
 				;
 				
-Vars ::= ID COMMA Vars 							
-		| ID								
+Vars ::= ID:id COMMA Vars:vars 																	{:vars.add(new IdentiferExpression(idxleft,idxright,id)); RESULT = vars;:}						
+		| ID:id																					{:
+																								RESULT = new ArrayList<IdentiferExpression>();
+																								RESULT.add(new IdentiferExpression(idxleft,idxright,id));
+																								:}					
 		;
 		
-Def_decl ::= DEF ID LPAR Par_decls RPAR Body 
-			|  DEF ID LPAR RPAR Body 						
+Def_decl ::= DEF ID:id LPAR Par_decls:pd RPAR Body:body 										{:RESULT = new DefFunctionWithParam(idxleft,idxright,id,pd,body);:}
+			|  DEF ID:id LPAR RPAR Body:body 													{:RESULT = new DefFunctionWithoutParams(idxleft,idxright,id,body);:}
 			;
 			
-Var_decls ::=  Var_decl Var_decls 									
-			| 														
+Var_decls ::=  Var_decl:vd Var_decls:vds 														{:vds.add(vd); RESULT = vds;:}									
+			| 																					{:RESULT = new ArrayList<>();:}
 			;
 
-Par_decls ::= Par_type Type ID COMMA Par_decls 					
-			| 	 Par_type Type ID 											
+Par_decls ::= Par_type:pt Type:type ID:id COMMA Par_decls:pds									{:pds.add(new ParDeclsNode(ptxleft,ptxright,pt,type,id)); RESULT = pds;:}
+			| 	 Par_type:pt Type:type ID:id 													{:
+																								RESULT = new ArrayList<>();
+																								RESULT.add(new ParDeclsNode(ptxleft,ptxright,pt,type,id));
+																								:}								
 			;
 
-Par_type ::= IN								
-			| OUT 												
-			| INOUT 											
+Par_type ::= IN:i																				{:RESULT = new ParType(ixleft,ixright,"in");:}						
+			| OUT:i 																			{:RESULT = new ParType(ixleft,ixright,"out");:}
+			| INOUT:i 																			{:RESULT = new ParType(ixleft,ixright,"inout");:}
 			;
 
-Body ::= LGPAR Var_decls Statements RGPAR 
+Body ::= LGPAR Var_decls:vd Statements:statements RGPAR											{:RESULT = new BodyNode(vdxleft,vdxright,vd,statements);:} 
 		;
 		
-Stat ::= Vars READ SEMI 										
-		| Args WRITE SEMI 										
-		| ID ASSIGN Expr SEMI 								
-		| ID LPAR Args RPAR SEMI 							
-		| ID LPAR RPAR SEMI 										
- 		| IF LPAR Expr RPAR THEN Comp_stat ELSE Comp_stat
- 		| IF LPAR Expr RPAR THEN Comp_stat 															
-		| WHILE LPAR Expr RPAR DO Comp_stat 
+Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsxleft,varsxright,vars);:}													
+		| Args:args WRITE SEMI 																	{:RESULT = new WriteOperation(argsxleft,argsxright,args);:}
+		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentiferExpression(idxleft,idxright,id),expr);:}							
+		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallOpParamOperation(idxleft,idxright,new IdentiferExpression(idxleft,idxright,id),args);:} 							
+		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParam(idxleft,idxright,id);:}
+ 		| IF LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
+ 		| IF LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
+		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileNode(exprxleft,exprxright,expr,cs);:} 
 			;	
 
-Args ::= Expr COMMA Args 			
-		| Expr 						
+Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
+		| Expr:expr 																			{:RESULT = new ArrayList<>(); RESULT.add(expr);:}
 		;
 		
-Comp_stat ::= LGPAR Statements RGPAR 	
+Comp_stat ::= LGPAR Statements:cs RGPAR															{:RESULT = new CompStat(csxleft,csxright,cs);:} 	
 			;
 			
-Expr ::= Expr Arith_op Expr 		
-		|Expr Bool_op Expr 		
-		|Expr Rel_op Expr 		
-		| MINUS Expr					 
+Expr ::= Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1,expr2,ao);:} 		
+		|Expr:expr1 Bool_op:bo Expr:expr2														{:RESULT = new BooleanExpession(expr1xleft,expr1xright,expr1,expr2,bo);:} 		
+		|Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopExpression(expr1xleft,expr1xright,expr1,expr2,ro);:} 		
+		| MINUS Expr:expr																		{:RESULT = new MinusExpression(exprxleft,exprxright,expr);:}					 
 		%prec UMINUS
-		| NOT Expr
-		| LPAR Expr RPAR
-		| TRUE												
-		| FALSE		 					
-		| ID 							 
-		| INT_CONST 						
-		| DOUBLE_CONST 														
-		| CHAR_CONST 					
-		| STRING_CONST 												
+		| NOT Expr:expr																			{:RESULT = new NotExpression(exprxleft,exprxright,expr);:}
+		| LPAR Expr:e RPAR																		{:RESULT = e;:}
+		| TRUE:t																				{:RESULT = new TrueExpression(txleft,txright);:}								
+		| FALSE:f																				{:RESULT = new FalseExpression(fxleft,fxright);:}		 					
+		| ID: id																				{:RESULT = new IdentiferExpression(idxleft,idxright,id);:} 							 
+		| INT_CONST:i																			{:RESULT = new Int_Const(ixleft,ixright,i);:} 						
+		| DOUBLE_CONST :d																		{:RESULT = new Double_Const(dxleft,dxright,d);:}														
+		| CHAR_CONST:c 																			{:RESULT = new Char_Const(cxleft,cxright,c);:} 					
+		| STRING_CONST:s 																		{:RESULT = new String_Const(sxleft,sxright,s);:}
 			;
 			
-Arith_op ::= PLUS 								
-			|MINUS
-			|TIMES 									
-			|DIV 								
+Arith_op ::= PLUS:s																				{:RESULT = "PLUS";:}													
+			|MINUS:s																			{:RESULT = "MINUS";:}
+			|TIMES:s 																			{:RESULT = "TIMES";:}									
+			|DIV:s  																			{:RESULT = "DIV";:}								
 			;
 		
-Bool_op ::= AND 										
-		|	OR 										
+Bool_op ::= AND:s																				{:RESULT = "and";:} 										
+		|	OR:s 																				{:RESULT = "or";:}					
 		;
 		
-Rel_op	::= GE 												
-		|	GT 																						
-		|	LE 										
-		|	LT										
-		| 	EQ
+Rel_op	::= GE:s																				{:RESULT = "GE";:} 												
+		|	GT:s 																				{:RESULT = "GT";:}																					
+		|	LE:s    																			{:RESULT = "LE";:} 										
+		|	LT:s																				{:RESULT = "LT";:}									
+		| 	EQ:s																				{:RESULT = "EQ";:}
 		;
        
