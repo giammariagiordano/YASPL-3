@@ -12,19 +12,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import binaryOperationExpression.ArithOperation;
-import binaryOperationExpression.BooleanExpession;
-import binaryOperationExpression.RelopExpression;
-import otherOperationExpression.Char_Const;
-import otherOperationExpression.Double_Const;
-import otherOperationExpression.FalseExpression;
-import otherOperationExpression.IdentiferExpression;
-import otherOperationExpression.Int_Const;
-import otherOperationExpression.MinusExpression;
-import otherOperationExpression.NotExpression;
-import otherOperationExpression.String_Const;
-import otherOperationExpression.TrueExpression;
-import statOperation.*;
 import syntax.*;
 
 public class SyntaxVisitor implements Visitor<Element, Void> {
@@ -128,7 +115,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   }
 
 
-  public Element visit(IdentiferExpression identiferExpression, Void param) {
+  public Element visit(IdentifierExpression identiferExpression, Void param) {
     Element el = this.xmlDocument.createElement("IdentifierOp");
     el.setAttribute("lexem", identiferExpression.getId());
     return el;

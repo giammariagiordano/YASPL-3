@@ -3,7 +3,6 @@ package syntax;
 import java.util.ArrayList;
 import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
-import otherOperationExpression.IdentiferExpression;
 import visitor.Visitor;
 
 public class ParDeclsNode extends YasplNode {
@@ -16,7 +15,7 @@ public class ParDeclsNode extends YasplNode {
   public ParDeclsNode(Location left, Location right,ParType pt,TypeNode type, String id) {
     super(left, right);
     this.listParam = new ArrayList<ListParams>();
-    listParam.add(new ListParams(left, right, pt, type, new IdentiferExpression(left,right,id)));
+    listParam.add(new ListParams(left, right, pt, type, new IdentifierExpression(left,right,id)));
   }
 
   public List<ListParams> getListParam() {

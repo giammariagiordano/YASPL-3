@@ -12,9 +12,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import syntax.*;
-import otherOperationExpression.*;
-import statOperation.*;
-import binaryOperationExpression.*;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.XMLElement;
 
@@ -638,15 +635,15 @@ RESULT = new VarInitValue(null,null);
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 17: // Vars ::= ID COMMA Vars 
             {
-              ArrayList<IdentiferExpression> RESULT =null;
+              ArrayList<IdentifierExpression> RESULT =null;
 		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		Location varsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location varsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
-		ArrayList<IdentiferExpression> vars = (ArrayList<IdentiferExpression>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
+		ArrayList<IdentifierExpression> vars = (ArrayList<IdentifierExpression>)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG19
-vars.add(new IdentiferExpression(idxleft,idxright,id)); RESULT = vars;
+vars.add(new IdentifierExpression(idxleft,idxright,id)); RESULT = vars;
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Vars",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -654,14 +651,14 @@ vars.add(new IdentiferExpression(idxleft,idxright,id)); RESULT = vars;
           /*. . . . . . . . . . . . . . . . . . . .*/
           case 18: // Vars ::= ID 
             {
-              ArrayList<IdentiferExpression> RESULT =null;
+              ArrayList<IdentifierExpression> RESULT =null;
 		Location idxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xleft;
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG20
 
-																								RESULT = new ArrayList<IdentiferExpression>();
-																								RESULT.add(new IdentiferExpression(idxleft,idxright,id));
+																								RESULT = new ArrayList<IdentifierExpression>();
+																								RESULT.add(new IdentifierExpression(idxleft,idxright,id));
 																								
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Vars",13, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
@@ -833,7 +830,7 @@ RESULT = new BodyNode(vdxleft,vdxright,vd,statements);
               StatementsNode RESULT =null;
 		Location varsxleft = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xleft;
 		Location varsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
-		ArrayList<IdentiferExpression> vars = (ArrayList<IdentiferExpression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
+		ArrayList<IdentifierExpression> vars = (ArrayList<IdentifierExpression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		//@@CUPDBG31
 RESULT = new ReadOperation(varsxleft,varsxright,vars);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
@@ -864,7 +861,7 @@ RESULT = new WriteOperation(argsxleft,argsxright,args);
 		Location exprxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-1)).xright;
 		Expression expr = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-1)).value;
 		//@@CUPDBG33
-RESULT = new AssignOperation(idxleft,idxright,new IdentiferExpression(idxleft,idxright,id),expr);
+RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-3)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -880,7 +877,7 @@ RESULT = new AssignOperation(idxleft,idxright,new IdentiferExpression(idxleft,id
 		Location argsxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)).xright;
 		ArrayList<Expression> args = (ArrayList<Expression>)((java_cup.runtime.Symbol) CUP$Parser$stack.elementAt(CUP$Parser$top-2)).value;
 		//@@CUPDBG34
-RESULT = new CallOpParamOperation(idxleft,idxright,new IdentiferExpression(idxleft,idxright,id),args);
+RESULT = new CallOpParamOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Stat",8, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-4)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;
@@ -1121,7 +1118,7 @@ RESULT = new FalseExpression(fxleft,fxright);
 		Location idxright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		String id = (String)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG50
-RESULT = new IdentiferExpression(idxleft,idxright,id);
+RESULT = new IdentifierExpression(idxleft,idxright,id);
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",12, ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

@@ -1,13 +1,12 @@
 package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
-import otherOperationExpression.IdentiferExpression;
 import visitor.Visitor;
 
 public class VarInitValueId extends YasplNode {
-  private final IdentiferExpression ids;
+  private final IdentifierExpression ids;
   private final VarInitValue varsInitValue;
-  public VarInitValueId(Location left, Location right,IdentiferExpression ids,VarInitValue value) {
+  public VarInitValueId(Location left, Location right,IdentifierExpression ids,VarInitValue value) {
     super(left, right);
     this.ids = ids;
     this.varsInitValue = value;
@@ -16,12 +15,12 @@ public class VarInitValueId extends YasplNode {
   
   public VarInitValueId(Location idxleft, Location idxright, String id, VarInitValue viv) {
     super(idxleft,idxright);
-    this.ids = new IdentiferExpression(idxleft, idxright, id);
+    this.ids = new IdentifierExpression(idxleft, idxright, id);
     this.varsInitValue = viv;
   }
 
 
-  public IdentiferExpression getIds() {
+  public IdentifierExpression getIds() {
     return ids;
   }
 

@@ -1,20 +1,19 @@
 package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
-import otherOperationExpression.IdentiferExpression;
 import visitor.Visitor;
 
 public class DefFunctionWithoutParams extends DefDecl {
-  private final IdentiferExpression id;
+  private final IdentifierExpression id;
   private final BodyNode body;
-  public DefFunctionWithoutParams(Location left, Location right,IdentiferExpression id,BodyNode body) {
+  public DefFunctionWithoutParams(Location left, Location right,IdentifierExpression id,BodyNode body) {
     super(left, right);
     this.id = id;
     this.body = body;
   }
   public DefFunctionWithoutParams(Location left, Location right,String id,BodyNode body) {
     super(left, right);
-    this.id = new IdentiferExpression(left, right, id);
+    this.id = new IdentifierExpression(left, right, id);
     this.body = body;
   }
   
@@ -22,7 +21,7 @@ public class DefFunctionWithoutParams extends DefDecl {
     return body;
   }
   
-  public IdentiferExpression getId() {
+  public IdentifierExpression getId() {
     return id;
   }
   @Override

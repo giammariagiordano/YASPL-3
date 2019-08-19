@@ -1,42 +1,42 @@
 package visitor;
 
-import binaryOperationExpression.ArithOperation;
-import binaryOperationExpression.BooleanExpession;
-import binaryOperationExpression.RelopExpression;
-import otherOperationExpression.Char_Const;
-import otherOperationExpression.Double_Const;
-import otherOperationExpression.FalseExpression;
-import otherOperationExpression.IdentiferExpression;
-import otherOperationExpression.Int_Const;
-import otherOperationExpression.MinusExpression;
-import otherOperationExpression.NotExpression;
-import otherOperationExpression.String_Const;
-import otherOperationExpression.TrueExpression;
-import statOperation.Args;
-import statOperation.AssignOperation;
-import statOperation.CallOpParamOperation;
-import statOperation.CallWithoutParam;
-import statOperation.CompStat;
-import statOperation.IfThenElseOperation;
-import statOperation.IfThenOperation;
-import statOperation.ReadOperation;
-import statOperation.Vars;
-import statOperation.WhileNode;
-import statOperation.WriteOperation;
+import syntax.Args;
+import syntax.ArithOperation;
+import syntax.AssignOperation;
 import syntax.BodyNode;
+import syntax.BooleanExpession;
+import syntax.CallOpParamOperation;
+import syntax.CallWithoutParam;
+import syntax.Char_Const;
+import syntax.CompStat;
 import syntax.DefDecl;
 import syntax.DefFunctionWithParam;
 import syntax.DefFunctionWithoutParams;
+import syntax.Double_Const;
+import syntax.FalseExpression;
+import syntax.IdentifierExpression;
+import syntax.IfThenElseOperation;
+import syntax.IfThenOperation;
+import syntax.Int_Const;
 import syntax.ListParams;
+import syntax.MinusExpression;
+import syntax.NotExpression;
 import syntax.ParDeclsNode;
 import syntax.ParType;
 import syntax.Program;
+import syntax.ReadOperation;
+import syntax.RelopExpression;
+import syntax.String_Const;
+import syntax.TrueExpression;
 import syntax.TypeNode;
 import syntax.VarDeclInit;
 import syntax.VarDeclaration;
 import syntax.VarDecls;
 import syntax.VarInitValue;
 import syntax.VarInitValueId;
+import syntax.Vars;
+import syntax.WhileNode;
+import syntax.WriteOperation;
 
 public interface Visitor <T,P> {
 
@@ -54,7 +54,7 @@ public interface Visitor <T,P> {
 
   T visit(FalseExpression falseExpression, P param);
 
-  T visit(IdentiferExpression identiferExpression, P param);
+  T visit(IdentifierExpression identiferExpression, P param);
 
   T visit(Int_Const intConst, P param);
 

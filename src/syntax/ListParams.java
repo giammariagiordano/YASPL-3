@@ -1,14 +1,13 @@
 package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
-import otherOperationExpression.IdentiferExpression;
 import visitor.Visitor;
 
 public class ListParams extends YasplNode {
   private final ParType parType;
   private final TypeNode type;
-  private final IdentiferExpression id;
-  public ListParams(Location left, Location right,ParType parType, TypeNode type, IdentiferExpression id) {
+  private final IdentifierExpression id;
+  public ListParams(Location left, Location right,ParType parType, TypeNode type, IdentifierExpression id) {
     super(left, right);
     this.parType =  parType;
     this.type = type;
@@ -23,7 +22,7 @@ public class ListParams extends YasplNode {
     return type;
   }
 
-  public IdentiferExpression getId() {
+  public IdentifierExpression getId() {
     return id;
   }
 

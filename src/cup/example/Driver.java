@@ -12,7 +12,7 @@ class Driver {
         Program program = (Program) parser.parse().value;
 		SyntaxVisitor syntaxVisitor = new SyntaxVisitor();
         syntaxVisitor.appendRoot(syntaxVisitor.visit(program, null));
-        syntaxVisitor.toXml("sfb.xml");
+        syntaxVisitor.toXml("SyntaxVisitor.xml");
 	}
 	
 }

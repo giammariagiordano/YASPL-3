@@ -2,7 +2,6 @@ package syntax;
 
 import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
-import otherOperationExpression.IdentiferExpression;
 import visitor.Visitor;
 
 public class VarDeclInit extends YasplNode {
@@ -16,7 +15,7 @@ public class VarDeclInit extends YasplNode {
     this.ids =ids;
     this.varInitValueIds = valueIds;
   }*/
-  public VarDeclInit(Location left, Location right,IdentiferExpression id, VarInitValue valueId) {
+  public VarDeclInit(Location left, Location right,IdentifierExpression id, VarInitValue valueId) {
     super(left, right);
     this.valueId = new VarInitValueId(left, right, id, valueId);
   }
