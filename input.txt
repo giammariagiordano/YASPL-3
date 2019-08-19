@@ -1,10 +1,41 @@
-	head
-
-	def mult(in int a, out int b){
-		a = b;
-	}
-	start 
-while (a > b) do {
-x = 3;
-mult(a,b);
+head
+def sum(in double op1, in double op2, out double result)
+{
+    result = op1 + op2;
+}
+def mul(in double op1, in double op2, out double result){
+    result = op1 * op2;
+}
+def div(in double op1, in double op2, out double result){
+    result = op1 / op2;
+}
+def sub(in double op1, in double op2, out double result){
+    result = op1 - op2;
+}
+int scelta,nextOpt;
+double op1, op2, ris;
+start
+scelta = -1;
+while(not (scelta == 0)) do {
+    "1) somma\n 2) moltiplicazione\n 3) divisione 4) sottrazione"->;
+    scelta <-;
+        "Inserisci i due  operatori"->;
+        op1, op2 <-;
+        if (scelta == 1) then { sum(op1,op2,ris);}
+        if (scelta == 2) then { mul(op1,op2,ris);}
+        if (scelta == 3) then {
+        	if (op2 == 0) then {
+        		"impossibile dividere per 0"->;
+        		ris = 0;
+        	}
+        	else {
+        		div(op1,op2,ris);
+        	}
+        }
+        if (scelta == 4) then { sub( op1,op2,ris);}
+        "risultato:"+ris->;
+        "premi 0 per uscire, 1 per effettuare una nuova operazione"->;
+        nextOp<-;
+        if(nextOp == 0) then {scelta = 0;}
+        else{ if (nextOp == 1) then {scelta = -1; }} 
 }
