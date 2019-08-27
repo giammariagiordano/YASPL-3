@@ -97,11 +97,13 @@ non terminal  Expression Bool_Expr;
 non terminal  CompStat Comp_stat;
 /* Precedences */
 
-precedence nonassoc  ELSE; 
-precedence left PLUS,MINUS,OR;
-precedence left TIMES,DIV,AND;
-precedence nonassoc GT, GE, LT, LE, EQ; 
-precedence left UMINUS, NOT, COMMA;	
+ /* Precedences */
+precedence nonassoc ELSE;
+precedence left PLUS, MINUS, OR;
+precedence left TIMES, DIV, AND;
+/* Due occorrenze consecutive di terminali non associativi generano errore, usato per operazioni di confronto */
+precedence nonassoc GT, GE, LT, LE, EQ;
+precedence left UMINUS, NOT, COMMA;
 
 /* The grammar rules */
 Programma ::= HEAD:h Decls:decls START Statements:statements 	{:RESULT = new Program(hxleft,hxright,decls,statements);:}		
@@ -172,8 +174,8 @@ Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsx
 		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}							
 		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallOpParamOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
 		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParam(idxleft,idxright,id);:}
- 		| IF LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
- 		| IF LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
+ 		| IF  LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
+ 		| IF  LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
 		| WHILE LPAR Bool_Expr:expr RPAR DO Comp_stat:cs										{:RESULT = new WhileNode(exprxleft,exprxright,expr,cs);:} 
 			;	
 
@@ -184,8 +186,8 @@ Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = arg
 Comp_stat ::= LGPAR Statements:cs RGPAR															{:RESULT = new CompStat(csxleft,csxright,cs);:} 	
 			;
 			
-Expr ::= Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(aoxleft,aoxright,expr1,expr2,ao);:} 		
-		|LPAR Expr:expr RPAR																	{:RESULT = expr;:}
+Expr ::=  Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(aoxleft,aoxright,expr1,expr2,ao);:} 		
+		| LPAR Bool_Expr:expr RPAR																	{:RESULT = expr;:}
 		| MINUS Expr:expr																		{:RESULT = new MinusExpression(exprxleft,exprxright,expr);:}					 
 		%prec UMINUS
 		| NOT Expr:expr																			{:RESULT = new NotExpression(exprxleft,exprxright,expr);:}
@@ -196,12 +198,12 @@ Expr ::= Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOper
 		| DOUBLE_CONST :d																		{:RESULT = new Double_Const(dxleft,dxright,d);:}														
 		| CHAR_CONST:c 																			{:RESULT = new Char_Const(cxleft,cxright,c);:} 					
 		| STRING_CONST:s 																		{:RESULT = new String_Const(sxleft,sxright,s);:}
-		| Bool_Expr:be																			{:RESULT = be; :}
+		
 		;
 			
-Bool_Expr ::= Bool_Expr:expr1 Bool_op:bo Bool_Expr:expr2														{:RESULT = new BooleanExpression(boxleft,boxright,expr1,expr2,bo);:} 		
+Bool_Expr ::= Bool_Expr:expr1 Bool_op:bo Bool_Expr:expr2										{:RESULT = new BooleanExpression(boxleft,boxright,expr1,expr2,bo);:} 		
 		|Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopExpression(roxleft,roxright,expr1,expr2,ro);:} 		
-		| Expr:e 																		{:RESULT = e;:}
+		| Expr:be 																			{:RESULT = be; :}
 		;
 Arith_op ::= PLUS:s																				{:RESULT = "PLUS";:}													
 			|MINUS:s																			{:RESULT = "MINUS";:}

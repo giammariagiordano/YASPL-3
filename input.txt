@@ -1,58 +1,99 @@
 head
 
-double sommagrande, sommapiccola;
-int i;
-double x, y, risultato;
-bool grande;
+double op1, op2, res;
+int choise;
+string menu;
 
-def moltiplicazione(in double x, in double y, out double res, out bool grande)
-{
-	double risultato = x*y;
-	if ((x*y) >= 100) then {
-		grande = true;
-	}
-	else{ 
-		grande = false;
-	}
-	res = risultato;
+def resetResTo0(inout double res){
+    res=0;
+}
+def resetResTo1(inout double res){
+    res=1;
 }
 
-start 
-
-sommagrande = 0;
-sommapiccola = 0;
-
-"Questo programma permette di svolgere una serie di moltiplicazioni" ->;
-"accumulando i risultati > 100 in sommagrande e quelli < 100 in sommapiccola" ->; 
-
-i = -1;
-while (i <= 0) do{
-	"Quante moltiplicazioni vuoi svolgere? (inserire intero > 0)"->;
-	i <-;
+def addizione(in double op1, in double op2, out double res){
+    res = op1+op2;
 }
 
-while (i > 0) do{
-	
-	x = -1; 
-	y = -1;
-
-	while (not(x > 0 and y >0)) do
-	{
-		"Moltiplicazione " + i + ": inserisci due numeri positivi" ->;
-		x, y <-;
-	}
-	
-	moltiplicazione(x, y , risultato, grande);
-
-	if(grande) then{ 
-		sommagrande = sommagrande + risultato;
-	}else{
-		sommapiccola = sommapiccola + risultato;
-	}
-	i = i-1;
+def sottrazione(in double op1, in double op2, out double res){
+    res = op1-op2;
 }
 
-"Valore di sommagrande: " + sommagrande ->;
-"Valore di sommapiccola: " + sommapiccola ->;
+def moltiplicazione(in double op1, in double op2, out double res){
+    res = op1*op2;
+}
 
-"ciao" ->;
+def divisione(in double op1, in double op2, out double res){
+    res = op1/op2;
+}
+
+def quadrato(in double op, out double res){
+    res = op*op;
+}
+
+def printMenu(){
+"Scegli l'operazione da svolgere\n"+
+"1. Addizione\n"+
+"2. Sottrazione\n"+
+"3. Moltiplicazione\n"+
+"4. Divisione\n"+
+"5. Quadrato\n"+
+"0. esci" ->;
+}
+
+def readOps(){
+"Inserisci due numeri"->;
+op1,op2<-;
+}
+
+
+start
+
+printMenu();
+choise <-;
+while(not(choise == 0) ) do {
+    if(choise == 1) then {
+        readOps();
+        resetResTo0(res);
+        addizione(op1,op2,res);
+        res->;
+    }else {
+        if(choise == 2) then {
+        readOps();
+        resetResTo0(res);
+        sottrazione(op1,op2,res);
+        res->;
+    } else {
+        if(choise == 3) then {
+            readOps();
+            resetResTo1(res);
+            moltiplicazione(op1, op2, res);
+            res ->;
+        } else {
+            if(choise == 4) then {
+                readOps();
+                resetResTo1(res);
+                divisione(op1, op2, res);
+                res->;
+            }else{
+                if(choise == 5) then {
+                    "Inserisci un numero"->;
+                    op1<-;
+                    resetResTo1(res);
+                    quadrato(op1, res);
+                    res->;
+                } else {
+                    if(choise < 0 or choise > 5) then {
+                        "Scelta non valida, inserisci un intero compreso fra 0 e 5"->;
+                        printMenu();
+                        choise <-;
+                    }
+                }
+            }
+        }
+    }
+    }
+    printMenu();
+    choise<-;
+}
+"Finito"->;
