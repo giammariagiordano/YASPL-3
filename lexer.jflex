@@ -4,6 +4,11 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import java_cup.runtime.Symbol;
 import java.lang.*;
 import java.io.InputStreamReader;
+import lexical.*;
+import semantic.*;
+import syntax.*;
+import visitor.*;
+import java.util.HashMap;
 
 %%
 
@@ -16,40 +21,38 @@ import java.io.InputStreamReader;
 %cup
 %char
 %{
-	StringBuilder lexeme = new StringBuilder();
+   private StringTable table;
 
-    public Lexer(ComplexSymbolFactory sf, java.io.InputStream is){
-		this(is);
+
+    public Lexer(ComplexSymbolFactory sf, java.io.InputStream is, StringTable table){
+		this(new InputStreamReader(is));
         symbolFactory = sf;
+        this.table = table;
     }
-	public Lexer(ComplexSymbolFactory sf, java.io.Reader reader){
-		this(reader);
-        symbolFactory = sf;
-    }
-    
-    private StringBuffer sb;
+
+    private StringBuffer sb = new StringBuffer();
     private ComplexSymbolFactory symbolFactory;
-    private int csline,cscolumn;
 
     public Symbol symbol(String name, int code){
 		return symbolFactory.newSymbol(name, code,
-						new Location(yyline+1,yycolumn+1, yychar), // -yylength()
-						new Location(yyline+1,yycolumn+yylength(), yychar+yylength())
-				);
+						new Location(yyline+1,yycolumn+1 - yylength()),
+						new Location(yyline+1,yycolumn+1));
     }
-    public Symbol symbol(String name, int code, String lexem){
-	return symbolFactory.newSymbol(name, code, 
-						new Location(yyline+1, yycolumn +1, yychar), 
-						new Location(yyline+1,yycolumn+yylength(), yychar+yylength()), lexem);
+
+    public Symbol symbol(String name, int code, Object value){
+        this.table.addLexicalSymbol(value.toString(), code);
+        return symbolFactory.newSymbol(name, code,
+    					new Location(yyline+1, yycolumn+1),
+    					new Location(yyline+1, yycolumn+yylength()), value);
     }
-    
+
     protected void emit_warning(String message){
-    	System.out.println("scanner warning: " + message + " at : 2 "+ 
-    			(yyline+1) + " " + (yycolumn+1) + " " + yychar);
+    	System.out.println("scanner warning: " + message + " at : 2 "+
+    			(yyline+1) + " " + (yycolumn+1));
     }
-    
+
     protected void emit_error(String message){
-    	System.out.println("scanner error: " + message + " at : 2" + 
+    	System.out.println("scanner error: " + message + " at : 2" +
     			(yyline+1) + " " + (yycolumn+1) + " " + yychar);
     }
 %}
@@ -71,7 +74,7 @@ CHAR_CONST = [:jletterdigit:]
 
 
 %eofval{
-    return symbolFactory.newSymbol("EOF",sym.EOF);
+    return symbol("EOF",sym.EOF);
 %eofval}
 
 %state STRING
@@ -81,77 +84,79 @@ CHAR_CONST = [:jletterdigit:]
 							//keywords
     {Whitespace} {                                                 }   
     {Comment}   {                                                   }                                      
-	"head"      { return symbolFactory.newSymbol("HEAD", sym.HEAD);    }
-    "start"     { return symbolFactory.newSymbol("START", sym.START);   }
-    "int"       { return symbolFactory.newSymbol("INT", sym.INT);     }
-    "double"    { return symbolFactory.newSymbol("DOUBLE", sym.DOUBLE);}
-    "bool"      { return symbolFactory.newSymbol("BOOL", sym.BOOL);    }
-    "def"       { return symbolFactory.newSymbol("DEF", sym.DEF);     }
-    "true"      { return symbolFactory.newSymbol("TRUE", sym.TRUE);    }
-    "false"     { return symbolFactory.newSymbol("FALSE", sym.FALSE);   }
-  	"if"        { return symbolFactory.newSymbol("IF", sym.IF);		}
-  	"then"      { return symbolFactory.newSymbol("THEN", sym.THEN);	}
-  	"else"      { return symbolFactory.newSymbol("ELSE", sym.ELSE);	}
-  	"while"     { return symbolFactory.newSymbol("WHILE", sym.WHILE);	}
-  	"do"        { return symbolFactory.newSymbol("DO", sym.DO);      }
-  	"in"        { return symbolFactory.newSymbol("IN", sym.IN);      }
-  	"out"       { return symbolFactory.newSymbol("OUT", sym.OUT);     }
-  	"inout"     { return symbolFactory.newSymbol("INOUT", sym.INOUT);   }  
+	"head"      { return symbol("HEAD", sym.HEAD);    }
+    "start"     { return symbol("START", sym.START);   }
+    "int"       { return symbol("INT", sym.INT);     }
+    "double"    { return symbol("DOUBLE", sym.DOUBLE);}
+    "bool"      { return symbol("BOOL", sym.BOOL);    }
+    "string"	{ return symbol("STRING", sym.STRING);}
+    "char"		{ return symbol("CHAR",sym.CHAR);}
+    "def"       { return symbol("DEF", sym.DEF);     }
+    "true"      { return symbol("TRUE", sym.TRUE);    }
+    "false"     { return symbol("FALSE", sym.FALSE);   }
+  	"if"        { return symbol("IF", sym.IF);		}
+  	"then"      { return symbol("THEN", sym.THEN);	}
+  	"else"      { return symbol("ELSE", sym.ELSE);	}
+  	"while"     { return symbol("WHILE", sym.WHILE);	}
+  	"do"        { return symbol("DO", sym.DO);      }
+  	"in"        { return symbol("IN", sym.IN);      }
+  	"out"       { return symbol("OUT", sym.OUT);     }
+  	"inout"     { return symbol("INOUT", sym.INOUT);   }  
  						 //separators
-	";"         { return symbolFactory.newSymbol("SEMI", sym.SEMI); 	}
-  	"("         { return symbolFactory.newSymbol("LPAR", sym.LPAR); 	}
-  	")"         { return symbolFactory.newSymbol("RPAR", sym.RPAR); 	}
-  	"{"         { return symbolFactory.newSymbol("LGPAR", sym.LGPAR);	}
-  	"}"         {  return symbolFactory.newSymbol("RGPAR", sym.RGPAR);	} 
-    ","         { return symbolFactory.newSymbol("COMMA", sym.COMMA);}
+	";"         { return symbol("SEMI", sym.SEMI); 	}
+  	"("         { return symbol("LPAR", sym.LPAR); 	}
+  	")"         { return symbol("RPAR", sym.RPAR); 	}
+  	"{"         { return symbol("LGPAR", sym.LGPAR);	}
+  	"}"         {  return symbol("RGPAR", sym.RGPAR);	} 
+    ","         { return symbol("COMMA", sym.COMMA);}
 							  //opts
-  	"+"         { return symbolFactory.newSymbol("PLUS", sym.PLUS); 	}
-  	"<-"        { return symbolFactory.newSymbol("READ", sym.READ);    }
-  	"->"        { return symbolFactory.newSymbol("WRITE", sym.WRITE);   }
-  	"-"         { return symbolFactory.newSymbol("MINUS", sym.MINUS); 	}
-  	"*"         { return symbolFactory.newSymbol("TIMES", sym.TIMES); 	}
-  	"/"		    { return symbolFactory.newSymbol("DIV", sym.DIV);		}
-  	">"         { return symbolFactory.newSymbol("GT", sym.GT);		}
-  	"<"         { return symbolFactory.newSymbol("LT", sym.LT);		}
-  	"="         { return symbolFactory.newSymbol("ASSIGN", sym.ASSIGN);	}
-  	"=="        { return symbolFactory.newSymbol("EQ", sym.EQ);		}
-  	"<="        {  return symbolFactory.newSymbol("LE", sym.LE);		}
-  	">="        { return symbolFactory.newSymbol("GE", sym.GE);		}
-  	"not"       { return symbolFactory.newSymbol("NOT", sym.NOT);		}
-  	"and"       { return symbolFactory.newSymbol("AND", sym.AND);		}
-  	"or"        { return symbolFactory.newSymbol("OR", sym.OR);		}
-  //	"-"         { return symbolFactory.newSymbol("UMINUS", sym.UMINUS);  }
+  	"+"         { return symbol("PLUS", sym.PLUS); 	}
+  	"<-"        { return symbol("READ", sym.READ);    }
+  	"->"        { return symbol("WRITE", sym.WRITE);   }
+  	"-"         { return symbol("MINUS", sym.MINUS); 	}
+  	"*"         { return symbol("TIMES", sym.TIMES); 	}
+  	"/"		    { return symbol("DIV", sym.DIV);		}
+  	">"         { return symbol("GT", sym.GT);		}
+  	"<"         { return symbol("LT", sym.LT);		}
+  	"="         { return symbol("ASSIGN", sym.ASSIGN);	}
+  	"=="        { return symbol("EQ", sym.EQ);		}
+  	"<="        {  return symbol("LE", sym.LE);		}
+  	">="        { return symbol("GE", sym.GE);		}
+  	"not"       { return symbol("NOT", sym.NOT);		}
+  	"and"       { return symbol("AND", sym.AND);		}
+  	"or"        { return symbol("OR", sym.OR);		}
+  //	"-"         { return symbol("UMINUS", sym.UMINUS);  }
 
 
 
 
-  {ID}              { return symbolFactory.newSymbol("ID",sym.ID , yytext()); 								  }
-  {INT_CONST}       { return symbolFactory.newSymbol( "INT_CONST",sym.INT_CONST, Integer.parseInt(yytext())); 	  }
-  {DOUBLE_CONST}    { return symbolFactory.newSymbol( "DOUBLE_CONST",sym.DOUBLE_CONST,  Double.parseDouble(yytext())); }
-  {CHAR_CONST}      { return symbolFactory.newSymbol( "CHAR_CONST",sym.CHAR_CONST,(char)Integer.parseInt(yytext()));   }
+  {ID}              { return symbol("ID",sym.ID , yytext()); 								  }
+  {INT_CONST}       { return symbol( "INT_CONST",sym.INT_CONST, Integer.parseInt(yytext())); 	  }
+  {DOUBLE_CONST}    { return symbol( "DOUBLE_CONST",sym.DOUBLE_CONST,  Double.parseDouble(yytext())); }
+  {CHAR_CONST}      { return symbol( "CHAR_CONST",sym.CHAR_CONST,(char)Integer.parseInt(yytext()));   }
   
     /*When found " start state string*/
-  \" { yybegin(STRING); lexeme.setLength(0); }
+  \" { yybegin(STRING); sb.setLength(0); }
   
 }
 
 /*Handle String state*/
 <STRING> {
-\" { yybegin(YYINITIAL); return symbolFactory.newSymbol("STRING_CONST",sym.STRING_CONST, lexeme.toString()); }
+\" { yybegin(YYINITIAL); return symbol("STRING_CONST",sym.STRING_CONST, sb.toString()); }
 /* escape sequences */
-  {STRING_CONST}+ { lexeme.append( yytext()); }
-  "\\b" 	{ lexeme.append( '\b' ); }
-  "\\t" 	{ lexeme.append( '\t' ); }
-  "\\n" 	{ lexeme.append( '\n' ); }
-  "\\f" 	{ lexeme.append( '\f' ); }
-  "\\r" 	{ lexeme.append( '\r' ); }
-  "\\\"" 	{ lexeme.append( '\"' ); }
-  "\\'" 	{ lexeme.append( '\'' ); }
-  "\\\\" 	{ lexeme.append( '\\' ); }
+  {STRING_CONST}+ { sb.append( yytext()); }
+  "\\b" 	{ sb.append( '\b' ); }
+  "\\t" 	{ sb.append( '\t' ); }
+  "\\n" 	{ sb.append( '\n' ); }
+  "\\f" 	{ sb.append( '\f' ); }
+  "\\r" 	{ sb.append( '\r' ); }
+  "\\\"" 	{ sb.append( '\"' ); }
+  "\\'" 	{ sb.append( '\'' ); }
+  "\\\\" 	{ sb.append( '\\' ); }
 
 // error fallback
  \\. { throw new RuntimeException("Illegal escape sequence \""+yytext()+"\"");	}
   {Newline} { throw new RuntimeException("Unterminated string at end of line"); }
   }
-  <<EOF>>  { return symbolFactory.newSymbol("EOF",sym.EOF); }
+  <<EOF>>  { return symbol("EOF",sym.EOF); }
   [^]          { emit_warning("Unrecognized character '" +yytext()+"' -- ignored"); }

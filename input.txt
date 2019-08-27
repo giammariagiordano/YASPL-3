@@ -1,41 +1,58 @@
 head
-def sum(in double op1, in double op2, out double result)
+
+double sommagrande, sommapiccola;
+int i;
+double x, y, risultato;
+bool grande;
+
+def moltiplicazione(in double x, in double y, out double res, out bool grande)
 {
-    result = op1 + op2;
+	double risultato = x*y;
+	if ((x*y) >= 100) then {
+		grande = true;
+	}
+	else{ 
+		grande = false;
+	}
+	res = risultato;
 }
-def mul(in double op1, in double op2, out double result){
-    result = op1 * op2;
+
+start 
+
+sommagrande = 0;
+sommapiccola = 0;
+
+"Questo programma permette di svolgere una serie di moltiplicazioni" ->;
+"accumulando i risultati > 100 in sommagrande e quelli < 100 in sommapiccola" ->; 
+
+i = -1;
+while (i <= 0) do{
+	"Quante moltiplicazioni vuoi svolgere? (inserire intero > 0)"->;
+	i <-;
 }
-def div(in double op1, in double op2, out double result){
-    result = op1 / op2;
+
+while (i > 0) do{
+	
+	x = -1; 
+	y = -1;
+
+	while (not(x > 0 and y >0)) do
+	{
+		"Moltiplicazione " + i + ": inserisci due numeri positivi" ->;
+		x, y <-;
+	}
+	
+	moltiplicazione(x, y , risultato, grande);
+
+	if(grande) then{ 
+		sommagrande = sommagrande + risultato;
+	}else{
+		sommapiccola = sommapiccola + risultato;
+	}
+	i = i-1;
 }
-def sub(in double op1, in double op2, out double result){
-    result = op1 - op2;
-}
-int scelta,nextOpt;
-double op1, op2, ris;
-start
-scelta = -1;
-while(not (scelta == 0)) do {
-    "1) somma\n 2) moltiplicazione\n 3) divisione 4) sottrazione"->;
-    scelta <-;
-        "Inserisci i due  operatori"->;
-        op1, op2 <-;
-        if (scelta == 1) then { sum(op1,op2,ris);}
-        if (scelta == 2) then { mul(op1,op2,ris);}
-        if (scelta == 3) then {
-        	if (op2 == 0) then {
-        		"impossibile dividere per 0"->;
-        		ris = 0;
-        	}
-        	else {
-        		div(op1,op2,ris);
-        	}
-        }
-        if (scelta == 4) then { sub( op1,op2,ris);}
-        "risultato:"+ris->;
-        "premi 0 per uscire, 1 per effettuare una nuova operazione"->;
-        nextOp<-;
-        if(nextOp == 0) then {scelta = 0;}
-        else{ if (nextOp == 1) then {scelta = -1; }} 
-}
+
+"Valore di sommagrande: " + sommagrande ->;
+"Valore di sommapiccola: " + sommapiccola ->;
+
+"ciao" ->;

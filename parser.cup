@@ -7,16 +7,46 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.ArrayList;
 import syntax.*;
-
-
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java.util.logging.Logger;
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.List;
 
 
 parser code {:
-  protected Lexer lexer;
+   private static Logger logger = Logger.getLogger("Parser");
+
+   public void report_error(String message, Object info) {
+     if (info instanceof ComplexSymbol) {
+       ComplexSymbol cs = (ComplexSymbol)info;
+       logger.severe(message + " for input symbol \"" + cs.getName() + "\" spanning from " + cs.getLeft() + " to " + cs.getRight());
+     } else {
+         this.logger.severe(message);
+         if (info instanceof Symbol) {
+           if (((Symbol)info).left != -1) {
+             logger.severe(" at character " + ((Symbol)info).left + " of input");
+           } else {
+              this.logger.severe("");
+           }
+         }
+     }
+   }
+
+   protected void report_expected_token_ids() {
+     List<Integer> ids = this.expected_token_ids();
+     LinkedList<String> list = new LinkedList<>();
+     Iterator var3 = ids.iterator();
+     while(var3.hasNext()) {
+       Integer expected = (Integer)var3.next();
+       list.add(this.symbl_name_from_id(expected));
+      }
+       logger.severe("instead expected token classes are " + list);
+    }
 :}
 
 /* define how to connect to the scanner! */
-init with {:
+/*init with {:
   ComplexSymbolFactory f = new ComplexSymbolFactory();
   symbolFactory = f;
   File file = new File("input.txt");
@@ -28,7 +58,7 @@ init with {:
   } 
   lexer = new Lexer(f,fis);
 :};
-scan with {: return lexer.next_token(); :};
+scan with {: return lexer.next_token(); :};*/
 
 
 /* Terminals (tokens returned by the scanner). */
@@ -63,7 +93,7 @@ non terminal BodyNode Body;
 non terminal  ArrayList<VarDeclaration>Var_decls;
 non terminal  ParType Par_type;
 non terminal ArrayList<Expression>Args;
-non terminal  Bool_Expr;
+non terminal  Expression Bool_Expr;
 non terminal  CompStat Comp_stat;
 /* Precedences */
 
@@ -122,10 +152,10 @@ Var_decls ::=  Var_decl:vd Var_decls:vds 														{:vds.add(vd); RESULT = v
 			| 																					{:RESULT = new ArrayList<>();:}
 			;
 
-Par_decls ::= Par_type:pt Type:type ID:id COMMA Par_decls:pds									{:pds.add(new ParDeclsNode(ptxleft,ptxright,pt,type,id)); RESULT = pds;:}
+Par_decls ::= Par_type:pt Type:type ID:id COMMA Par_decls:pds									{:pds.add(new ParDeclsNode(ptxleft,ptxright,pt,type,new IdentifierExpression(idxleft,idxright,id))); RESULT = pds;:}
 			| 	 Par_type:pt Type:type ID:id 													{:
 																								RESULT = new ArrayList<>();
-																								RESULT.add(new ParDeclsNode(ptxleft,ptxright,pt,type,id));
+																								RESULT.add(new ParDeclsNode(ptxleft,ptxright,pt,type,new IdentifierExpression(idxleft,idxright,id)));
 																								:}								
 			;
 
@@ -142,9 +172,9 @@ Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsx
 		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}							
 		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallOpParamOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
 		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParam(idxleft,idxright,id);:}
- 		| IF LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
- 		| IF LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
-		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileNode(exprxleft,exprxright,expr,cs);:} 
+ 		| IF LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
+ 		| IF LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
+		| WHILE LPAR Bool_Expr:expr RPAR DO Comp_stat:cs										{:RESULT = new WhileNode(exprxleft,exprxright,expr,cs);:} 
 			;	
 
 Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
@@ -154,13 +184,11 @@ Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = arg
 Comp_stat ::= LGPAR Statements:cs RGPAR															{:RESULT = new CompStat(csxleft,csxright,cs);:} 	
 			;
 			
-Expr ::= Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1,expr2,ao);:} 		
-		|Expr:expr1 Bool_op:bo Expr:expr2														{:RESULT = new BooleanExpession(expr1xleft,expr1xright,expr1,expr2,bo);:} 		
-		|Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopExpression(expr1xleft,expr1xright,expr1,expr2,ro);:} 		
+Expr ::= Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(aoxleft,aoxright,expr1,expr2,ao);:} 		
+		|LPAR Expr:expr RPAR																	{:RESULT = expr;:}
 		| MINUS Expr:expr																		{:RESULT = new MinusExpression(exprxleft,exprxright,expr);:}					 
 		%prec UMINUS
 		| NOT Expr:expr																			{:RESULT = new NotExpression(exprxleft,exprxright,expr);:}
-		| LPAR Expr:e RPAR																		{:RESULT = e;:}
 		| TRUE:t																				{:RESULT = new TrueExpression(txleft,txright);:}								
 		| FALSE:f																				{:RESULT = new FalseExpression(fxleft,fxright);:}		 					
 		| ID: id																				{:RESULT = new IdentifierExpression(idxleft,idxright,id);:} 							 
@@ -168,16 +196,21 @@ Expr ::= Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOper
 		| DOUBLE_CONST :d																		{:RESULT = new Double_Const(dxleft,dxright,d);:}														
 		| CHAR_CONST:c 																			{:RESULT = new Char_Const(cxleft,cxright,c);:} 					
 		| STRING_CONST:s 																		{:RESULT = new String_Const(sxleft,sxright,s);:}
-			;
+		| Bool_Expr:be																			{:RESULT = be; :}
+		;
 			
+Bool_Expr ::= Bool_Expr:expr1 Bool_op:bo Bool_Expr:expr2														{:RESULT = new BooleanExpression(boxleft,boxright,expr1,expr2,bo);:} 		
+		|Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopExpression(roxleft,roxright,expr1,expr2,ro);:} 		
+		| Expr:e 																		{:RESULT = e;:}
+		;
 Arith_op ::= PLUS:s																				{:RESULT = "PLUS";:}													
 			|MINUS:s																			{:RESULT = "MINUS";:}
 			|TIMES:s 																			{:RESULT = "TIMES";:}									
 			|DIV:s  																			{:RESULT = "DIV";:}								
 			;
 		
-Bool_op ::= AND:s																				{:RESULT = "and";:} 										
-		|	OR:s 																				{:RESULT = "or";:}					
+Bool_op ::= AND:s																				{:RESULT = "AND";:} 										
+		|	OR:s 																				{:RESULT = "OR";:}					
 		;
 		
 Rel_op	::= GE:s																				{:RESULT = "GE";:} 												

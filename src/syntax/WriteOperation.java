@@ -1,6 +1,7 @@
 package syntax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 

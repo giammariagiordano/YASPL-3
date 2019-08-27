@@ -1,30 +1,40 @@
 package syntax;
 
-import java.util.ArrayList;
-import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class ParDeclsNode extends YasplNode {
- private final List<ListParams> listParam;
-  public ParDeclsNode(Location left, Location right, List<ListParams> listParam) {
+  private final ParType parType;
+  private final TypeNode type;
+  private final IdentifierExpression id;
+
+  public ParDeclsNode(Location left, Location right, ParType parType, TypeNode type,
+      IdentifierExpression id) {
     super(left, right);
-    this.listParam = listParam;
+    this.parType = parType;
+    this.type = type;
+    this.id = id;
   }
 
-  public ParDeclsNode(Location left, Location right,ParType pt,TypeNode type, String id) {
-    super(left, right);
-    this.listParam = new ArrayList<ListParams>();
-    listParam.add(new ListParams(left, right, pt, type, new IdentifierExpression(left,right,id)));
+  public ParType getParType() {
+    return parType;
   }
 
-  public List<ListParams> getListParam() {
-    return listParam;
+  public TypeNode getType() {
+    return type;
   }
 
+  public IdentifierExpression getId() {
+    return id;
+  }
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
+  }
+  @Override
+  public String toString() {
+    // TODO Auto-generated method stub
+    return super.toString();
   }
 
 }

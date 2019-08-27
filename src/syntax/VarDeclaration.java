@@ -1,6 +1,6 @@
 package syntax;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
@@ -11,6 +11,7 @@ public class VarDeclaration extends Declarations {
   public VarDeclaration(Location left, Location right,TypeNode type, List<VarInitValueId> variables) {
     super(left, right);
     this.type = type;
+    Collections.reverse(variables);
     this.variables = variables;
   }
 

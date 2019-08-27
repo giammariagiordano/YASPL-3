@@ -4,29 +4,29 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class VarInitValueId extends YasplNode {
-  private final IdentifierExpression ids;
-  private final VarInitValue varsInitValue;
-  public VarInitValueId(Location left, Location right,IdentifierExpression ids,VarInitValue value) {
+  private final IdentifierExpression id;
+  private final VarInitValue varInitValue;
+  public VarInitValueId(Location left, Location right,IdentifierExpression id,VarInitValue value) {
     super(left, right);
-    this.ids = ids;
-    this.varsInitValue = value;
+    this.id = id;
+    this.varInitValue = value;
   }
 
   
   public VarInitValueId(Location idxleft, Location idxright, String id, VarInitValue viv) {
     super(idxleft,idxright);
-    this.ids = new IdentifierExpression(idxleft, idxright, id);
-    this.varsInitValue = viv;
+    this.id = new IdentifierExpression(idxleft, idxright, id);
+    this.varInitValue = viv;
   }
 
 
-  public IdentifierExpression getIds() {
-    return ids;
+  public IdentifierExpression getId() {
+    return id;
   }
 
 
-  public VarInitValue getVarsInitValue() {
-    return varsInitValue;
+  public VarInitValue getVarInitValue() {
+    return varInitValue;
   }
 
 

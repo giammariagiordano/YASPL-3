@@ -1,23 +1,26 @@
 package syntax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.StringJoiner;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class CallOpParamOperation extends StatementsNode {
-  private final IdentifierExpression id;
+  private final IdentifierExpression functionName;
   private final List<Expression> args;
-  
+  private String domain;
   public CallOpParamOperation(Location left,Location right,IdentifierExpression id, ArrayList<Expression> args) {
     super(left,right);
-    this.id = id;
+    this.functionName = id;
+    Collections.reverse(args);
     this.args = args;
   }
 
 
-  public IdentifierExpression getId() {
-    return id;
+  public IdentifierExpression getFunctionName() {
+    return functionName;
   }
 
 
@@ -30,5 +33,16 @@ public class CallOpParamOperation extends StatementsNode {
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
+  
+  public String getDomain() {
+    StringJoiner sj = new StringJoiner("X");
+    args.forEach(e -> sj.add(e.getNodeType().getValue()));
+    this.domain =sj.toString();
+    return sj.toString();
+  }
 
+
+  public void setDomain(String domain) {
+    this.domain = domain;
+  }
 }

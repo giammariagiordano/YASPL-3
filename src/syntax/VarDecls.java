@@ -1,19 +1,21 @@
 package syntax;
 
+import java.util.Collections;
 import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class VarDecls extends YasplNode {
-  private final List<VarDeclaration> varsDeclarasions;
+  private final List<VarDeclaration> varsDeclarations;
   public VarDecls(Location left, Location right,List<VarDeclaration> varDeclarations) {
     super(left, right);
-    this.varsDeclarasions = varDeclarations;
+    Collections.reverse(varDeclarations);
+    this.varsDeclarations = varDeclarations;
   }
 
   
-  public List<VarDeclaration> getVarsDeclarasions() {
-    return varsDeclarasions;
+  public List<VarDeclaration> getVarsDeclarations() {
+    return varsDeclarations;
   }
 
 

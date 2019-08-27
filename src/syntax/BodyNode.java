@@ -1,29 +1,30 @@
 package syntax;
 
 import java.util.ArrayList;
+import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class BodyNode extends YasplNode {
-  private final ArrayList<VarDeclaration> varDecls;
-  private final ArrayList<StatementsNode> statementsNode;
-  public BodyNode(Location left, Location right, ArrayList<VarDeclaration> vd, ArrayList<StatementsNode> statements) {
+  private final List<VarDeclaration> varDecls;
+  private final List<StatementsNode> statementsNode;
+  public BodyNode(Location left, Location right, List<VarDeclaration> vd, List<StatementsNode> statements) {
     super(left, right);
     this.varDecls = vd;
     this.statementsNode = statements;
   }
 
-  public BodyNode(Location left, Location right, ArrayList<StatementsNode> statementsNode) {
+  public BodyNode(Location left, Location right, List<StatementsNode> statementsNode) {
     super(left, right);
     this.statementsNode = statementsNode;
     varDecls = new ArrayList<VarDeclaration>();
     }
   
-  public ArrayList<VarDeclaration> getVarDecls() {
+  public List<VarDeclaration> getVarDecls() {
     return varDecls;
   }
 
-  public ArrayList<StatementsNode> getStatementsNode() {
+  public List<StatementsNode> getStatementsNode() {
     return statementsNode;
   }
 

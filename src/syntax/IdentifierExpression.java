@@ -4,14 +4,14 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class IdentifierExpression extends Expression {
-  private final String id;
+  private final String name;
   public IdentifierExpression(Location left, Location right,String id) {
     super(left, right);
-    this.id = id;
+    this.name = id;
   }
 
-  public String getId() {
-    return id;
+  public String getName() {
+    return name;
   }
 
   @Override

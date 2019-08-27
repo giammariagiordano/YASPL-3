@@ -1,6 +1,7 @@
 package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory;
+import semantic.ReturnType;
 import visitor.Visitor;
 
 public abstract class YasplNode {

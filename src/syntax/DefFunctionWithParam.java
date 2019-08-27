@@ -1,13 +1,20 @@
 package syntax;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.StringJoiner;
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import semantic.ReturnType;
+import semantic.Scope;
+import semantic.Scopeable;
 import visitor.Visitor;
 
-public class DefFunctionWithParam extends DefDecl {
+public class DefFunctionWithParam extends DefDecl implements Scopeable {
   private final IdentifierExpression id;
   private final ArrayList<ParDeclsNode> parDecls;
   private final BodyNode body;
+  private Scope scope;
+  
   public DefFunctionWithParam(Location left, Location right,IdentifierExpression identiferExpression, ParDeclsNode parDecls,BodyNode body) {
     super(left, right);
     this.id = identiferExpression;
@@ -27,6 +34,7 @@ public class DefFunctionWithParam extends DefDecl {
   public DefFunctionWithParam(Location idxleft, Location idxright, String id, ArrayList<ParDeclsNode> pd, BodyNode body) {
     super(idxleft,idxright);
     this.id = new IdentifierExpression(idxleft, idxright, id);
+    Collections.reverse(pd);
     this.parDecls = pd;
     this.body = body;
   }
@@ -45,6 +53,19 @@ public class DefFunctionWithParam extends DefDecl {
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
+  }
+  @Override
+  public void attachScope(Scope sc) {
+    this.scope=sc;
+  }
+  @Override
+  public Scope getAttachScope() {
+    return this.scope;
+  }
+  public String getDomain() {
+    StringJoiner sj = new StringJoiner("X");
+    parDecls.forEach(e -> sj.add(e.getNodeType().getValue()));
+    return sj.toString();
   }
 
 }

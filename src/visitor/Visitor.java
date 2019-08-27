@@ -4,7 +4,7 @@ import syntax.Args;
 import syntax.ArithOperation;
 import syntax.AssignOperation;
 import syntax.BodyNode;
-import syntax.BooleanExpession;
+import syntax.BooleanExpression;
 import syntax.CallOpParamOperation;
 import syntax.CallWithoutParam;
 import syntax.Char_Const;
@@ -18,7 +18,6 @@ import syntax.IdentifierExpression;
 import syntax.IfThenElseOperation;
 import syntax.IfThenOperation;
 import syntax.Int_Const;
-import syntax.ListParams;
 import syntax.MinusExpression;
 import syntax.NotExpression;
 import syntax.ParDeclsNode;
@@ -29,7 +28,6 @@ import syntax.RelopExpression;
 import syntax.String_Const;
 import syntax.TrueExpression;
 import syntax.TypeNode;
-import syntax.VarDeclInit;
 import syntax.VarDeclaration;
 import syntax.VarDecls;
 import syntax.VarInitValue;
@@ -40,9 +38,9 @@ import syntax.WriteOperation;
 
 public interface Visitor <T,P> {
 
-  T visit(ArithOperation arithOperation, P param) throws RuntimeException;
+  T visit(ArithOperation arithOperation, P param);
 
-  T visit(BooleanExpession booleanExpession, P param) throws RuntimeException;
+  T visit(BooleanExpression booleanExpession, P param);
 
   T visit(RelopExpression relopExpression, P param);
 
@@ -90,13 +88,12 @@ public interface Visitor <T,P> {
 
   T visit(VarInitValue varInitValue, P param);
 
-  T visit(VarDeclInit varDeclInit, P param);
 
   T visit(VarInitValueId varInitValueId, P param);
 
   T visit(VarDeclaration varDeclaration, P param);
 
-  T visit(ListParams listParams, P param);
+ // T visit(ListParams listParams, P param);
 
   T visit(ParDeclsNode parDecls, P param);
 
