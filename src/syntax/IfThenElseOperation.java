@@ -3,22 +3,24 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class IfThenElseOperation extends StatementsNode {
-  private final Expression expr;
-  private final CompStat thenCompState,elseCompStat;
-  public IfThenElseOperation(Location left, Location right,Expression expr,CompStat csThen,CompStat  csElse) {
+public class IfThenElseOperation extends StatementNode {
+  private final Expression condition;
+  private final CompStat thenCompStat, elseCompStat;
+
+  public IfThenElseOperation(Location left, Location right, Expression condition,
+      CompStat thenCompStat, CompStat elseCompStat) {
     super(left, right);
-    this.expr = expr;
-    this.thenCompState = csThen;
-    this.elseCompStat =  csElse;
+    this.condition = condition;
+    this.thenCompStat = thenCompStat;
+    this.elseCompStat = elseCompStat;
   }
 
-  public Expression getExpr() {
-    return expr;
+  public Expression getCondition() {
+    return condition;
   }
 
-  public CompStat getThenCompState() {
-    return thenCompState;
+  public CompStat getThenCompStat() {
+    return thenCompStat;
   }
 
   public CompStat getElseCompStat() {
@@ -29,5 +31,4 @@ public class IfThenElseOperation extends StatementsNode {
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

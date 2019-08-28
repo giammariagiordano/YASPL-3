@@ -3,29 +3,28 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class IfThenOperation extends StatementsNode {
-  private final Expression expr;
-  private final CompStat cs;
-  public IfThenOperation(Location left, Location right,Expression expr,CompStat cs) {
+public class IfThenOperation extends StatementNode {
+  private final Expression condition;
+  private final CompStat thenCompStat;
+
+  public IfThenOperation(Location left, Location right, Expression condition,
+      CompStat thenCompStat) {
     super(left, right);
-    this.expr = expr;
-    this.cs  = cs;
-  }
-
-  
-  public Expression getExpr() {
-    return expr;
+    this.condition = condition;
+    this.thenCompStat = thenCompStat;
   }
 
 
-  public CompStat getCs() {
-    return cs;
+  public Expression getCondition() {
+    return condition;
   }
 
+  public CompStat getThenCompStat() {
+    return thenCompStat;
+  }
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

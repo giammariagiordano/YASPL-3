@@ -5,9 +5,10 @@ import visitor.Visitor;
 
 public class IdentifierExpression extends Expression {
   private final String name;
-  public IdentifierExpression(Location left, Location right,String id) {
+
+  public IdentifierExpression(Location left, Location right, String name) {
     super(left, right);
-    this.name = id;
+    this.name = name;
   }
 
   public String getName() {
@@ -18,5 +19,4 @@ public class IdentifierExpression extends Expression {
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

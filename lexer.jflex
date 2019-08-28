@@ -57,13 +57,19 @@ import java.util.HashMap;
     }
 %}
 
-Newline    = \r | \n | \r\n
-Whitespace = [ \t\f] | {Newline}
-/* comments */
-Comment = {TraditionalComment} | {EndOfLineComment}
-TraditionalComment = "/*" {CommentContent} \*+ "/"
-EndOfLineComment = "//" [^\r\n]* {CommentContent}  {Newline}
-CommentContent = ( [^*] | \*+[^*/] )*
+Newline = \r|\n|\r\n
+InputCharacter = [^\r\n]
+Whitespace     = {Newline} | [ \t\f]
+
+/* COMMENTS */
+Comment = {TraditionalComment} | {EndOfLineComment} | {DocumentationComment}
+
+TraditionalComment   = "/*" [^*] ~"*/" | "/*" "*"+ "/"
+// Comment can be the last line of the file, without line terminator.
+EndOfLineComment     = "//" {InputCharacter}* {Newline}?
+DocumentationComment = "/**" {CommentContent} "*"+ "/"
+CommentContent       = ( [^*] | \*+ [^/*] )*
+
 
 ID = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 INT_CONST = 0 | [1-9][0-9]* /*Decimal number is 0 or start with a number that not is zero followed by 0 or plus digits*/
@@ -82,7 +88,7 @@ CHAR_CONST = [:jletterdigit:]
 
 <YYINITIAL> {
 							//keywords
-    {Whitespace} {                                                 }   
+    {Whitespace} {/*ignore*/}   
     {Comment}   {                                                   }                                      
 	"head"      { return symbol("HEAD", sym.HEAD);    }
     "start"     { return symbol("START", sym.START);   }

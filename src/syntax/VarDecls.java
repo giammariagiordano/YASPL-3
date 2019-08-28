@@ -7,21 +7,19 @@ import visitor.Visitor;
 
 public class VarDecls extends YasplNode {
   private final List<VarDeclaration> varsDeclarations;
-  public VarDecls(Location left, Location right,List<VarDeclaration> varDeclarations) {
+
+  public VarDecls(Location left, Location right, List<VarDeclaration> varsDeclarations) {
     super(left, right);
-    Collections.reverse(varDeclarations);
-    this.varsDeclarations = varDeclarations;
+    Collections.reverse(varsDeclarations);
+    this.varsDeclarations = varsDeclarations;
   }
 
-  
   public List<VarDeclaration> getVarsDeclarations() {
     return varsDeclarations;
   }
-
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

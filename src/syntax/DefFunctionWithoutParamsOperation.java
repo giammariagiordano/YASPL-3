@@ -6,43 +6,49 @@ import semantic.Scope;
 import semantic.Scopeable;
 import visitor.Visitor;
 
-public class DefFunctionWithoutParams extends DefDecl implements Scopeable {
-  private final IdentifierExpression id;
+public class DefFunctionWithoutParamsOperation extends DefDeclaration implements Scopeable {
+  private final IdentifierExpression functionName;
   private final BodyNode body;
   private Scope scope;
-  public DefFunctionWithoutParams(Location left, Location right,IdentifierExpression id,BodyNode body) {
+
+  public DefFunctionWithoutParamsOperation(Location left, Location right,
+      IdentifierExpression functionName, BodyNode body) {
     super(left, right);
-    this.id = id;
+    this.functionName = functionName;
     this.body = body;
   }
-  public DefFunctionWithoutParams(Location left, Location right,String id,BodyNode body) {
+
+  public DefFunctionWithoutParamsOperation(Location left, Location right, String functionName,
+      BodyNode body) {
     super(left, right);
-    this.id = new IdentifierExpression(left, right, id);
+    this.functionName = new IdentifierExpression(left, right, functionName);
     this.body = body;
   }
-  
+
   public BodyNode getBody() {
     return body;
   }
-  
-  public IdentifierExpression getId() {
-    return id;
+
+  public IdentifierExpression getFunctionName() {
+    return functionName;
   }
+
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
-   return visitor.visit(this, param);
+    return visitor.visit(this, param);
   }
+
   @Override
   public void attachScope(Scope sc) {
-    this.scope=sc;
-    
+    this.scope = sc;
   }
+
   @Override
   public Scope getAttachScope() {
     return this.scope;
   }
+
   public String getDomain() {
     return ReturnType.VOID.getValue();
   }
-
 }

@@ -5,7 +5,8 @@ import visitor.Visitor;
 
 public class MinusExpression extends Expression {
   private final Expression expr;
-  public MinusExpression(Location left, Location right,Expression expr) {
+
+  public MinusExpression(Location left, Location right, Expression expr) {
     super(left, right);
     this.expr = expr;
   }
@@ -16,7 +17,6 @@ public class MinusExpression extends Expression {
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
-    return visitor.visit(this,param);
+    return visitor.visit(this, param);
   }
-
 }

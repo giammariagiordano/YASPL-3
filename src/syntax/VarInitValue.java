@@ -11,22 +11,17 @@ public class VarInitValue extends YasplNode {
     this.expr = expr;
   }
 
-
   public VarInitValue(Location left, Location right) {
-   super(left,right);
-   this.expr = null;
-   }
-
+    super(left, right);
+    this.expr = null;
+  }
 
   public Expression getExpr() {
     return expr;
   }
 
-
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
-
 }

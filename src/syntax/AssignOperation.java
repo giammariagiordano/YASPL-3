@@ -3,28 +3,27 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class AssignOperation extends StatementsNode {
-  private final IdentifierExpression id;
+public class AssignOperation extends StatementNode {
+  private final IdentifierExpression varName;
   private final Expression expr;
-  public AssignOperation(Location left, Location right,IdentifierExpression id,Expression expr) {
+
+  public AssignOperation(Location left, Location right, IdentifierExpression varName,
+      Expression expr) {
     super(left, right);
-    this.id = id;
+    this.varName = varName;
     this.expr = expr;
   }
-
 
   public Expression getExpr() {
     return expr;
   }
 
-
-  public IdentifierExpression getId() {
-    return id;
+  public IdentifierExpression getVarName() {
+    return varName;
   }
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
-   return visitor.visit(this, param);
+    return visitor.visit(this, param);
   }
-
 }

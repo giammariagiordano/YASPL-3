@@ -7,24 +7,26 @@ import visitor.Visitor;
 
 public class BodyNode extends YasplNode {
   private final List<VarDeclaration> varDecls;
-  private final List<StatementsNode> statementsNode;
-  public BodyNode(Location left, Location right, List<VarDeclaration> vd, List<StatementsNode> statements) {
+  private final List<StatementNode> statementsNode;
+
+  public BodyNode(Location left, Location right, List<VarDeclaration> vd,
+      List<StatementNode> statements) {
     super(left, right);
     this.varDecls = vd;
     this.statementsNode = statements;
   }
 
-  public BodyNode(Location left, Location right, List<StatementsNode> statementsNode) {
+  public BodyNode(Location left, Location right, List<StatementNode> statementsNode) {
     super(left, right);
     this.statementsNode = statementsNode;
     varDecls = new ArrayList<VarDeclaration>();
-    }
-  
+  }
+
   public List<VarDeclaration> getVarDecls() {
     return varDecls;
   }
 
-  public List<StatementsNode> getStatementsNode() {
+  public List<StatementNode> getStatementsNode() {
     return statementsNode;
   }
 
@@ -32,5 +34,4 @@ public class BodyNode extends YasplNode {
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

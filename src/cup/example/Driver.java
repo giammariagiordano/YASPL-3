@@ -11,7 +11,7 @@ import semantic.ReturnType;
 import semantic.StackSymbolTable;
 import semantic.SymbolTable;
 import syntax.Program;
-import visitor.SemanticVisitor2;
+import visitor.SemanticVisitor;
 import visitor.SyntaxVisitor;
 
 class Driver {
@@ -25,9 +25,9 @@ class Driver {
       Program program = (Program) parser.parse().value;
       SyntaxVisitor syntaxVisitor = new SyntaxVisitor();
       syntaxVisitor.appendRoot(syntaxVisitor.visit(program, null));
-      syntaxVisitor.toXml("SyntaxVisitor1.xml");
+      syntaxVisitor.toXml("SyntaxVisitor.xml");
       SymbolTable symbolTable = new StackSymbolTable(stringTable);
-      SemanticVisitor2 semanticVisitor = new SemanticVisitor2(symbolTable);
+      SemanticVisitor semanticVisitor = new SemanticVisitor(symbolTable);
       semanticVisitor.visit(program, Logger.getLogger(Driver.class.getSimpleName()));
       if(program.getNodeType() == ReturnType.UNDEFINED) {
           throw new Exception("Semantic Error");

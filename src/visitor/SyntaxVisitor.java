@@ -55,9 +55,8 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
       StreamResult result = new StreamResult(
           new File(System.getProperty("user.home").concat("/Scrivania/".concat(fileName))));
       String path = System.getProperty("user.home").concat("/Scrivania/".concat(fileName));
-      System.out.println("file salvato nel percoso: "+path);
+      System.out.println("SyntaxVisitor.xml saved in: " + path);
       transformer.transform(source, result);
-      System.out.println("File saved!");
     } catch (TransformerException e) {
       e.printStackTrace();
     }
@@ -66,28 +65,27 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   public Element visit(ArithOperation arithOperation, Void param) {
     Element el = this.xmlDocument.createElement("ArithOp");
     el.setAttribute("operator", arithOperation.getSimbolOperation());
-    el.appendChild(arithOperation.getLeftOperation().accept(this, param));
-    el.appendChild(arithOperation.getRightOperation().accept(this, param));
+    el.appendChild(arithOperation.getLeftOperand().accept(this, param));
+    el.appendChild(arithOperation.getRightOperand().accept(this, param));
     return el;
   }
 
 
-  public Element visit(BooleanExpression booleanExpression, Void param) {
+  public Element visit(BooleanOperation booleanOperation, Void param) {
     Element el = this.xmlDocument.createElement("booleanExpression");
-    el.setAttribute("operator", booleanExpression.getOperation());
-    el.appendChild(booleanExpression.getLeftOperation().accept(this, param));
-    el.appendChild(booleanExpression.getRightOperation().accept(this, param));
+    el.setAttribute("operator", booleanOperation.getOperation());
+    el.appendChild(booleanOperation.getLeftOperand().accept(this, param));
+    el.appendChild(booleanOperation.getRightOperand().accept(this, param));
     return el;
   }
 
-  public Element visit(RelopExpression relopExpression, Void param) {
+  public Element visit(RelopOperation relopOperation, Void param) {
     Element el = this.xmlDocument.createElement("relopExpression");
-    el.setAttribute("operator", relopExpression.getOperation());
-    el.appendChild(relopExpression.getLeftOperation().accept(this, param));
-    el.appendChild(relopExpression.getRightOperation().accept(this, param));
+    el.setAttribute("operator", relopOperation.getOperation());
+    el.appendChild(relopOperation.getLeftOperand().accept(this, param));
+    el.appendChild(relopOperation.getRightOperand().accept(this, param));
     return el;
   }
-
 
   public Element visit(MinusExpression minus, Void param) {
     Element el = this.xmlDocument.createElement("Uminus");
@@ -95,13 +93,11 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
-  public Element visit(NotExpression notOp, Void param) {
+  public Element visit(NotExpression notExpression, Void param) {
     Element el = this.xmlDocument.createElement("not");
-    el.appendChild(notOp.getExpr().accept(this, param));
+    el.appendChild(notExpression.getExpr().accept(this, param));
     return el;
   }
-
 
   public Element visit(TrueExpression trueExpression, Void param) {
     Element el = this.xmlDocument.createElement("true");
@@ -109,73 +105,63 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
   public Element visit(FalseExpression falseExpression, Void param) {
     Element el = this.xmlDocument.createElement("false");
     el.setAttribute("value", String.valueOf(falseExpression.getFalse()));
     return el;
   }
 
-
-  public Element visit(IdentifierExpression identiferExpression, Void param) {
+  public Element visit(IdentifierExpression identifierExpression, Void param) {
     Element el = this.xmlDocument.createElement("IdentifierOp");
-    el.setAttribute("lexem", identiferExpression.getName());
+    el.setAttribute("lexem", identifierExpression.getName());
     return el;
   }
 
-
-  public Element visit(Int_Const intConst, Void param) {
+  public Element visit(IntConst intConst, Void param) {
     Element el = this.xmlDocument.createElement("INT_CONST");
     el.setAttribute("NUMBER", String.valueOf(intConst.getIntConst()));
     return el;
   }
 
-
-  public Element visit(Double_Const double_Const, Void param) {
+  public Element visit(DoubleConst doubleConst, Void param) {
     Element el = this.xmlDocument.createElement("DOUBLE_CONST");
-    el.setAttribute("Double_Number", String.valueOf(double_Const.getDoubleNumber()));
+    el.setAttribute("Double_Number", String.valueOf(doubleConst.getDoubleConst()));
     return el;
   }
 
-
-  public Element visit(Char_Const char_Const, Void param) {
+  public Element visit(CharConst charConst, Void param) {
     Element el = this.xmlDocument.createElement("CHAR_CONST");
-    el.setAttribute("CHAR_CONST", String.valueOf(char_Const.getChar_const()));
+    el.setAttribute("CHAR_CONST", String.valueOf(charConst.getCharConst()));
     return el;
   }
 
-
-  public Element visit(String_Const string_Const, Void param) {
+  public Element visit(StringConst stringConst, Void param) {
     Element el = this.xmlDocument.createElement("STRING_CONST");
-    el.setAttribute("STRING_CONST", String.valueOf(string_Const.getString_const()));
+    el.setAttribute("STRING_CONST", String.valueOf(stringConst.getStringConst()));
     return el;
   }
 
-
-  public Element visit(WhileNode whileNode, Void param) {
+  public Element visit(WhileOperation whileOperation, Void param) {
     Element el = this.xmlDocument.createElement("WhileNode");
-    el.appendChild(whileNode.getExpr().accept(this, param));
-    el.appendChild(whileNode.getCs().accept(this, param));
+    el.appendChild(whileOperation.getCondition().accept(this, param));
+    el.appendChild(whileOperation.getWhileCompStat().accept(this, param));
     return el;
   }
-
 
   public Element visit(IfThenOperation ifThenOperation, Void param) {
     Element el = this.xmlDocument.createElement("IfThen");
-    el.appendChild(ifThenOperation.getExpr().accept(this, param));
-    el.appendChild(ifThenOperation.getCs().accept(this, param));
+    el.appendChild(ifThenOperation.getCondition().accept(this, param));
+    el.appendChild(ifThenOperation.getThenCompStat().accept(this, param));
     return el;
   }
-
 
   public Element visit(IfThenElseOperation ifThenElseOperation, Void param) {
     Element el = this.xmlDocument.createElement("IfThenElse");
-    el.appendChild(ifThenElseOperation.getExpr().accept(this, param));
-    el.appendChild(ifThenElseOperation.getThenCompState().accept(this, param));
+    el.appendChild(ifThenElseOperation.getCondition().accept(this, param));
+    el.appendChild(ifThenElseOperation.getThenCompStat().accept(this, param));
     el.appendChild(ifThenElseOperation.getElseCompStat().accept(this, param));
     return el;
   }
-
 
   public Element visit(ReadOperation readOperation, Void param) {
     Element el = this.xmlDocument.createElement("ReadOp");
@@ -183,14 +169,11 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
   public Element visit(Vars vars, Void param) {
     Element el = this.xmlDocument.createElement("Vars");
-    vars.getIds().forEach(i -> el.appendChild(i.accept(this, param)));
+    vars.getVarsNames().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
-
   }
-
 
   @Override
   public Element visit(Args args, Void param) {
@@ -199,7 +182,6 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
   @Override
   public Element visit(WriteOperation writeOperation, Void param) {
     Element el = this.xmlDocument.createElement("WriteOp");
@@ -207,50 +189,43 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
   @Override
   public Element visit(AssignOperation assignOperation, Void param) {
     Element el = this.xmlDocument.createElement("AssignOp");
-    el.appendChild(assignOperation.getId().accept(this, param));
+    el.appendChild(assignOperation.getVarName().accept(this, param));
     el.appendChild(assignOperation.getExpr().accept(this, param));
     return el;
   }
 
-
   @Override
-  public Element visit(CallOpParamOperation callOpParamOperation, Void param) {
+  public Element visit(CallWithParamsOperation callWithParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("CallWithParam");
-    el.appendChild(callOpParamOperation.getFunctionName().accept(this, param));
-    callOpParamOperation.getArgs().forEach(i -> el.appendChild(i.accept(this, param)));
+    el.appendChild(callWithParamsOperation.getFunctionName().accept(this, param));
+    callWithParamsOperation.getArgs().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
-
 
   @Override
-  public Element visit(CallWithoutParam callWithoutParam, Void param) {
+  public Element visit(CallWithoutParamsOperation callWithoutParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("CallWithoutParam");
-    el.appendChild(callWithoutParam.getFunctionName().accept(this, param));
+    el.appendChild(callWithoutParamsOperation.getFunctionName().accept(this, param));
     return el;
   }
-
 
   @Override
   public Element visit(Program program, Void param) {
     Element el = this.xmlDocument.createElement("Program");
-    program.getDecls().forEach(i -> el.appendChild(i.accept(this, param)));
-    program.getStatements().forEach(i -> el.appendChild(i.accept(this, param)));
+    program.getDeclsNode().forEach(i -> el.appendChild(i.accept(this, param)));
+    program.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
-
 
   @Override
   public Element visit(TypeNode type, Void param) {
     Element el = this.xmlDocument.createElement("Type");
     el.setAttribute("value", type.getTypeName());
-
     return el;
   }
-
 
   @Override
   public Element visit(VarInitValue varInitValue, Void param) {
@@ -260,21 +235,11 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-/*
-  @Override
-  public Element visit(VarDeclInit varDeclInit, Void param) {
-    Element el = this.xmlDocument.createElement("VarDeclInit");
-    el.appendChild(varDeclInit.getValueId().getId().accept(this, param));
-    el.appendChild(varDeclInit.getValueId().getVarsInitValue().accept(this, param));
-    return el;
-  }*/
-
-
   @Override
   public Element visit(VarInitValueId varInitValueId, Void param) {
     Element el = this.xmlDocument.createElement("VarInitValueID");
-    el.appendChild(varInitValueId.getId().accept(this, param));
-    el.appendChild(varInitValueId.getVarInitValue().accept(this, param));
+    el.appendChild(varInitValueId.getVarName().accept(this, param));
+    el.appendChild(varInitValueId.getInitialValue().accept(this, param));
     return el;
   }
 
@@ -282,30 +247,17 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   @Override
   public Element visit(VarDeclaration varDeclaration, Void param) {
     Element el = this.xmlDocument.createElement("VarDeclarations");
-    el.appendChild(varDeclaration.getType().accept(this, param));
+    el.appendChild(varDeclaration.getTypeNode().accept(this, param));
     varDeclaration.getVariables().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
 
-
-/*  @Override
-  public Element visit(ListParams listParams, Void param) {
-    Element el = this.xmlDocument.createElement("ListParam");
-    el.appendChild(listParams.getParType().accept(this, param));
-    el.appendChild(listParams.getType().accept(this, param));
-    el.appendChild(listParams.getId().accept(this, param));
-    return el;
-  }
-*/
-
   @Override
   public Element visit(ParDeclsNode parDecls, Void param) {
-  /*  Element el = this.xmlDocument.createElement("ParDecls");
-    parDecls.getListParam().forEach(i -> el.appendChild(i.accept(this, param)));*/
     Element el = this.xmlDocument.createElement("ListParam");
     el.appendChild(parDecls.getParType().accept(this, param));
     el.appendChild(parDecls.getType().accept(this, param));
-    el.appendChild(parDecls.getId().accept(this, param));
+    el.appendChild(parDecls.getVarName().accept(this, param));
     return el;
   }
 
@@ -325,16 +277,14 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
   @Override
-  public Element visit(DefFunctionWithParam defFunctionWithParam, Void param) {
+  public Element visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithParam");
-    el.appendChild(defFunctionWithParam.getId().accept(this, param));
-    defFunctionWithParam.getParDecls().forEach(i -> el.appendChild(i.accept(this, param)));
-    el.appendChild(defFunctionWithParam.getBody().accept(this, param));
+    el.appendChild(defFunctionWithParamsOperation.getFunctionName().accept(this, param));
+    defFunctionWithParamsOperation.getdefListParams().forEach(i -> el.appendChild(i.accept(this, param)));
+    el.appendChild(defFunctionWithParamsOperation.getBody().accept(this, param));
     return el;
   }
-
 
   @Override
   public Element visit(BodyNode body, Void param) {
@@ -344,22 +294,18 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
   @Override
-  public Element visit(DefFunctionWithoutParams defFunctionWithoutParams, Void param) {
+  public Element visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithoutParams");
-    el.appendChild(defFunctionWithoutParams.getId().accept(this, param));
-    el.appendChild(defFunctionWithoutParams.getBody().accept(this, param));
+    el.appendChild(defFunctionWithoutParamsOperation.getFunctionName().accept(this, param));
+    el.appendChild(defFunctionWithoutParamsOperation.getBody().accept(this, param));
     return el;
   }
-
 
   @Override
   public Element visit(CompStat compStat, Void param) {
     Element el = this.xmlDocument.createElement("CompStat");
-    compStat.getStatements().forEach(i -> el.appendChild(i.accept(this, param)));
+    compStat.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
-
-
 }

@@ -5,7 +5,8 @@ import visitor.Visitor;
 
 public class ParType extends YasplNode {
   final String parType;
-  public ParType(Location left, Location right,String parType) {
+
+  public ParType(Location left, Location right, String parType) {
     super(left, right);
     this.parType = parType;
   }
@@ -16,7 +17,6 @@ public class ParType extends YasplNode {
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
-      return visitor.visit(this, param);
+    return visitor.visit(this, param);
   }
-
 }

@@ -4,28 +4,28 @@ import syntax.Args;
 import syntax.ArithOperation;
 import syntax.AssignOperation;
 import syntax.BodyNode;
-import syntax.BooleanExpression;
-import syntax.CallOpParamOperation;
-import syntax.CallWithoutParam;
-import syntax.Char_Const;
+import syntax.BooleanOperation;
+import syntax.CallWithParamsOperation;
+import syntax.CallWithoutParamsOperation;
+import syntax.CharConst;
 import syntax.CompStat;
-import syntax.DefDecl;
-import syntax.DefFunctionWithParam;
-import syntax.DefFunctionWithoutParams;
-import syntax.Double_Const;
+import syntax.DefDeclaration;
+import syntax.DefFunctionWithParamsOperation;
+import syntax.DefFunctionWithoutParamsOperation;
+import syntax.DoubleConst;
 import syntax.FalseExpression;
 import syntax.IdentifierExpression;
 import syntax.IfThenElseOperation;
 import syntax.IfThenOperation;
-import syntax.Int_Const;
+import syntax.IntConst;
 import syntax.MinusExpression;
 import syntax.NotExpression;
 import syntax.ParDeclsNode;
 import syntax.ParType;
 import syntax.Program;
 import syntax.ReadOperation;
-import syntax.RelopExpression;
-import syntax.String_Const;
+import syntax.RelopOperation;
+import syntax.StringConst;
 import syntax.TrueExpression;
 import syntax.TypeNode;
 import syntax.VarDeclaration;
@@ -33,16 +33,16 @@ import syntax.VarDecls;
 import syntax.VarInitValue;
 import syntax.VarInitValueId;
 import syntax.Vars;
-import syntax.WhileNode;
+import syntax.WhileOperation;
 import syntax.WriteOperation;
 
 public interface Visitor <T,P> {
 
   T visit(ArithOperation arithOperation, P param);
 
-  T visit(BooleanExpression booleanExpession, P param);
+  T visit(BooleanOperation booleanExpession, P param);
 
-  T visit(RelopExpression relopExpression, P param);
+  T visit(RelopOperation relopExpression, P param);
 
   T visit(MinusExpression minus, P param);
 
@@ -54,15 +54,15 @@ public interface Visitor <T,P> {
 
   T visit(IdentifierExpression identiferExpression, P param);
 
-  T visit(Int_Const intConst, P param);
+  T visit(IntConst intConst, P param);
 
-  T visit(Double_Const double_Const, P param);
+  T visit(DoubleConst double_Const, P param);
 
-  T visit(Char_Const char_Const, P param);
+  T visit(CharConst char_Const, P param);
 
-  T visit(String_Const string_Const, P param);
+  T visit(StringConst string_Const, P param);
 
-  T visit(WhileNode whileNode, P param);
+  T visit(WhileOperation whileNode, P param);
 
   T visit(IfThenOperation ifThenOperation, P param);
 
@@ -78,9 +78,9 @@ public interface Visitor <T,P> {
 
   T visit(AssignOperation assignOperation, P param);
 
-  T visit(CallOpParamOperation callOpParamOperation, P param);
+  T visit(CallWithParamsOperation callOpParamOperation, P param);
 
-  T visit(CallWithoutParam callWithoutParam, P param);
+  T visit(CallWithoutParamsOperation callWithoutParam, P param);
 
   T visit(Program program, P param);
 
@@ -101,11 +101,11 @@ public interface Visitor <T,P> {
 
   T visit(VarDecls varDecls, P param);
 
-  T visit(DefFunctionWithParam defFunctionWithParam, P param);
+  T visit(DefFunctionWithParamsOperation defFunctionWithParam, P param);
 
   T visit(BodyNode body, P param);
 
-  T visit(DefFunctionWithoutParams defFunctionWithoutParams, P param);
+  T visit(DefFunctionWithoutParamsOperation defFunctionWithoutParams, P param);
 
   T visit(CompStat compStat, P param);
 

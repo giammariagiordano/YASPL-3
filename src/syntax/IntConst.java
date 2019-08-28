@@ -3,22 +3,20 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class Double_Const extends Expression {
-  final double doubleNumber;
-  public Double_Const(Location left, Location right,double dn) {
+public class IntConst extends Expression {
+  private final int intConst;
+
+  public IntConst(Location left, Location right, int intConst) {
     super(left, right);
-    this.doubleNumber = dn;
+    this.intConst = intConst;
   }
 
-  
-  public double getDoubleNumber() {
-    return doubleNumber;
+  public int getIntConst() {
+    return intConst;
   }
-
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

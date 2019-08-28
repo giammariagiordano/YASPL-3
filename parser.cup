@@ -78,23 +78,23 @@ non terminal String Arith_op,Bool_op,Rel_op;
       // used to store evaluated subexpressions
 
 non terminal Program Programma;
-non terminal ArrayList<Declarations> Decls;
-non terminal ArrayList<StatementsNode> Statements;
+non terminal ArrayList<DeclarationNode> Decls;
+non terminal ArrayList<StatementNode> Statements;
 non terminal VarDeclaration Var_decl;
-non terminal  DefDecl Def_decl;
-non terminal StatementsNode Stat;
-non terminal  TypeNode Type;
-non terminal  ArrayList<VarInitValueId> Var_decls_init;
+non terminal DefDeclaration Def_decl;
+non terminal StatementNode Stat;
+non terminal TypeNode Type;
+non terminal ArrayList<VarInitValueId> Var_decls_init;
 non terminal VarInitValue Var_init_value;
-non terminal  Expression Expr;
-non terminal  ArrayList<IdentifierExpression>Vars;
+non terminal Expression Expr;
+non terminal ArrayList<IdentifierExpression>Vars;
 non terminal ArrayList<ParDeclsNode> Par_decls;
 non terminal BodyNode Body;
-non terminal  ArrayList<VarDeclaration>Var_decls;
-non terminal  ParType Par_type;
+non terminal ArrayList<VarDeclaration>Var_decls;
+non terminal ParType Par_type;
 non terminal ArrayList<Expression>Args;
-non terminal  Expression Bool_Expr;
-non terminal  CompStat Comp_stat;
+non terminal Expression Bool_Expr;
+non terminal CompStat Comp_stat;
 /* Precedences */
 
  /* Precedences */
@@ -146,8 +146,8 @@ Vars ::= ID:id COMMA Vars:vars 																	{:vars.add(new IdentifierExpress
 																								:}					
 		;
 		
-Def_decl ::= DEF ID:id LPAR Par_decls:pd RPAR Body:body 										{:RESULT = new DefFunctionWithParam(idxleft,idxright,id,pd,body);:}
-			|  DEF ID:id LPAR RPAR Body:body 													{:RESULT = new DefFunctionWithoutParams(idxleft,idxright,id,body);:}
+Def_decl ::= DEF ID:id LPAR Par_decls:pd RPAR Body:body 										{:RESULT = new DefFunctionWithParamsOperation(idxleft,idxright,id,pd,body);:}
+			|  DEF ID:id LPAR RPAR Body:body 													{:RESULT = new DefFunctionWithoutParamsOperation(idxleft,idxright,id,body);:}
 			;
 			
 Var_decls ::=  Var_decl:vd Var_decls:vds 														{:vds.add(vd); RESULT = vds;:}									
@@ -172,11 +172,11 @@ Body ::= LGPAR Var_decls:vd Statements:statements RGPAR											{:RESULT = new
 Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsxleft,varsxright,vars);:}													
 		| Args:args WRITE SEMI 																	{:RESULT = new WriteOperation(argsxleft,argsxright,args);:}
 		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}							
-		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallOpParamOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
-		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParam(idxleft,idxright,id);:}
+		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallWithParamsOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
+		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParamsOperation(idxleft,idxright,id);:}
  		| IF  LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
  		| IF  LPAR Bool_Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
-		| WHILE LPAR Bool_Expr:expr RPAR DO Comp_stat:cs										{:RESULT = new WhileNode(exprxleft,exprxright,expr,cs);:} 
+		| WHILE LPAR Bool_Expr:expr RPAR DO Comp_stat:cs										{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:} 
 			;	
 
 Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
@@ -194,15 +194,15 @@ Expr ::=  Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOpe
 		| TRUE:t																				{:RESULT = new TrueExpression(txleft,txright);:}								
 		| FALSE:f																				{:RESULT = new FalseExpression(fxleft,fxright);:}		 					
 		| ID: id																				{:RESULT = new IdentifierExpression(idxleft,idxright,id);:} 							 
-		| INT_CONST:i																			{:RESULT = new Int_Const(ixleft,ixright,i);:} 						
-		| DOUBLE_CONST :d																		{:RESULT = new Double_Const(dxleft,dxright,d);:}														
-		| CHAR_CONST:c 																			{:RESULT = new Char_Const(cxleft,cxright,c);:} 					
-		| STRING_CONST:s 																		{:RESULT = new String_Const(sxleft,sxright,s);:}
+		| INT_CONST:i																			{:RESULT = new IntConst(ixleft,ixright,i);:} 						
+		| DOUBLE_CONST :d																		{:RESULT = new DoubleConst(dxleft,dxright,d);:}														
+		| CHAR_CONST:c 																			{:RESULT = new CharConst(cxleft,cxright,c);:} 					
+		| STRING_CONST:s 																		{:RESULT = new StringConst(sxleft,sxright,s);:}
 		
 		;
 			
-Bool_Expr ::= Bool_Expr:expr1 Bool_op:bo Bool_Expr:expr2										{:RESULT = new BooleanExpression(boxleft,boxright,expr1,expr2,bo);:} 		
-		|Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopExpression(roxleft,roxright,expr1,expr2,ro);:} 		
+Bool_Expr ::= Bool_Expr:expr1 Bool_op:bo Bool_Expr:expr2										{:RESULT = new BooleanOperation(boxleft,boxright,expr1,expr2,bo);:} 		
+		|Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopOperation(roxleft,roxright,expr1,expr2,ro);:} 		
 		| Expr:be 																			{:RESULT = be; :}
 		;
 Arith_op ::= PLUS:s																				{:RESULT = "PLUS";:}													

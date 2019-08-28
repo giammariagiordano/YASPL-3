@@ -6,14 +6,14 @@ import visitor.Visitor;
 public class ParDeclsNode extends YasplNode {
   private final ParType parType;
   private final TypeNode type;
-  private final IdentifierExpression id;
+  private final IdentifierExpression varName;
 
   public ParDeclsNode(Location left, Location right, ParType parType, TypeNode type,
-      IdentifierExpression id) {
+      IdentifierExpression varName) {
     super(left, right);
     this.parType = parType;
     this.type = type;
-    this.id = id;
+    this.varName = varName;
   }
 
   public ParType getParType() {
@@ -24,17 +24,17 @@ public class ParDeclsNode extends YasplNode {
     return type;
   }
 
-  public IdentifierExpression getId() {
-    return id;
+  public IdentifierExpression getVarName() {
+    return varName;
   }
+
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
+
   @Override
   public String toString() {
-    // TODO Auto-generated method stub
     return super.toString();
   }
-
 }

@@ -5,8 +5,9 @@ import semantic.ReturnType;
 import visitor.Visitor;
 
 public abstract class YasplNode {
-  ComplexSymbolFactory.Location left,right;
+  ComplexSymbolFactory.Location left, right;
   private ReturnType returnType;
+
   public YasplNode(ComplexSymbolFactory.Location left, ComplexSymbolFactory.Location right) {
     this.left = left;
     this.right = right;
@@ -25,17 +26,18 @@ public abstract class YasplNode {
     return left;
   }
 
-  public abstract <T, P> T accept(Visitor <T,P> visitor, P param);
-  
+  public abstract <T, P> T accept(Visitor<T, P> visitor, P param);
+
   public ReturnType getNodeType() {
     return returnType;
-}
+  }
 
-/**
- * set a new node type
- * @param nodeType the new node type
- */
-public void setNodeType(ReturnType nodeType) {
+  /**
+   * set a new node type
+   * 
+   * @param nodeType the new node type
+   */
+  public void setNodeType(ReturnType nodeType) {
     this.returnType = nodeType;
-}
+  }
 }

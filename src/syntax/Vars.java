@@ -5,19 +5,19 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class Vars extends YasplNode {
- private List<IdentifierExpression> ids;
-  public Vars(Location left, Location right, List<IdentifierExpression> ids) {
-    super(left, right);
-    this.ids = ids;
-   }
+  private List<IdentifierExpression> varsNames;
 
-  public List<IdentifierExpression> getIds() {
-    return ids;
+  public Vars(Location left, Location right, List<IdentifierExpression> varsNames) {
+    super(left, right);
+    this.varsNames = varsNames;
+  }
+
+  public List<IdentifierExpression> getVarsNames() {
+    return varsNames;
   }
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }

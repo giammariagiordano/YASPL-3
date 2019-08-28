@@ -2,23 +2,27 @@ package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
-  
+
 public class ArithOperation extends Expression {
-  final Expression leftOperation,rightOperation;
-  final String  operation;
-  public ArithOperation(Location left, Location right,Expression es1,Expression es2,String op) {
+  final Expression leftOperand, rightOperand;
+  final String operation;
+
+  public ArithOperation(Location left, Location right, Expression leftOperand,
+      Expression rightOperand, String op) {
     super(left, right);
-    this.leftOperation = es1;
-    this.rightOperation = es2;
+    this.leftOperand = leftOperand;
+    this.rightOperand = rightOperand;
     this.operation = op;
   }
 
-  public Expression getLeftOperation() {
-    return leftOperation;
+  public Expression getLeftOperand() {
+    return leftOperand;
   }
-  public Expression getRightOperation() {
-    return rightOperation;
+
+  public Expression getRightOperand() {
+    return rightOperand;
   }
+
   public String getSimbolOperation() {
     return operation;
   }
@@ -27,5 +31,4 @@ public class ArithOperation extends Expression {
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }
-
 }
