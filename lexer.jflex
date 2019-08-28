@@ -70,13 +70,13 @@ EndOfLineComment     = "//" {InputCharacter}* {Newline}?
 DocumentationComment = "/**" {CommentContent} "*"+ "/"
 CommentContent       = ( [^*] | \*+ [^/*] )*
 
-
+any = .
 ID = ([:jletter:] | "_" ) ([:jletterdigit:] | [:jletter:] | "_" )*
 INT_CONST = 0 | [1-9][0-9]* /*Decimal number is 0 or start with a number that not is zero followed by 0 or plus digits*/
 DOUBLE_CONST = (0 | [1-9][0-9]*)\.[0-9]+
 /*String literal*/
 STRING_CONST = [^\r\n\"\\]
-CHAR_CONST = [:jletterdigit:]
+CHAR_CONST = '({any})?'
 
 
 %eofval{
@@ -139,7 +139,7 @@ CHAR_CONST = [:jletterdigit:]
   {ID}              { return symbol("ID",sym.ID , yytext()); 								  }
   {INT_CONST}       { return symbol( "INT_CONST",sym.INT_CONST, Integer.parseInt(yytext())); 	  }
   {DOUBLE_CONST}    { return symbol( "DOUBLE_CONST",sym.DOUBLE_CONST,  Double.parseDouble(yytext())); }
-  {CHAR_CONST}      { return symbol( "CHAR_CONST",sym.CHAR_CONST,(char)Integer.parseInt(yytext()));   }
+  {CHAR_CONST}      { return symbol( "CHAR_CONST",sym.CHAR_CONST,(char) Integer.parseInt(yytext()));   }
   
     /*When found " start state string*/
   \" { yybegin(STRING); sb.setLength(0); }

@@ -1,39 +1,6 @@
 package visitor;
 
-import syntax.Args;
-import syntax.ArithOperation;
-import syntax.AssignOperation;
-import syntax.BodyNode;
-import syntax.BooleanOperation;
-import syntax.CallWithParamsOperation;
-import syntax.CallWithoutParamsOperation;
-import syntax.CharConst;
-import syntax.CompStat;
-import syntax.DefFunctionWithParamsOperation;
-import syntax.DefFunctionWithoutParamsOperation;
-import syntax.DoubleConst;
-import syntax.FalseExpression;
-import syntax.IdentifierExpression;
-import syntax.IfThenElseOperation;
-import syntax.IfThenOperation;
-import syntax.IntConst;
-import syntax.MinusExpression;
-import syntax.NotExpression;
-import syntax.ParDeclsNode;
-import syntax.ParType;
-import syntax.Program;
-import syntax.ReadOperation;
-import syntax.RelopOperation;
-import syntax.StringConst;
-import syntax.TrueExpression;
-import syntax.TypeNode;
-import syntax.VarDeclaration;
-import syntax.VarDecls;
-import syntax.VarInitValue;
-import syntax.VarInitValueId;
-import syntax.Vars;
-import syntax.WhileOperation;
-import syntax.WriteOperation;
+import syntax.*;
 
 public interface Visitor <T,P> {
 

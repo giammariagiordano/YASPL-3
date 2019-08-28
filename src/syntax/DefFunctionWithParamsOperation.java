@@ -71,7 +71,7 @@ public class DefFunctionWithParamsOperation extends DefDeclaration implements Sc
   }
 
   public String getDomain() {
-    StringJoiner sj = new StringJoiner("X");
+    StringJoiner sj = new StringJoiner(",");
     defListParams.forEach(e -> sj.add(e.getNodeType().getValue()));
     return sj.toString();
   }
