@@ -76,7 +76,7 @@ INT_CONST = 0 | [1-9][0-9]* /*Decimal number is 0 or start with a number that no
 DOUBLE_CONST = (0 | [1-9][0-9]*)\.[0-9]+
 /*String literal*/
 STRING_CONST = [^\r\n\"\\]
-CHAR_CONST = '({any})?'
+CHAR_CONST = '([a-z]|[0-9]|[^$])?'
 
 
 %eofval{
@@ -139,7 +139,7 @@ CHAR_CONST = '({any})?'
   {ID}              { return symbol("ID",sym.ID , yytext()); 								  }
   {INT_CONST}       { return symbol( "INT_CONST",sym.INT_CONST, Integer.parseInt(yytext())); 	  }
   {DOUBLE_CONST}    { return symbol( "DOUBLE_CONST",sym.DOUBLE_CONST,  Double.parseDouble(yytext())); }
-  {CHAR_CONST}      { return symbol( "CHAR_CONST",sym.CHAR_CONST,(char) Integer.parseInt(yytext()));   }
+  {CHAR_CONST}      { return symbol( "CHAR_CONST",sym.CHAR_CONST,yytext().charAt(1));  }
   
     /*When found " start state string*/
   \" { yybegin(STRING); sb.setLength(0); }
