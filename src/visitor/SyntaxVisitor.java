@@ -1,7 +1,6 @@
 package visitor;
 
 import java.io.File;
-import java.util.Collections;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;

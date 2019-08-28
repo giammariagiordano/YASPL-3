@@ -29,7 +29,7 @@ def mulSom(in int op1, in int op2, out int res)
 	}
 	
 	while((i < op2)) do{
-	//"sono nel while"//
+	//"sono nel while"
 		risultato = risultato + op1;
 		i = i + 1;
 	}
