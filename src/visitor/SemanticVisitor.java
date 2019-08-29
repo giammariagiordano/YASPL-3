@@ -308,11 +308,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         && (this.isUndefined(assignOperation.getExpr()))) {
       ReturnType identifier = assignOperation.getVarName().getNodeType();
       ReturnType expression = assignOperation.getExpr().getNodeType();
-      /*
-       * if ((identifier == ReturnType.INTEGER || identifier == ReturnType.DOUBLE) && (expression ==
-       * ReturnType.INTEGER || expression == ReturnType.DOUBLE)) {
-       * assignOperation.setNodeType(ReturnType.VOID); }
-       */
       if (identifier == ReturnType.INTEGER && expression == ReturnType.INTEGER) {
         assignOperation.setNodeType(ReturnType.VOID);
       } else if (identifier == ReturnType.DOUBLE && expression == ReturnType.DOUBLE) {

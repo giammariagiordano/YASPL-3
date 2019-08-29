@@ -1,6 +1,7 @@
 head
 char e;
 
+
 start
 
-e = 'cazzo'; 
+e = '@';
