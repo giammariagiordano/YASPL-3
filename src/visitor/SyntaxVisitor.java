@@ -63,7 +63,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
 
   public Element visit(ArithOperation arithOperation, Void param) {
     Element el = this.xmlDocument.createElement("ArithOp");
-    el.setAttribute("operator", arithOperation.getSimbolOperation());
+    el.setAttribute("operator", arithOperation.getOperation());
     el.appendChild(arithOperation.getLeftOperand().accept(this, param));
     el.appendChild(arithOperation.getRightOperand().accept(this, param));
     return el;

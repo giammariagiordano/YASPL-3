@@ -23,7 +23,7 @@ public class ArithOperation extends Expression {
     return rightOperand;
   }
 
-  public String getSimbolOperation() {
+  public String getOperation() {
     return operation;
   }
 

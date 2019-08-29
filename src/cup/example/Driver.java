@@ -29,8 +29,8 @@ class Driver {
       SymbolTable symbolTable = new StackSymbolTable(stringTable);
       SemanticVisitor semanticVisitor = new SemanticVisitor(symbolTable);
       semanticVisitor.visit(program, Logger.getLogger(Driver.class.getSimpleName()));
-      if(program.getNodeType() == ReturnType.UNDEFINED) {
+      /*if(program.getNodeType() == ReturnType.UNDEFINED) {
           throw new Exception("Semantic Error");
-      }
+      }*/
 	}
 }
