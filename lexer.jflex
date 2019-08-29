@@ -167,4 +167,4 @@ CHAR_CONST = '({any})?'
   {Newline} { throw new RuntimeException("Unterminated string at end of line"); }
   }
   <<EOF>>  { return symbol("EOF",sym.EOF); }
-  [^]          { emit_warning("Unrecognized character '" +yytext()+"' -- ignored"); }
+[^]        {  throw new Error("Illegal character <"+yytext()+"> at line "+(yyline+1)+", column "+yycolumn);}
