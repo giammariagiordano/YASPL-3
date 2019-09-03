@@ -5,8 +5,9 @@ string c = "ciao";
 bool d = true;
 char e = 'c';
 start
-a->;
-b->;
-c->;
-d->;
-e->;
+4->;
+4.5->;
+true->;
+false->;
+'c'->;
+"test"->;
