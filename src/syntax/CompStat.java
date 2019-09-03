@@ -1,5 +1,6 @@
 package syntax;
 
+import java.util.Collections;
 import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
@@ -9,6 +10,7 @@ public class CompStat extends StatementNode {
 
   public CompStat(Location left, Location right, List<StatementNode> statementsNode) {
     super(left, right);
+    Collections.reverse(statementsNode);
     this.statementsNode = statementsNode;
   }
 

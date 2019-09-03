@@ -264,7 +264,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   @Override
   public Element visit(ParType parType, Void param) {
     Element el = this.xmlDocument.createElement("ParType");
-    el.setAttribute("value", parType.getParType());
+    el.setAttribute("value", parType.getType());
     return el;
   }
 

@@ -4,15 +4,15 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 public class ParType extends YasplNode {
-  final String parType;
+  final String type;
 
-  public ParType(Location left, Location right, String parType) {
+  public ParType(Location left, Location right, String type) {
     super(left, right);
-    this.parType = parType;
+    this.type = type;
   }
 
-  public String getParType() {
-    return parType;
+  public String getType() {
+    return type;
   }
 
   @Override

@@ -1,5 +1,7 @@
 head
 int a;
-char c;
+def f(out int b){
+b = b+b;
+}
 start
-c = 'a';
+f(a);

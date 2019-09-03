@@ -10,6 +10,7 @@ import semantic.Scope;
 import semantic.SemanticSymbol;
 import semantic.SymbolTable;
 import semantic.Variable;
+import semantic.VariableType;
 import syntax.*;
 
 public class SemanticVisitor implements Visitor<ReturnType, Logger> {
@@ -394,7 +395,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       param.severe(GenerateError.ErrorGenerate("Error Program", program));
     }
     program.attachScope(this.symbolTable.getCurrentScope());
-    this.symbolTable.exitScope();
+   // this.symbolTable.exitScope();
     return program.getNodeType();
   }
 
@@ -505,9 +506,9 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
   @Override
   public ReturnType visit(ParType parType, Logger param) {
-    if (parType.getParType().equals("in") || parType.getParType().equals("out")
-        || parType.getParType().equals("inout")) {
-      parType.setNodeType(ReturnType.getEnumFor(parType.getParType()));
+    if (parType.getType().equals("in") || parType.getType().equals("out")
+        || parType.getType().equals("inout")) {
+      parType.setNodeType(ReturnType.getEnumFor(parType.getType()));
     } else {
       param.severe(GenerateError.ErrorGenerate("ParType: invalid parType", parType));
       parType.setNodeType(ReturnType.UNDEFINED);
@@ -546,7 +547,14 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       defFunctionWithParamsOperation.getdefListParams().forEach(p -> {
         int addr = this.symbolTable.findAddr(p.getVarName().getName());
         Variable var = new Variable(p.getReturnType());
-        this.symbolTable.add(addr, var);
+        if(p.getParType().getType().equals("out")|| 
+            p.getParType().getType().equals("inout")) {
+          var.setVarType(VariableType.OUTPUT);
+          this.symbolTable.add(addr, var);
+        }
+        else {
+          this.symbolTable.add(addr, var);
+        }
       });
       defFunctionWithParamsOperation.getBody().accept(this, param);
       if (checkAll(defFunctionWithParamsOperation.getdefListParams())

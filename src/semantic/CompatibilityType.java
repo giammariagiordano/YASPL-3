@@ -20,10 +20,11 @@ public class CompatibilityType {
   
   //add operation
   public static ReturnType ADDOP [][] = {
-      {ReturnType.INTEGER, ReturnType.DOUBLE, ReturnType.STRING, ReturnType.UNDEFINED, ReturnType.UNDEFINED},
+      //int double string char bool
+      {ReturnType.INTEGER, ReturnType.DOUBLE, ReturnType.STRING, ReturnType.INTEGER, ReturnType.UNDEFINED},
       {ReturnType.DOUBLE, ReturnType.DOUBLE, ReturnType.STRING, ReturnType.UNDEFINED, ReturnType.UNDEFINED},
       {ReturnType.STRING, ReturnType.STRING, ReturnType.STRING, ReturnType.STRING, ReturnType.STRING},
-      {ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.STRING, ReturnType.UNDEFINED,ReturnType.UNDEFINED},
+      {ReturnType.INTEGER,ReturnType.UNDEFINED, ReturnType.STRING, ReturnType.INTEGER,ReturnType.UNDEFINED},
       {ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.STRING, ReturnType.UNDEFINED,ReturnType.UNDEFINED}
   };
   
