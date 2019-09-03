@@ -335,17 +335,16 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
   @Override
   public String visit(AssignOperation assignOperation, Scope param) {
-    StringBuilder builder = new StringBuilder();
+        StringBuilder builder = new StringBuilder();
     assignOperation.getVarName().accept(this, param);
     assignOperation.getExpr().accept(this, param);
-    int addr = this.symbolTable.findAddr(assignOperation.getVarName().getName());
-    Scope scope = this.symbolTable.lookup(addr);
-    /*Variable x =(Variable) scope.get(addr);
+   /* Variable x =(Variable) scope.get(addr);
     if(x.getVarType() == VariableType.OUTPUT) {
       builder.append("*"+assignOperation.getVarName().getName());
-    } else {*/
+    } else {
     builder.append(assignOperation.getVarName().getName());
-  //  }
+   }*/
+    builder.append(assignOperation.getVarName().accept(this, param));
     builder.append("=");
     builder.append(assignOperation.getExpr().accept(this, param)).append(";\n");
     return builder.toString();
@@ -374,7 +373,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
   @Override
   public String visit(Program program, Scope param) {
-    //this.symbolTable.enterScope();
+   // this.symbolTable.enterScope();
     String declarations = this.compactCode(program.getDeclsNode(), program.getAttachScope());
     String statements = this.compactCode(program.getStatementsNode(), program.getAttachScope());
     StringBuilder programBuilder = new StringBuilder();
@@ -436,11 +435,13 @@ public class CodeVisitor implements Visitor<String, Scope> {
     String parType = parDeclsNode.getParType().accept(this, param);
     String type = parDeclsNode.getType().accept(this, param);
     String id = parDeclsNode.getVarName().accept(this, param);
+    
+   
     type = toCType(type);
     builder.append(type).append(" ");
-   if (parType.equals("out") || parType.equals("inout")) {
+   /*if (parType.equals("out") || parType.equals("inout")) {
       builder.append("*");
-    }   
+    }   */
     builder.append(id);
     return builder.toString();
   }
@@ -458,19 +459,20 @@ public class CodeVisitor implements Visitor<String, Scope> {
   // void nomeFunzione(int a,int *b){}
   @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
+    
     StringBuilder builder = new StringBuilder();
     StringJoiner listParams = new StringJoiner(", ");
     String FunctionName = defFunctionWithParamsOperation.getFunctionName().accept(this, param);
     defFunctionWithParamsOperation.getdefListParams()
-        .forEach(p -> listParams.add(p.accept(this, param)));
-    String body = defFunctionWithParamsOperation.getBody().accept(this, param);
+        .forEach(p -> listParams.add(p.accept(this,defFunctionWithParamsOperation.getAttachScope())));
+    String body = defFunctionWithParamsOperation.getBody().accept(this, defFunctionWithParamsOperation.getAttachScope());
     builder.append("void").append(" ");
     builder.append(FunctionName).append("(");
     builder.append(listParams).append(") {\n");
     builder.append(body).append("\n}\n");
     return builder.toString();
   }
-
+// in getBody devi passare lo scope della sua  funzione
   @Override
   public String visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation,
       Scope param) {
@@ -478,7 +480,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     builder.append("void").append(" ");
     builder.append(defFunctionWithoutParamsOperation.getFunctionName().accept(this, param));
     builder.append("() {\n");
-    builder.append(defFunctionWithoutParamsOperation.getBody().accept(this, param));
+    builder.append(defFunctionWithoutParamsOperation.getBody().accept(this, defFunctionWithoutParamsOperation.getAttachScope()));
     builder.append("\n}");
     return builder.toString();
   }

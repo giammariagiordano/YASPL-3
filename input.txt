@@ -1,7 +1,7 @@
 head
-int a;
+string b = "ciao";
 def f(out int b){
 b = b+b;
 }
 start
-f(a);
+

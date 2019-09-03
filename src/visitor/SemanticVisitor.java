@@ -202,9 +202,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       if (whileOperation.getCondition().getNodeType() == ReturnType.BOOLEAN) {
         whileOperation.setNodeType(ReturnType.VOID);
       } else {
-        param
-            .severe(GenerateError.ErrorGenerate("WhileOperation: expected 'BOOLEAN' but I found: '"
-                + whileOperation.getCondition().getNodeType() + "'", whileOperation));
+        param.severe(GenerateError.ErrorGenerate("WhileOperation: expected 'BOOLEAN' but I found: '"
+            + whileOperation.getCondition().getNodeType() + "'", whileOperation));
         whileOperation.setNodeType(ReturnType.UNDEFINED);
       }
     } else {
@@ -223,8 +222,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       if (ifThenOperation.getCondition().getNodeType() == ReturnType.BOOLEAN) {
         ifThenOperation.setNodeType(ReturnType.VOID);
       } else {
-        param.severe(
-            GenerateError.ErrorGenerate("IfThenOperation: expected 'BOOLEAN' but I found: '"
+        param
+            .severe(GenerateError.ErrorGenerate("IfThenOperation: expected 'BOOLEAN' but I found: '"
                 + ifThenOperation.getCondition().getNodeType() + "", ifThenOperation));
         ifThenOperation.setNodeType(ReturnType.UNDEFINED);
       }
@@ -395,7 +394,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       param.severe(GenerateError.ErrorGenerate("Error Program", program));
     }
     program.attachScope(this.symbolTable.getCurrentScope());
-   // this.symbolTable.exitScope();
+    // this.symbolTable.exitScope();
     return program.getNodeType();
   }
 
@@ -439,11 +438,12 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
             .equals(varInitValueId.getInitialValue().getExpr().getNodeType())) {
           varInitValueId.setNodeType(ReturnType.VOID);
         } else {
-          param.severe(GenerateError.ErrorGenerate(
-              "VarInitValueId: expected '" + varInitValueId.getVarName().getNodeType()
-                  + "' for variable '" + varInitValueId.getVarName().getName() + "' but I found "
-                  + varInitValueId.getInitialValue().getExpr().getNodeType(),
-              varInitValueId));
+          param
+              .severe(GenerateError.ErrorGenerate(
+                  "VarInitValueId: expected '" + varInitValueId.getVarName().getNodeType()
+                      + "' for variable '" + varInitValueId.getVarName().getName()
+                      + "' but I found " + varInitValueId.getInitialValue().getExpr().getNodeType(),
+                  varInitValueId));
           varInitValueId.setNodeType(ReturnType.UNDEFINED);
         }
       }
@@ -547,15 +547,14 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       defFunctionWithParamsOperation.getdefListParams().forEach(p -> {
         int addr = this.symbolTable.findAddr(p.getVarName().getName());
         Variable var = new Variable(p.getReturnType());
-        if(p.getParType().getType().equals("out")|| 
-            p.getParType().getType().equals("inout")) {
+        if (p.getParType().getType().equals("out") || p.getParType().getType().equals("inout")) {
           var.setVarType(VariableType.OUTPUT);
           this.symbolTable.add(addr, var);
-        }
-        else {
+        } else {
           this.symbolTable.add(addr, var);
         }
       });
+      //this.symbolTable.enterScope();
       defFunctionWithParamsOperation.getBody().accept(this, param);
       if (checkAll(defFunctionWithParamsOperation.getdefListParams())
           && isUndefined(defFunctionWithParamsOperation.getBody())) {
@@ -570,11 +569,40 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       this.symbolTable.exitScope();
     } else {
       defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate("DefFunctionWithParamsOperation: " + "function '"
-          + defFunctionWithParamsOperation.getFunctionName().getName() + "' already declared",
+      param.severe(GenerateError.ErrorGenerate(
+          "DefFunctionWithParamsOperation: " + "function '"
+              + defFunctionWithParamsOperation.getFunctionName().getName() + "' already declared",
           defFunctionWithParamsOperation));
     }
     return defFunctionWithParamsOperation.getNodeType();
+    /*
+     * defFunctionWithParamsOperation.getFunctionName().accept(this, param); if
+     * (!isUndefined(defFunctionWithParamsOperation.getFunctionName())) { int addrFunction =
+     * this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
+     * FunctionSymbol fs = new FunctionSymbol(ReturnType.VOID, "undefined", "undefined");
+     * this.symbolTable.add(addrFunction, fs); this.symbolTable.enterScope();
+     * defFunctionWithParamsOperation.getdefListParams().forEach(p -> p.accept(this, param));
+     * defFunctionWithParamsOperation.getdefListParams().forEach(p -> { int addr =
+     * this.symbolTable.findAddr(p.getVarName().getName()); Variable var = new
+     * Variable(p.getReturnType()); if(p.getParType().getType().equals("out")||
+     * p.getParType().getType().equals("inout")) { var.setVarType(VariableType.OUTPUT);
+     * this.symbolTable.add(addr, var); } else { this.symbolTable.add(addr, var); }
+     * 
+     * }); defFunctionWithParamsOperation.getBody().accept(this, param); if
+     * (checkAll(defFunctionWithParamsOperation.getdefListParams()) &&
+     * isUndefined(defFunctionWithParamsOperation.getBody())) {
+     * defFunctionWithParamsOperation.setNodeType(ReturnType.VOID);
+     * fs.setInputDom(defFunctionWithParamsOperation.getDomain()); } else {
+     * defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
+     * param.severe(GenerateError.ErrorGenerate(
+     * "DefFunctionWithParamsOperation: invalid parameters", defFunctionWithParamsOperation)); }
+     * defFunctionWithParamsOperation.attachScope(this.symbolTable.getCurrentScope());
+     * this.symbolTable.exitScope(); } else {
+     * defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
+     * param.severe(GenerateError.ErrorGenerate("DefFunctionWithParamsOperation: " + "function '" +
+     * defFunctionWithParamsOperation.getFunctionName().getName() + "' already declared",
+     * defFunctionWithParamsOperation)); } return defFunctionWithParamsOperation.getNodeType();
+     */
   }
 
   @Override
