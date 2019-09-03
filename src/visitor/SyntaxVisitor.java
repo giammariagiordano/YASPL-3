@@ -100,13 +100,13 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
 
   public Element visit(TrueExpression trueExpression, Void param) {
     Element el = this.xmlDocument.createElement("true");
-    el.setAttribute("value", String.valueOf(trueExpression.getTrue()));
+    el.setAttribute("value", String.valueOf(trueExpression.getValue()));
     return el;
   }
 
   public Element visit(FalseExpression falseExpression, Void param) {
     Element el = this.xmlDocument.createElement("false");
-    el.setAttribute("value", String.valueOf(falseExpression.getFalse()));
+    el.setAttribute("value", String.valueOf(falseExpression.getValue()));
     return el;
   }
 
@@ -118,25 +118,25 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
 
   public Element visit(IntConst intConst, Void param) {
     Element el = this.xmlDocument.createElement("INT_CONST");
-    el.setAttribute("NUMBER", String.valueOf(intConst.getIntConst()));
+    el.setAttribute("NUMBER", String.valueOf(intConst.getValue()));
     return el;
   }
 
   public Element visit(DoubleConst doubleConst, Void param) {
     Element el = this.xmlDocument.createElement("DOUBLE_CONST");
-    el.setAttribute("Double_Number", String.valueOf(doubleConst.getDoubleConst()));
+    el.setAttribute("Double_Number", String.valueOf(doubleConst.getValue()));
     return el;
   }
 
   public Element visit(CharConst charConst, Void param) {
     Element el = this.xmlDocument.createElement("CHAR_CONST");
-    el.setAttribute("CHAR_CONST", String.valueOf(charConst.getCharConst()));
+    el.setAttribute("CHAR_CONST", String.valueOf(charConst.getValue()));
     return el;
   }
 
   public Element visit(StringConst stringConst, Void param) {
     Element el = this.xmlDocument.createElement("STRING_CONST");
-    el.setAttribute("STRING_CONST", String.valueOf(stringConst.getStringConst()));
+    el.setAttribute("STRING_CONST", String.valueOf(stringConst.getValue()));
     return el;
   }
 

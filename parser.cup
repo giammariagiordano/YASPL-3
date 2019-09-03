@@ -63,20 +63,20 @@ scan with {: return lexer.next_token(); :};*/
 
 
 /* Terminals (tokens returned by the scanner). */
-terminal String  HEAD, START, INT, BOOL, DOUBLE, STRING, CHAR, DEF,  TRUE, FALSE, IF, THEN, ELSE, WHILE, DO, IN, OUT, INOUT, SEMI, RPAR, LGPAR,
-RGPAR, COMMA, PLUS, MINUS,  TIMES, DIV, LT, GT, ASSIGN, EQ, LE, GE, UMINUS,
+terminal String HEAD, START, INT, BOOL, DOUBLE, STRING, CHAR, DEF,  TRUE, FALSE, IF, THEN, ELSE, WHILE, DO, IN, OUT, INOUT, SEMI, RPAR, LGPAR,
+RGPAR, COMMA, PLUS, MINUS, TIMES, DIV, LT, GT, ASSIGN, EQ, LE, GE, UMINUS,
 NOT, AND, OR, READ, WRITE;
 terminal String LPAR;
-terminal  Integer  INT_CONST;        // our scanner provides numbers as integers
+terminal Integer INT_CONST;        // our scanner provides numbers as integers
 terminal Double DOUBLE_CONST;
 terminal String STRING_CONST;
-terminal  Character CHAR_CONST;
+terminal Character CHAR_CONST;
 terminal String ID;
 
 /* Non terminals */
-non terminal String Arith_op,Bool_op,Rel_op;
+//non terminal String Arith_op,Bool_op,Rel_op;
 
-      // used to store evaluated subexpressions
+ // used to store evaluated subexpressions
 
 non terminal Program Programma;
 non terminal ArrayList<DeclarationNode> Decls;
@@ -96,15 +96,8 @@ non terminal ParType Par_type;
 non terminal ArrayList<Expression>Args;
 non terminal Expression Bool_Expr;
 non terminal CompStat Comp_stat;
-/* Precedences */
 
- /* Precedences */
-/*precedence nonassoc ELSE;
-precedence left PLUS, MINUS, OR;
-precedence left TIMES, DIV, AND;
-/* Due occorrenze consecutive di terminali non associativi generano errore, usato per operazioni di confronto */
-//precedence nonassoc GT, GE, LT, LE, EQ;
-//precedence left UMINUS, NOT, COMMA;
+/* Precedences */
 precedence left COMMA;
 precedence right ASSIGN;
 precedence left OR;
@@ -116,29 +109,29 @@ precedence nonassoc GT, GE, LT, LE, EQ;
 
 
 /* The grammar rules */
-Programma ::= HEAD:h Decls:decls START Statements:statements 	{:RESULT = new Program(hxleft,hxright,decls,statements);:}		
+Programma ::= HEAD:h Decls:decls START Statements:statements 									{:RESULT = new Program(hxleft,hxright,decls,statements);:}		
 			;
 
-Decls ::= Var_decl:var_decl  Decls:decls 										{:decls.add(var_decl); RESULT = decls;:}													
-			| Def_decl:def_decl Decls:decls 									{:decls.add(def_decl); RESULT = decls;:}
-			| 																	{:RESULT = new ArrayList<>();:}										 
+Decls ::= Var_decl:var_decl  Decls:decls 														{:decls.add(var_decl); RESULT = decls;:}													
+			| Def_decl:def_decl Decls:decls 													{:decls.add(def_decl); RESULT = decls;:}
+			| 																					{:RESULT = new ArrayList<>();:}										 
 			;
 			
-Statements ::= Stat:stat Statements:statements 									{:statements.add(stat); RESULT = statements;:}
-			|																	{:RESULT = new ArrayList<>();:}
+Statements ::= Stat:stat Statements:statements 													{:statements.add(stat); RESULT = statements;:}
+			|																					{:RESULT = new ArrayList<>();:}
 			;
 
-Var_decl ::= Type:t Var_decls_init:vdi SEMI 									{:RESULT = new VarDeclaration(txleft,txright,t,vdi);:}										
+Var_decl ::= Type:t Var_decls_init:vdi SEMI 													{:RESULT = new VarDeclaration(txleft,txright,t,vdi);:}										
 			;
 		
-Type ::=  INT:i																	{:RESULT = new TypeNode(ixleft,ixright,"int");:}					
-		| BOOL:b																{:RESULT = new TypeNode(bxleft,bxright,"bool");;:}						
-		| DOUBLE:d																{:RESULT = new TypeNode(dxleft,dxright,"double");:}
-		| STRING:s																{:RESULT = new TypeNode(sxleft,sxright,"string");:}
-		| CHAR:c																{:RESULT = new TypeNode(cxleft,cxright,"char");:}
+Type ::=  INT:i																					{:RESULT = new TypeNode(ixleft,ixright,"int");:}					
+		| BOOL:b																				{:RESULT = new TypeNode(bxleft,bxright,"bool");;:}						
+		| DOUBLE:d																				{:RESULT = new TypeNode(dxleft,dxright,"double");:}
+		| STRING:s																				{:RESULT = new TypeNode(sxleft,sxright,"string");:}
+		| CHAR:c																				{:RESULT = new TypeNode(cxleft,cxright,"char");:}
 		;
 			
-Var_decls_init ::= ID:id Var_init_value:viv  COMMA Var_decls_init:vdi 				{:vdi.add(new VarInitValueId(idxleft,idxright,id,viv)); RESULT =vdi;:}						
+Var_decls_init ::= ID:id Var_init_value:viv  COMMA Var_decls_init:vdi 							{:vdi.add(new VarInitValueId(idxleft,idxright,id,viv)); RESULT =vdi;:}						
 				|  ID:id Var_init_value:viv										 				{:
 																									RESULT = new ArrayList<VarInitValueId>();
 																									RESULT.add(new VarInitValueId(idxleft,idxright,id,viv));
@@ -186,7 +179,7 @@ Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsx
 		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParamsOperation(idxleft,idxright,id);:}
  		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
  		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
-		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs										{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:} 
+		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:} 
 			;	
 
 Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
@@ -195,7 +188,33 @@ Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = arg
 		
 Comp_stat ::= LGPAR Statements:cs RGPAR															{:RESULT = new CompStat(csxleft,csxright,cs);:} 	
 			;
-/*			
+
+Expr ::= Expr:expr1 PLUS Expr:expr2																{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "PLUS"); :}
+		|Expr:expr1 MINUS Expr:expr2 															{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "MINUS"); :}
+		|Expr:expr1 TIMES Expr:expr2 															{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "TIMES"); :}
+		|Expr:expr1 DIV Expr:expr2 																{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "DIV"); :}	
+		|Expr:expr1 AND Expr:expr2																{:RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"AND"); :}
+		|Expr:expr1 OR Expr:expr2 																{:RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"OR");:}
+		|Expr:expr1 GT Expr:expr2																{: RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GT"); :}
+		|Expr:expr1 GE Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GE"); :}
+		|Expr:expr1 LT Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"LT"); :}
+		|Expr:expr1 LE Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"LE"); :}
+		|Expr:expr1 EQ Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"EQ"); :}
+		|MINUS Expr:expr 																		{:RESULT = new MinusExpression(exprxleft,exprxright,expr); :} 
+		%prec UMINUS				
+		|NOT Expr:expr																			{:RESULT = new NotExpression(exprxleft,exprxright,expr); :}
+		|LPAR Expr:expr RPAR																	{:RESULT = expr; :}
+		|TRUE:t																					{:RESULT =  new TrueExpression(txleft,txright); :}
+		|FALSE:f																				{:RESULT = new FalseExpression(fxleft,fxright); :}
+		|ID:id																					{:RESULT = new IdentifierExpression(idxleft,idxright,id); :}							
+		|INT_CONST:i																			{:RESULT = new IntConst(ixleft,ixright,i); :}	
+		|DOUBLE_CONST:d																			{:RESULT = new  DoubleConst(dxleft,dxright,d);:}
+		|CHAR_CONST:c																			{:RESULT = new CharConst(cxleft,cxright,c); :}
+		|STRING_CONST:s																			{:RESULT = new StringConst(sxleft,sxright,s); :}
+		;
+		
+		
+	/*			
 Expr ::=  Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(aoxleft,aoxright,expr1,expr2,ao);:} 		
 		| Expr:expr1 Bool_op:bo Expr:expr2														{:RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,bo);:} 
 		| Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopOperation(roxleft,roxright,expr1,expr2,ro);:} 		
@@ -230,25 +249,4 @@ Rel_op	::= GE:s																				{:RESULT = "GE";:}
 		| 	EQ:s																				{:RESULT = "EQ";:}
 		;
        */
-       Expr ::= Expr:expr1 PLUS Expr:expr2	{: RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "PLUS"); :}
-		|Expr:expr1 MINUS Expr:expr2 {: RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "MINUS"); :}
-		|Expr:expr1 TIMES Expr:expr2 {: RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "TIMES"); :}
-		|Expr:expr1 DIV Expr:expr2 {: RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "DIV"); :}	
-		|Expr:expr1 AND Expr:expr2		{: RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"AND"); :}
-		|Expr:expr1 OR Expr:expr2 {: RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"OR");:}
-		|Expr:expr1 GT Expr:expr2		{: RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GT"); :}
-		|Expr:expr1 GE Expr:expr2 {: RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GE"); :}
-		|Expr:expr1 LT Expr:expr2 {: RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"LT"); :}
-		|Expr:expr1 LE Expr:expr2 {: RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"LE"); :}
-		|Expr:expr1 EQ Expr:expr2 {: RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"EQ"); :}
-		|MINUS Expr:expr {: RESULT = new MinusExpression(exprxleft,exprxright,expr); :} %prec UMINUS				
-		|NOT Expr:expr								{: RESULT = new NotExpression(exprxleft,exprxright,expr); :}
-		|LPAR Expr:expr RPAR						{: RESULT = expr; :}
-		|TRUE:t									{: RESULT =  new TrueExpression(txleft,txright); :}
-		|FALSE:f										{: RESULT = new FalseExpression(fxleft,fxright); :}
-		|ID:id										{:RESULT = new IdentifierExpression(idxleft,idxright,id); :}							
-		|INT_CONST:i							{: RESULT = new IntConst(ixleft,ixright,i); :}	
-		|DOUBLE_CONST:d							{: RESULT = new  DoubleConst(dxleft,dxright,d);:}
-		|CHAR_CONST:c							{: RESULT = new CharConst(cxleft,cxright,c); :}
-		|STRING_CONST:s							{: RESULT = new StringConst(sxleft,sxright,s); :}
-		;
+	

@@ -1,7 +1,12 @@
 head
-string b = "ciao";
-def f(out int b){
-b = b+b;
-}
+int a = 5;
+double b = 5.3;
+string c = "ciao";
+bool d = true;
+char e = 'c';
 start
-
+a->;
+b->;
+c->;
+d->;
+e->;

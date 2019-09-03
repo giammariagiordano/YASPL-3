@@ -3,16 +3,12 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class CharConst extends Expression {
+public class CharConst extends Expression implements iConst<Character>{
   char charConst;
 
   public CharConst(Location left, Location right, char charConst) {
     super(left, right);
     this.charConst = charConst;
-  }
-
-  public char getCharConst() {
-    return charConst;
   }
 
   public void setCharConst(char charConst) {
@@ -22,5 +18,10 @@ public class CharConst extends Expression {
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
+  }
+
+  @Override
+  public Character getValue() {
+    return charConst;
   }
 }
