@@ -2,13 +2,7 @@ package visitor;
 
 import java.util.List;
 import java.util.StringJoiner;
-import semantic.FunctionSymbol;
-import semantic.ReturnType;
-import semantic.Scope;
-import semantic.SemanticSymbol;
-import semantic.SymbolTable;
-import semantic.Variable;
-import semantic.VariableType;
+import semantic.*;
 import syntax.*;
 
 public class CodeVisitor implements Visitor<String, Scope> {
@@ -180,7 +174,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
       sj.add(e.accept(this, param));
     });
     builder.append(sj).toString();
-    System.out.println(builder.toString());
     return builder.toString();
   }
 
@@ -193,14 +186,12 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
       } else if (e instanceof ArithOperation) {
         builder.append(mathPrint(e, param));
-        System.out.println(builder.toString());
       } else if (e instanceof iConst) {
         StringJoiner sj = new StringJoiner(",");
         builder.append("printf(\"");
         builder.append(strcat(e, param, sj) + "\\n\",");
         builder.append(sj.toString());
         builder.append(");\n");
-        System.out.println(builder.toString());
       }
     });
     return builder.toString();
@@ -305,10 +296,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
         paramsCall.add(callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
       }
     }
-    System.out.println(paramsCall.toString());
     builder.append(paramsCall);
     builder.append(");\n");
-    System.out.println(paramsCall.toString());
     return builder.toString();
   }
 

@@ -14,6 +14,7 @@ import syntax.Program;
 import visitor.CodeVisitor;
 import visitor.SemanticVisitor;
 import visitor.SyntaxVisitor;
+import java.util.Scanner;
 
 class Driver {
   private static StringTable stringTable = new ArrayStringTable();
@@ -21,26 +22,28 @@ class Driver {
   private static final String OUTPUT_PATH = System.getProperty("user.home");
   private static StringBuilder pathBuilder = new StringBuilder();
 	public static void main(String[] args) throws Exception {
-	  InputStream   is = new FileInputStream(new File("input.txt"));
+	  String fileName;
+	  Scanner sc = new Scanner(System.in);
+	  System.out.println("Insert file name");
+	  fileName = sc.nextLine();
+	  InputStream   is = new FileInputStream(new File("script/"+fileName+".yaspl"));
 	  Lexer lexer = new Lexer(complexSymbolFactory, is, stringTable);
       Parser parser = new Parser(lexer, complexSymbolFactory);
       Program program = (Program) parser.parse().value;
       SyntaxVisitor syntaxVisitor = new SyntaxVisitor();
       syntaxVisitor.appendRoot(syntaxVisitor.visit(program, null));
-      syntaxVisitor.toXml("SyntaxVisitor.xml");
+      syntaxVisitor.toXml(fileName+".xml");
       SymbolTable symbolTable = new StackSymbolTable(stringTable);
       SemanticVisitor semanticVisitor = new SemanticVisitor(symbolTable);
       semanticVisitor.visit(program, Logger.getLogger(Driver.class.getSimpleName()));
      CodeVisitor codeVisitor = new CodeVisitor(symbolTable);
-      String testFile = "input.txt";
-      String generatedOutput = testFile.replace("txt", "c");
-      pathBuilder.append(OUTPUT_PATH).append('/').append(generatedOutput);
+      String generatedOutput = fileName+".c";
+      pathBuilder.append(OUTPUT_PATH).append("/ScriptCGenerati/").append(generatedOutput);
       File generatedFile = new File(pathBuilder.toString());
       FileWriter pw = new FileWriter(generatedFile);
+      System.out.println(generatedOutput+" saved in: "+pathBuilder.toString());
       pw.write(codeVisitor.visit(program, symbolTable.getCurrentScope()));
       pw.close();
-      /*if(program.getNodeType() == ReturnType.UNDEFINED) {
-          throw new Exception("Semantic Error");
-      }*/
+      sc.close();
 	}
 }

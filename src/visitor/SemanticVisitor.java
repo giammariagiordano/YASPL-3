@@ -3,14 +3,7 @@ package visitor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
-import semantic.CompatibilityType;
-import semantic.FunctionSymbol;
-import semantic.ReturnType;
-import semantic.Scope;
-import semantic.SemanticSymbol;
-import semantic.SymbolTable;
-import semantic.Variable;
-import semantic.VariableType;
+import semantic.*;
 import syntax.*;
 
 public class SemanticVisitor implements Visitor<ReturnType, Logger> {

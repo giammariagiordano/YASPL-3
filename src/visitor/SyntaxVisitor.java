@@ -1,13 +1,8 @@
 package visitor;
 
 import java.io.File;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
@@ -52,9 +47,9 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
       transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
       DOMSource source = new DOMSource(this.xmlDocument);
       StreamResult result = new StreamResult(
-          new File(System.getProperty("user.home").concat("/Scrivania/".concat(fileName))));
-      String path = System.getProperty("user.home").concat("/Scrivania/".concat(fileName));
-      System.out.println("SyntaxVisitor.xml saved in: " + path);
+          new File(System.getProperty("user.home").concat("/AlberoSintattico/".concat(fileName))));
+      String path = System.getProperty("user.home").concat("/AlberoSintattico/".concat(fileName));
+      System.out.println(fileName+".xml saved in: " + path);
       transformer.transform(source, result);
     } catch (TransformerException e) {
       e.printStackTrace();
