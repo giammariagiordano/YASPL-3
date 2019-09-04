@@ -1,13 +1,8 @@
 head
-int a = 5;
-double b = 5.3;
-string c = "ciao";
-bool d = true;
-char e = 'c';
+string a = "ciao";
+bool b = true;
+int c=1,d=2;
+double e=5.5;
 start
-4->;
-4.5->;
-true->;
-false->;
-'c'->;
-"test"->;
+c= c+d;
+c->;

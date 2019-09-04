@@ -2,6 +2,8 @@ package semantic;
 
 public class CompatibilityType {
   
+  //Ordine intestazione tabelle(vale sia per le righe che per le colonne): int, double, string, char, bool
+  
   public static  ReturnType EQRELOP[][] = {
       { ReturnType.BOOLEAN, ReturnType.BOOLEAN, ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.UNDEFINED},
       { ReturnType.BOOLEAN, ReturnType.BOOLEAN, ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.UNDEFINED},
@@ -20,7 +22,6 @@ public class CompatibilityType {
   
   //add operation
   public static ReturnType ADDOP [][] = {
-      //int double string char bool
       {ReturnType.INTEGER, ReturnType.DOUBLE, ReturnType.STRING, ReturnType.INTEGER, ReturnType.UNDEFINED},
       {ReturnType.DOUBLE, ReturnType.DOUBLE, ReturnType.STRING, ReturnType.UNDEFINED, ReturnType.UNDEFINED},
       {ReturnType.STRING, ReturnType.STRING, ReturnType.STRING, ReturnType.STRING, ReturnType.STRING},
