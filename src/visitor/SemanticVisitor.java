@@ -541,6 +541,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       int addrFunction =
           this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
       FunctionSymbol fs = new FunctionSymbol(ReturnType.VOID, "undefined", "undefined");
+      
+      
       this.symbolTable.add(addrFunction, fs);
       this.symbolTable.enterScope();
       defFunctionWithParamsOperation.getdefListParams().forEach(p -> p.accept(this, param));
@@ -559,6 +561,11 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       if (checkAll(defFunctionWithParamsOperation.getdefListParams())
           && isUndefined(defFunctionWithParamsOperation.getBody())) {
         defFunctionWithParamsOperation.setNodeType(ReturnType.VOID);
+        StringBuilder app = new StringBuilder();
+       defFunctionWithParamsOperation.getdefListParams().forEach(p ->{
+          app.append(p.getParType().accept(this, param).getValue()+"x");
+        });
+       fs.setOutputDom(app.toString());
         fs.setInputDom(defFunctionWithParamsOperation.getDomain());
       } else {
         defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);

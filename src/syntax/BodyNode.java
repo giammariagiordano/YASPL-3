@@ -1,6 +1,7 @@
 package syntax;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
@@ -13,6 +14,7 @@ public class BodyNode extends YasplNode {
       List<StatementNode> statements) {
     super(left, right);
     this.varDecls = vd;
+    Collections.reverse(statements);
     this.statementsNode = statements;
   }
 
