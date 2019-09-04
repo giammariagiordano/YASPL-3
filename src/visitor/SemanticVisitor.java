@@ -296,7 +296,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return args.getNodeType();
   }
 
-  // controlla con la generazione del codice se si trova il tipo del nodo
   @Override
   public ReturnType visit(WriteOperation writeOperation, Logger param) {
     writeOperation.getArgs().accept(this, param);
@@ -394,7 +393,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       param.severe(GenerateError.ErrorGenerate("Error Program", program));
     }
     program.attachScope(this.symbolTable.getCurrentScope());
-    // this.symbolTable.exitScope();
     return program.getNodeType();
   }
 
@@ -446,9 +444,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
                   varInitValueId));
           varInitValueId.setNodeType(ReturnType.UNDEFINED);
         }
-      }
-
-      else {
+      } else {
         param.severe(GenerateError.ErrorGenerate("Error in VarInitValueId: undefined parameters",
             varInitValueId));
       }
@@ -541,8 +537,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       int addrFunction =
           this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
       FunctionSymbol fs = new FunctionSymbol(ReturnType.VOID, "undefined", "undefined");
-      
-      
       this.symbolTable.add(addrFunction, fs);
       this.symbolTable.enterScope();
       defFunctionWithParamsOperation.getdefListParams().forEach(p -> p.accept(this, param));
@@ -556,16 +550,15 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
           this.symbolTable.add(addr, var);
         }
       });
-      //this.symbolTable.enterScope();
       defFunctionWithParamsOperation.getBody().accept(this, param);
       if (checkAll(defFunctionWithParamsOperation.getdefListParams())
           && isUndefined(defFunctionWithParamsOperation.getBody())) {
         defFunctionWithParamsOperation.setNodeType(ReturnType.VOID);
         StringBuilder app = new StringBuilder();
-       defFunctionWithParamsOperation.getdefListParams().forEach(p ->{
-          app.append(p.getParType().accept(this, param).getValue()+"x");
+        defFunctionWithParamsOperation.getdefListParams().forEach(p -> {
+          app.append(p.getParType().accept(this, param).getValue() + "x");
         });
-       fs.setOutputDom(app.toString());
+        fs.setOutputDom(app.toString());
         fs.setInputDom(defFunctionWithParamsOperation.getDomain());
       } else {
         defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
@@ -582,34 +575,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
           defFunctionWithParamsOperation));
     }
     return defFunctionWithParamsOperation.getNodeType();
-    /*
-     * defFunctionWithParamsOperation.getFunctionName().accept(this, param); if
-     * (!isUndefined(defFunctionWithParamsOperation.getFunctionName())) { int addrFunction =
-     * this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
-     * FunctionSymbol fs = new FunctionSymbol(ReturnType.VOID, "undefined", "undefined");
-     * this.symbolTable.add(addrFunction, fs); this.symbolTable.enterScope();
-     * defFunctionWithParamsOperation.getdefListParams().forEach(p -> p.accept(this, param));
-     * defFunctionWithParamsOperation.getdefListParams().forEach(p -> { int addr =
-     * this.symbolTable.findAddr(p.getVarName().getName()); Variable var = new
-     * Variable(p.getReturnType()); if(p.getParType().getType().equals("out")||
-     * p.getParType().getType().equals("inout")) { var.setVarType(VariableType.OUTPUT);
-     * this.symbolTable.add(addr, var); } else { this.symbolTable.add(addr, var); }
-     * 
-     * }); defFunctionWithParamsOperation.getBody().accept(this, param); if
-     * (checkAll(defFunctionWithParamsOperation.getdefListParams()) &&
-     * isUndefined(defFunctionWithParamsOperation.getBody())) {
-     * defFunctionWithParamsOperation.setNodeType(ReturnType.VOID);
-     * fs.setInputDom(defFunctionWithParamsOperation.getDomain()); } else {
-     * defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
-     * param.severe(GenerateError.ErrorGenerate(
-     * "DefFunctionWithParamsOperation: invalid parameters", defFunctionWithParamsOperation)); }
-     * defFunctionWithParamsOperation.attachScope(this.symbolTable.getCurrentScope());
-     * this.symbolTable.exitScope(); } else {
-     * defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
-     * param.severe(GenerateError.ErrorGenerate("DefFunctionWithParamsOperation: " + "function '" +
-     * defFunctionWithParamsOperation.getFunctionName().getName() + "' already declared",
-     * defFunctionWithParamsOperation)); } return defFunctionWithParamsOperation.getNodeType();
-     */
   }
 
   @Override
@@ -678,11 +643,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
   private boolean isUndefined(YasplNode node) {
     return node.getNodeType() != ReturnType.UNDEFINED;
-  }
-
-  private boolean checkReadType(List<? extends YasplNode> node) {
-    return node.stream().allMatch(
-        n -> n.getNodeType() != ReturnType.STRING && n.getNodeType() != ReturnType.BOOLEAN);
   }
 
   private String getAllNameVarUndefined(VarDeclaration varDecl) {

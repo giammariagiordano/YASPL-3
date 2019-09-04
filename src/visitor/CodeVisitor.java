@@ -1,6 +1,5 @@
 package visitor;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 import semantic.FunctionSymbol;
@@ -31,33 +30,27 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(ArithOperation arithOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
-    builder.append("(");
     builder.append(arithOperation.getLeftOperand().accept(this, param));
     builder.append(mapOperand(arithOperation.getOperation()));
     builder.append(arithOperation.getRightOperand().accept(this, param));
-    builder.append(")");
     return builder.toString();
   }
 
   @Override
   public String visit(BooleanOperation booleanOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
-    builder.append("(");
     builder.append(booleanOperation.getLeftOperand().accept(this, param)).append(" ");
     builder.append(mapOperand(booleanOperation.getOperation())).append(" ");
     builder.append(booleanOperation.getRightOperand().accept(this, param));
-    builder.append(")");
     return builder.toString();
   }
 
   @Override
   public String visit(RelopOperation relopOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
-    builder.append("(");
     builder.append(relopOperation.getLeftOperand().accept(this, param)).append(" ");
     builder.append(mapOperand(relopOperation.getOperation())).append(" ");
     builder.append(relopOperation.getRightOperand().accept(this, param));
-    builder.append(")");
     return builder.toString();
   }
 
@@ -72,8 +65,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(NotExpression notExpression, Scope param) {
     StringBuilder builder = new StringBuilder();
-    builder.append("(");
     builder.append("!");
+    builder.append("(");
     builder.append(notExpression.getExpr().accept(this, param));
     builder.append(")");
     return builder.toString();
@@ -110,7 +103,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(DoubleConst doubleConst, Scope param) {
     return String.valueOf(doubleConst.getValue());
-
   }
 
   @Override
@@ -164,9 +156,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
     builder.append("scanf(\"");
     StringJoiner sj = new StringJoiner(" ");
     String varsList = readOperation.getVars().accept(this, param);
-    // readOperation.getVars().getVarsNames().forEach(v -> v.accept(this, param));
     readOperation.getVars().getVarsNames()
-        .forEach(v -> sj.add(mapType(v.getNodeType().toString())));
+        .forEach(v -> sj.add(mapType(v.getNodeType().getValue().toString())));
     builder.append(sj.toString());
     builder.append("\",");
     builder.append(varsList);
@@ -206,9 +197,9 @@ public class CodeVisitor implements Visitor<String, Scope> {
       } else if (e instanceof iConst) {
         StringJoiner sj = new StringJoiner(",");
         builder.append("printf(\"");
-        builder.append(strcat(e, param, sj) + "\",");
+        builder.append(strcat(e, param, sj) + "\\n\",");
         builder.append(sj.toString());
-        builder.append(");");
+        builder.append(");\n");
         System.out.println(builder.toString());
       }
     });
@@ -218,7 +209,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
   private String strcat(Expression expr, Scope param, StringJoiner sj) {
     if (expr instanceof iConst) {
       if (expr instanceof StringConst) {
-        sj.add("\"" + ((iConst<?>) expr).getValue().toString() + "\"");
+        sj.add("\"" + ((iConst<?>) expr).getValue().toString().replaceAll("\n", "\\\\n") + "\"");
       } else {
         sj.add(((iConst<?>) expr).getValue().toString());
       }
@@ -233,7 +224,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
   private String relopPrint(Expression e, Scope param) {
     String toReturn;
     RelopOperation ro = (RelopOperation) e;
-    toReturn = "printf(\"%d\"," + ro.getLeftOperand().accept(this, param) + " "
+    toReturn = "printf(\"%d\\n\"," + ro.getLeftOperand().accept(this, param) + " "
         + mapOperand(ro.getOperation()) + " " + ro.getRightOperand().accept(this, param) + ");\n";
     return toReturn;
   }
@@ -246,19 +237,19 @@ public class CodeVisitor implements Visitor<String, Scope> {
       ReturnType right = ao.getRightOperand().getNodeType();
       // somma interi
       if (left == ReturnType.INTEGER && right == ReturnType.INTEGER) {
-        return "printf(\"%d\"," + ao.getLeftOperand().accept(this, param)
+        return "printf(\"%d\\n\"," + ao.getLeftOperand().accept(this, param)
             + mapOperand(ao.getOperation()) + ao.getRightOperand().accept(this, param) + ");\n";
       } // somma un double con un double o un int
       else if ((left == ReturnType.DOUBLE && right == ReturnType.DOUBLE)
           || (left == ReturnType.INTEGER && right == ReturnType.DOUBLE)
           || (left == ReturnType.DOUBLE && right == ReturnType.INTEGER)) {
-        return "printf(\"%lf\"," + ao.getLeftOperand().accept(this, param)
+        return "printf(\"%lf\\n\"," + ao.getLeftOperand().accept(this, param)
             + mapOperand(ao.getOperation()) + ao.getRightOperand().accept(this, param) + ");\n";
       } // somma un char con un char o un int
       else if ((left == ReturnType.CHAR && right == ReturnType.CHAR)
           || (left == ReturnType.CHAR && right == ReturnType.INTEGER)
           || (left == ReturnType.INTEGER && right == ReturnType.CHAR)) {
-        return "printf(\"%d\"," + ao.getLeftOperand().accept(this, param)
+        return "printf(\"%d\\n\"," + ao.getLeftOperand().accept(this, param)
             + mapOperand(ao.getOperation()) + ao.getRightOperand().accept(this, param) + ");\n";
       } else if (left == ReturnType.STRING || right == ReturnType.STRING) {
         builder.append("sprintf(str1,\"");
@@ -267,7 +258,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
         builder.append("\",");
         builder.append(sj.toString());
         builder.append(");\n");
-        builder.append("printf(\"%s\",str1);");
+        builder.append("printf(\"%s\\n\",str1);\n");
         return builder.toString();
       }
     }
@@ -279,11 +270,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder builder = new StringBuilder();
     assignOperation.getVarName().accept(this, param);
     assignOperation.getExpr().accept(this, param);
-    /*
-     * Variable x =(Variable) scope.get(addr); if(x.getVarType() == VariableType.OUTPUT) {
-     * builder.append("*"+assignOperation.getVarName().getName()); } else {
-     * builder.append(assignOperation.getVarName().getName()); }
-     */
     if (assignOperation.getVarName().getNodeType() == ReturnType.STRING) {
       builder.append("sprintf(str1,\"");
       StringJoiner sj = new StringJoiner(",");
@@ -310,12 +296,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
         this.symbolTable.findAddr(callWithParamsOperation.getFunctionName().getName());
     FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addrFunction);
     String[] splitOutput = fs.getOutputDom().split("x");
-    // int i = 0;
-    // System.out.println(list);
-    /*
-     * callWithParamsOperation.getArgs().forEach(a -> { if() paramsCall.add(a.accept(this, param));
-     * });
-     */
     builder.append(NameFunction).append("(");
     for (int i = 0; i < callWithParamsOperation.getArgs().size(); i++) {
       if (splitOutput[i].equals("out") || splitOutput[i].equals("inout")) {
@@ -342,7 +322,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
   @Override
   public String visit(Program program, Scope param) {
-    // this.symbolTable.enterScope();
     String declarations = this.compactCode(program.getDeclsNode(), program.getAttachScope());
     String statements = this.compactCode(program.getStatementsNode(), program.getAttachScope());
     StringBuilder programBuilder = new StringBuilder();
@@ -350,6 +329,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
         .append(DECL_HEADER).append('\n').append(declarations).append('\n').append(MAIN_HEADER)
         .append('\n').append("int main(void){\n").append(statements).append('\n')
         .append(" return 0;\n}\n");
+    this.symbolTable.exitScope();
     return programBuilder.toString();
   }
 
@@ -401,16 +381,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(ParDeclsNode parDeclsNode, Scope param) {
     StringBuilder builder = new StringBuilder();
-    String parType = parDeclsNode.getParType().accept(this, param);
     String type = parDeclsNode.getType().accept(this, param);
     String id = parDeclsNode.getVarName().accept(this, param);
-
-
     type = toCType(type);
     builder.append(type).append(" ");
-    /*
-     * if (parType.equals("out") || parType.equals("inout")) { builder.append("*"); }
-     */
     builder.append(id);
     return builder.toString();
   }
@@ -425,10 +399,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
     return compactCode(varDecls.getVarsDeclarations(), param);
   }
 
-  // void nomeFunzione(int a,int *b){}
   @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
-
     StringBuilder builder = new StringBuilder();
     StringJoiner listParams = new StringJoiner(", ");
     String FunctionName = defFunctionWithParamsOperation.getFunctionName().accept(this, param);
@@ -443,7 +415,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
     return builder.toString();
   }
 
-  // in getBody devi passare lo scope della sua funzione
   @Override
   public String visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation,
       Scope param) {
@@ -460,10 +431,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(BodyNode body, Scope param) {
     StringBuilder builder = new StringBuilder();
-    /*
-     * builder.append(compactCode(body.getVarDecls(), param));
-     * builder.append(compactCode(body.getStatementsNode(), param));
-     */
     body.getVarDecls().forEach(v -> {
       builder.append(v.accept(this, param));
     });
@@ -534,5 +501,4 @@ public class CodeVisitor implements Visitor<String, Scope> {
   private String compactCode(List<? extends YasplNode> list, Scope scope) {
     return list.stream().map(l -> l.accept(this, scope)).reduce("", String::concat);
   }
-
 }

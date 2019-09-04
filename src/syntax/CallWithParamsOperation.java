@@ -8,7 +8,6 @@ import visitor.Visitor;
 
 public class CallWithParamsOperation extends StatementNode {
   private final IdentifierExpression functionName;
-  private String domain;
   private final List<Expression> args;
 
   public CallWithParamsOperation(Location left, Location right, IdentifierExpression id,
@@ -36,11 +35,7 @@ public class CallWithParamsOperation extends StatementNode {
   public String getDomain() {
     StringJoiner sj = new StringJoiner(",");
     args.forEach(e -> sj.add(e.getNodeType().getValue()));
-    this.domain = sj.toString();
     return sj.toString();
   }
 
-  public void setDomain(String domain) {
-    this.domain = domain;
-  }
 }

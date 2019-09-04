@@ -1,2 +1,0 @@
-1) inserire gli & nelle chiamate a funzioni per i parametri di outputs
-2) sistemare la concatenazione tra le stringhe per la funzione di stampa
