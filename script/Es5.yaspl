@@ -33,7 +33,7 @@ def fibonacci(in int num){
       a = b;
       b = res;
       i = i + 1;
-      res+"\n"->;
+      res->;
   }
 }
 
@@ -43,7 +43,7 @@ def menu(){
     "2. Moltiplicazione fra due interi\n"+
     "3. Elevamento a potenza\n"+
     "4. Successione di Fibonacci\n"+
-    "0. Esci\n"->;
+    "0. Esci"->;
 }
 
 
@@ -53,34 +53,34 @@ menu();
 opt<-;
 while(not(opt == 0))do{
     if(opt == 1) then{
-        "Inserisci due interi\n"->;
+        "Inserisci due interi"->;
         n1,n2<-;
         somma(n1, n2, res);
-        n1+" + "+n2+" = "+res+"\n"->;
+        n1+" + "+n2+" = "+res->;
     }
     else{
         if(opt == 2)then{
-        "Inserisci due interi\n"->;
+        "Inserisci due interi"->;
         n1,n2<-;
         moltiplicazione(n1, n2, res);
-        n1+" * "+n2+" = "+res+"\n"->;
+        n1+" * "+n2+" = "+res->;
         }
     else{
         if(opt == 3)then{
         "Inserisci base ed esponente\n"->;
         n1,n2<-;
         potenza(n1, n2, res);
-        n1+" ^ "+n2+" = "+res+"\n"->;
+        n1+" ^ "+n2+" = "+res->;
         }
     else {
         if( opt == 4)then{
-            "Inserisci il numero per vedere la successione di Fibonacci\n"->;
+            "Inserisci il numero per vedere la successione di Fibonacci"->;
             n1<-;
             if(n1 >= 0) then{
-            "Questa è la sequenza:\n"->;
+            "Questa è la sequenza:"->;
             fibonacci(n1);
             } else {
-                "Inserisci numero positivo\n"->;
+                "Inserisci numero positivo"->;
             }
         }
     }

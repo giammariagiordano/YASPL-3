@@ -3,6 +3,9 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * This class create a name for identifier
+ */
 public class IdentifierExpression extends Expression implements iConst<String> {
   private final String name;
 
@@ -22,6 +25,6 @@ public class IdentifierExpression extends Expression implements iConst<String> {
 
   @Override
   public String getValue() {
-        return name;
+    return name;
   }
 }

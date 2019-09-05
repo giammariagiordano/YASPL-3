@@ -5,6 +5,9 @@ import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * This node represents a list of variable for read operation
+ */
 public class Vars extends YasplNode {
   private List<IdentifierExpression> varsNames;
 

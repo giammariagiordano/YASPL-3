@@ -5,6 +5,9 @@ import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * It represents a list of expression that used in write operation and callOperationWithParams
+ */
 public class Args extends YasplNode {
   private final List<Expression> args;
 

@@ -3,7 +3,10 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class IntConst extends Expression implements iConst<Integer>{
+/*
+ * This class create an integer constant
+ */
+public class IntConst extends Expression implements iConst<Integer> {
   private final int intConst;
 
   public IntConst(Location left, Location right, int intConst) {

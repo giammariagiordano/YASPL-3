@@ -6,11 +6,25 @@ import semantic.Scope;
 import semantic.Scopeable;
 import visitor.Visitor;
 
+/*
+ * The class represent a Function Declaration without parameters. For example def func()
+ */
 public class DefFunctionWithoutParamsOperation extends DefDeclaration implements Scopeable {
   private final IdentifierExpression functionName;
   private final BodyNode body;
   private Scope scope;
 
+  /*
+   * Create a new Function Declaration With Parameters
+   * 
+   * @param left for left location
+   * 
+   * @param right for right location
+   * 
+   * @param functionName for name function
+   * 
+   * @param body for body function
+   */
   public DefFunctionWithoutParamsOperation(Location left, Location right,
       IdentifierExpression functionName, BodyNode body) {
     super(left, right);

@@ -2,7 +2,11 @@ package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
-
+/*
+ * It represents a node for while operation, for example: 
+ * while(condition) {
+ * }
+ */
 public class WhileOperation extends StatementNode {
   private final Expression condition;
   private final CompStat whileCompStat;

@@ -5,6 +5,9 @@ import java.util.List;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * It represents a list of statements for while node or ifThen node or ifThenElse node
+ */
 public class CompStat extends StatementNode {
   private final List<StatementNode> statementsNode;
 

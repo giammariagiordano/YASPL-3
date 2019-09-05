@@ -3,6 +3,9 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * @return a string for partype of variables (in, out, inout)
+ */
 public class ParType extends YasplNode {
   final String type;
 

@@ -3,7 +3,10 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class CharConst extends Expression implements iConst<Character>{
+/*
+ * This class create a char constant
+ */
+public class CharConst extends Expression implements iConst<Character> {
   char charConst;
 
   public CharConst(Location left, Location right, char charConst) {

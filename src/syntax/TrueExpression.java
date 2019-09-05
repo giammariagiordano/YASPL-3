@@ -3,7 +3,10 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class TrueExpression extends Expression implements iConst<Boolean>{
+/*
+ * This class create a constant value true
+ */
+public class TrueExpression extends Expression implements iConst<Boolean> {
 
   public TrueExpression(Location left, Location right) {
     super(left, right);

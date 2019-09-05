@@ -3,6 +3,9 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * @return a string for type of variables (int, double, string, etc.)
+ */
 public class TypeNode extends YasplNode {
   final String typeName;
 

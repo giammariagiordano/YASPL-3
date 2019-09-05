@@ -3,6 +3,9 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * This class create a double constant
+ */
 public class DoubleConst extends Expression implements iConst<Double> {
   final double doubleConst;
 

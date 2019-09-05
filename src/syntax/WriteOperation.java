@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * /* This node represents a write statement, for example: x,y ->
+ */
 public class WriteOperation extends StatementNode {
   private final Args args;
 

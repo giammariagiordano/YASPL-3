@@ -5,6 +5,9 @@ import java.util.stream.Collectors;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.*;
 
+/*
+ * This node represents a read statement, for example: x,y <-
+ */
 public class ReadOperation extends StatementNode {
   private final Vars vars;
 

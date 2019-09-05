@@ -2,9 +2,9 @@ head
 string a = "ciao";
 string b = "mondo";
 int c = 5;
-def f(out string a,out string b,in int f){
+def f(out string a,in string b,in int f){
  a = a+a;
- b = b+a;
+ b = b+a+b+f+4+c;
  b = b+f;
 }
 start

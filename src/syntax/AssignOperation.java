@@ -3,6 +3,11 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * This node assign an expression to a variable, for example:
+ * 
+ * c=4+5;
+ */
 public class AssignOperation extends StatementNode {
   private final IdentifierExpression varName;
   private final Expression expr;

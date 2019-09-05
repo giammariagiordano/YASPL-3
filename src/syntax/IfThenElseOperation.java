@@ -3,6 +3,13 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
+/*
+ * It represents a node for if then else, for example: 
+ * if(condition)
+ *  then {
+ * } else {
+ }
+ */
 public class IfThenElseOperation extends StatementNode {
   private final Expression condition;
   private final CompStat thenCompStat, elseCompStat;
