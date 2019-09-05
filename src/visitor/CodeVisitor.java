@@ -1,5 +1,7 @@
 package visitor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringJoiner;
 import semantic.*;
@@ -16,7 +18,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
   private static final String MAIN_HEADER = "/***********Main*******************/";
   private SymbolTable symbolTable;
   private StringBuilder mallocString = new StringBuilder();
-
   public CodeVisitor(SymbolTable table) {
     super();
     this.symbolTable = table;
@@ -164,10 +165,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(Vars vars, Scope param) {
     StringJoiner inputs = new StringJoiner(", ");
     vars.getVarsNames().forEach(v -> {
-      if(v.getNodeType().getValue().equals("string")) {
-        inputs.add(v.accept(this, param));  
+      if (v.getNodeType().getValue().equals("string")) {
+        inputs.add(v.accept(this, param));
       } else {
-        inputs.add("&".concat(v.accept(this, param)));  
+        inputs.add("&".concat(v.accept(this, param)));
 
       }
     });
@@ -277,7 +278,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
       builder.append(");\n");
      /* builder
           .append(assignOperation.getVarName().getName() + "= malloc( sizeof(char) * LENGTH);\n");*/
-      builder.append("strcpy(" + assignOperation.getVarName().getName() + ",str1);\n");
+      builder.append("strcpy(_" + assignOperation.getVarName().getName() + ",str1);\n");
     } else {
       builder.append(assignOperation.getVarName().accept(this, param));
       builder.append("=");
@@ -297,9 +298,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
     String[] splitOutput = fs.getOutputDom().split("x");
     builder.append(NameFunction).append("(");
     for (int i = 0; i < callWithParamsOperation.getArgs().size(); i++) {
-      if ((splitOutput[i].equals("out") || splitOutput[i].equals("inout")) &&
-          (!callWithParamsOperation.getArgs().get(i).getNodeType().getValue().equals("string"))) {
-      
+      if ((splitOutput[i].equals("out") || splitOutput[i].equals("inout"))
+          && (!callWithParamsOperation.getArgs().get(i).getNodeType().getValue()
+              .equals("string"))) {
+
         paramsCall
             .add("&" + callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
       } else {
@@ -326,8 +328,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder programBuilder = new StringBuilder();
     programBuilder.append(COMMENT_HEADER).append('\n').append(C_HEADER).append('\n')
         .append(DECL_HEADER).append('\n').append(declarations).append('\n').append(MAIN_HEADER)
-        .append('\n').append("int main(void){\n").append(mallocString.toString()).append(statements).append('\n')
-        .append(" return 0;\n}\n");
+        .append('\n').append("int main(void){\n").append(mallocString.toString()).append(statements)
+        .append('\n').append(" return 0;\n}\n");
     this.symbolTable.exitScope();
     return programBuilder.toString();
   }
@@ -341,9 +343,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(VarInitValue varInitValue, Scope param) {
     StringBuilder builder = new StringBuilder();
     if (varInitValue.getExpr() != null) {
-      builder.append(" = ");
+      // builder.append(" = ");
       builder.append(varInitValue.getExpr().accept(this, param));
     }
+    System.out.println(builder.toString());
     return builder.toString();
   }
 
@@ -351,7 +354,20 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(VarInitValueId varInitValueId, Scope param) {
     StringBuilder builder = new StringBuilder();
     builder.append(varInitValueId.getVarName().accept(this, param));
-    builder.append(varInitValueId.getInitialValue().accept(this, param));
+    String initialValue = varInitValueId.getInitialValue().accept(this, param);
+    if (!initialValue.equals("")) {
+      builder.append("=");
+      builder.append(initialValue);
+    }
+    if (varInitValueId.getVarName().getNodeType().getValue().equals("string")) {
+      mallocString
+          .append(varInitValueId.getVarName().getName() + "=malloc(sizeof(char) * LENGTH);\n");
+      // se ha un valore del tipo head string a = "ciao";
+      if (!initialValue.equals("")) {
+        mallocString
+            .append("strcpy(" + varInitValueId.getVarName().getName() + "," + initialValue + ");\n");
+      }
+    } 
     return builder.toString();
   }
 
@@ -363,12 +379,11 @@ public class CodeVisitor implements Visitor<String, Scope> {
     if (type.equals("string")) {
       varDeclaration.getVariables().forEach(v -> {
         varJoiner.add("  *" + v.accept(this, param));
-        mallocString.append(v.getVarName().getName()+"=malloc(sizeof(char) * LENGTH);\n");
       });
 
       builder.append(toCType(type)).append(' ').append(varJoiner.toString()).append(';')
           .append('\n');
-     // builder.append(mallocString.toString());
+      // builder.append(mallocString.toString());
 
     } else {
       varDeclaration.getVariables().forEach(v -> {
@@ -376,7 +391,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
         varJoiner.add(v.accept(this, param));
       });
       builder.append(type).append(' ').append(varJoiner.toString()).append(';').append('\n');
-      
+
     }
     return builder.toString();
   }
@@ -405,15 +420,32 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
-    StringJoiner listParams = new StringJoiner(", ");
+    StringJoiner listParams = new StringJoiner(",");
+    List<String> varName = new ArrayList<String>();
     String FunctionName = defFunctionWithParamsOperation.getFunctionName().accept(this, param);
     defFunctionWithParamsOperation.getdefListParams().forEach(
-        p -> listParams.add(p.accept(this, defFunctionWithParamsOperation.getAttachScope())));
+        p -> {
+          listParams.add(p.accept(this, defFunctionWithParamsOperation.getAttachScope()));
+          varName.add(p.getVarName().getName());
+        });
     String body = defFunctionWithParamsOperation.getBody().accept(this,
         defFunctionWithParamsOperation.getAttachScope());
     builder.append("void").append(" ");
     builder.append(FunctionName).append("(");
     builder.append(listParams).append(") {\n");
+    int addrFunction = this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
+    FunctionSymbol fs = (FunctionSymbol)this.symbolTable.getCurrentScope().get(addrFunction);
+    List<String> varType = Arrays.asList(fs.getInputDom().split("x"));
+    List<String> parType = Arrays.asList(fs.getOutputDom().split("x"));
+     //defFunctionWithParamsOperation.getdefListParams().forEach(arg0);
+    
+    System.out.println(varType);
+    System.out.println(parType);
+    for(int i = 0;i<varType.size(); i++) {
+      if(varType.get(i).equals("string") && !parType.get(i).equals("in")){
+        builder.append("char* _"+varName.get(i)+" = "+varName.get(i)+";\n");
+      }
+    }
     builder.append(body).append("\n}\n");
     return builder.toString();
   }

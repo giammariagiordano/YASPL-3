@@ -33,7 +33,7 @@ public class CallWithParamsOperation extends StatementNode {
   }
 
   public String getDomain() {
-    StringJoiner sj = new StringJoiner(",");
+    StringJoiner sj = new StringJoiner("x");
     args.forEach(e -> sj.add(e.getNodeType().getValue()));
     return sj.toString();
   }
