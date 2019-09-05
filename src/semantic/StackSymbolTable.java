@@ -24,7 +24,7 @@ public class StackSymbolTable extends Stack<Scope> implements SymbolTable {
    this.pop();
   }
 
-
+  //if current scope contain the addr of variable/function
   @Override
   public boolean prob(int addr) {
     return this.getCurrentScope().containsKey(addr);

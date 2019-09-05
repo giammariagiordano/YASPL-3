@@ -1,11 +1,12 @@
 package visitor;
 
+import exception.SemanticException;
 import syntax.YasplNode;
 
 public class GenerateError {
 
   public static String ErrorGenerate(String msg, YasplNode yasplNode) {
-    return String.format("%s at line: %s", msg, yasplNode.getLeftLocation().getLine());
+    throw new SemanticException( String.format("%s at line: %s", msg, yasplNode.getLeftLocation().getLine()));
   }
 
 }

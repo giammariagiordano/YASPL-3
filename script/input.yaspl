@@ -1,15 +1,7 @@
 head
-string a = "ciao";
-string b = "mondo";
-int c = 5;
-def f(out string a,in string b,in int f){
- a = a+a;
- b = b+a+b+f+4+c;
- b = b+f;
-}
+int a = 5; 
+int b;
 start
-f(a,b,c);
-a->;
+b = -a;
+"inserisci un numero"->;
 b->;
-
-				

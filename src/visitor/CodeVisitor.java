@@ -16,6 +16,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
       + "#define LENGTH  256\n" + "char str1[LENGTH], str2[LENGTH];\n";
   private static final String MAIN_HEADER = "/***********Main*******************/";
   private SymbolTable symbolTable;
+  //use the mallocString for create into main the malloc for global variable (string)
   private StringBuilder mallocString = new StringBuilder();
 
   public CodeVisitor(SymbolTable table) {
@@ -46,6 +47,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder builder = new StringBuilder();
     if ((relopOperation.getLeftOperand().getNodeType() == ReturnType.STRING)
         && (relopOperation.getRightOperand().getNodeType() == ReturnType.STRING)) {
+      // create string like strcmp(a,b)>0
       builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param) + ","
           + relopOperation.getRightOperand().accept(this, param) + ")" + ""
           + mapOperand(relopOperation.getOperation()) + "0");
@@ -91,6 +93,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     SemanticSymbol ss = param.get(addr);
     if (ss instanceof Variable) {
       Variable var = (Variable) ss;
+      // add * if var is a string or var has partype = output
       if (var.getReturnType() == ReturnType.STRING || var.getVarType() == VariableType.OUTPUT) {
         return "*" + identifierExpression.getName();
       }
@@ -199,7 +202,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
     writeOperation.getArgs().getExprArgs().forEach(e -> {
       if (e instanceof RelopOperation) {
         builder.append(relopPrint(e, param));
-
       } else if (e instanceof ArithOperation) {
         builder.append(mathPrint(e, param));
       } else if (e instanceof iConst) {
@@ -222,9 +224,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
       }
       return mapType(expr.getNodeType().getValue());
     }
+    
     ArithOperation ao = (ArithOperation) expr;
     String app =
-        strcat(ao.getLeftOperand(), param, sj) + strcat(ao.getRightOperand(), param, sj) + "";
+        strcat(ao.getLeftOperand(), param, sj) + strcat(ao.getRightOperand(), param, sj);
     return app;
   }
 
@@ -283,10 +286,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
       builder.append(strcat(assignOperation.getExpr(), param, sj) + "\",");
       builder.append(sj.toString());
       builder.append(");\n");
-      /*
-       * builder .append(assignOperation.getVarName().getName() +
-       * "= malloc( sizeof(char) * LENGTH);\n");
-       */
       builder.append("strcpy(" + assignOperation.getVarName().getName() + ",str1);\n");
     } else {
       builder.append(assignOperation.getVarName().accept(this, param));
@@ -310,7 +309,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
       if ((splitOutput[i].equals("out") || splitOutput[i].equals("inout"))
           && (!callWithParamsOperation.getArgs().get(i).getNodeType().getValue()
               .equals("string"))) {
-
         paramsCall
             .add("&" + callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
       } else {
@@ -353,7 +351,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(VarInitValue varInitValue, Scope param) {
     StringBuilder builder = new StringBuilder();
     if (varInitValue.getExpr() != null) {
-      // builder.append(" = ");
       builder.append(varInitValue.getExpr().accept(this, param));
     }
     return builder.toString();
@@ -364,10 +361,13 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder builder = new StringBuilder();
     builder.append(varInitValueId.getVarName().accept(this, param));
     String initialValue = varInitValueId.getInitialValue().accept(this, param);
+    //if has a initial value into global scope (head) add in C a global variable with the value
     if (!initialValue.equals("")) {
       builder.append("=");
       builder.append(initialValue);
     }
+    //if i found a string into global scope save the corrisponent malloc and strcpy
+    //for printing into main 
     if (varInitValueId.getVarName().getNodeType().getValue().equals("string")) {
       mallocString
           .append(varInitValueId.getVarName().getName() + "=malloc(sizeof(char) * LENGTH);\n");

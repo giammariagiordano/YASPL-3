@@ -14,7 +14,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   }
 
   @Override
-  public ReturnType visit(ArithOperation arithOperation, Logger param) {
+  public ReturnType visit(ArithOperation arithOperation, Logger param)  {
     arithOperation.getLeftOperand().accept(this, param);
     arithOperation.getRightOperand().accept(this, param);
     if (this.isUndefined(arithOperation.getLeftOperand())
@@ -36,6 +36,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
                     "ArithOperation: type mismatch beetween: left:'" + left + "' right:'" + right
                         + "' for " + arithOperation.getOperation() + " expression",
                     arithOperation));
+        
       }
     } else {
       param.severe(GenerateError.ErrorGenerate("ArithOperation not allowed", arithOperation));
@@ -538,10 +539,10 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         Variable var = new Variable(p.getReturnType());
         if (p.getParType().getType().equals("out") || p.getParType().getType().equals("inout")) {
           var.setVarType(VariableType.OUTPUT);
-          this.symbolTable.add(addr, var);
-        } else {
-          this.symbolTable.add(addr, var);
         }
+          /*this.symbolTable.add(addr, var);
+        } else {*/
+          this.symbolTable.add(addr, var);
       });
       defFunctionWithParamsOperation.getBody().accept(this, param);
       if (checkAll(defFunctionWithParamsOperation.getdefListParams())
@@ -549,6 +550,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         defFunctionWithParamsOperation.setNodeType(ReturnType.VOID);
         StringBuilder app = new StringBuilder();
         defFunctionWithParamsOperation.getdefListParams().forEach(p -> {
+          // separo i tipi partype (in, out,inout) con una x per poterli
+          // usare nella generazione del codice
           app.append(p.getParType().accept(this, param).getValue() + "x");
         });
         fs.setOutputDom(app.toString());

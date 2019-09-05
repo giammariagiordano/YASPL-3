@@ -2,7 +2,7 @@ package visitor;
 
 import syntax.*;
 
-public interface Visitor <T,P> {
+public interface Visitor<T, P> {
 
   T visit(ArithOperation arithOperation, P param);
 
@@ -64,12 +64,12 @@ public interface Visitor <T,P> {
 
   T visit(VarDecls varDecls, P param);
 
-  T visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation , P param);
+  T visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, P param);
 
   T visit(BodyNode body, P param);
 
   T visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation, P param);
 
   T visit(CompStat compStat, P param);
-  
+
 }
