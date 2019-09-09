@@ -27,24 +27,29 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(ArithOperation arithOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
+    builder.append("(");
     builder.append(arithOperation.getLeftOperand().accept(this, param));
     builder.append(mapOperand(arithOperation.getOperation()));
     builder.append(arithOperation.getRightOperand().accept(this, param));
+    builder.append(")");
     return builder.toString();
   }
 
   @Override
   public String visit(BooleanOperation booleanOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
+    builder.append("(");
     builder.append(booleanOperation.getLeftOperand().accept(this, param)).append(" ");
     builder.append(mapOperand(booleanOperation.getOperation())).append(" ");
     builder.append(booleanOperation.getRightOperand().accept(this, param));
+    builder.append(")");
     return builder.toString();
   }
 
   @Override
   public String visit(RelopOperation relopOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
+   builder.append("(");
     if ((relopOperation.getLeftOperand().getNodeType() == ReturnType.STRING)
         && (relopOperation.getRightOperand().getNodeType() == ReturnType.STRING)) {
       // create string like strcmp(a,b)>0
@@ -56,6 +61,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
       builder.append(mapOperand(relopOperation.getOperation())).append(" ");
       builder.append(relopOperation.getRightOperand().accept(this, param));
     }
+    builder.append(")");
     return builder.toString();
   }
 
@@ -93,8 +99,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
     SemanticSymbol ss = param.get(addr);
     if (ss instanceof Variable) {
       Variable var = (Variable) ss;
-      // add * if var is a string or var has partype = output
-      if (var.getReturnType() == ReturnType.STRING || var.getVarType() == VariableType.OUTPUT) {
+      // add * if var is a string or var has partype = output or inout
+      if (var.getReturnType() == ReturnType.STRING || var.getVarType() == VariableType.OUT || var.getVarType() == VariableType.INOUT) {
         return "*" + identifierExpression.getName();
       }
     }

@@ -3,7 +3,7 @@ package semantic;
 public enum ReturnType {
   UNDEFINED("undefined"), VOID("void"), INTEGER("int"),
   DOUBLE("double"), BOOLEAN("bool"), STRING("string"),
-  CHAR("char"),  IN("in"), OUT("out"),INOUT("inout");
+  CHAR("char"),GLOBAL("global"), IN("in"),OUT("out"),INOUT("inout");
 
 
   private String value;

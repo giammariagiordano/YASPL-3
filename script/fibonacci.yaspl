@@ -16,13 +16,15 @@ def fibonacci(in int num){
 
 def sommaFibonacci(in int num, out int sum){
   int i = 1, a = -1, b = 1;
+  int app = 0;
   while(i <= num)do{
       res = a + b;
       a = b;
       b = res;
       i = i + 1;
-      sum = sum +res;
+      app = app +res;
   }
+  	sum = app;
 }
 
 def checkInput(in int x, out bool flag){

@@ -10,7 +10,7 @@ public class Variable extends SemanticSymbol {
    */
   public Variable(ReturnType returnType) {
       super(returnType);
-      this.varType = VariableType.NORMAL;
+      this.varType = VariableType.GLOBAL;
   }
 
   /**
@@ -33,4 +33,5 @@ public class Variable extends SemanticSymbol {
   public String toString() {
       return String.format("Type:%s", this.getReturnType().getValue());
   }
+
 }

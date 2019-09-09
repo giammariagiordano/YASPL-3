@@ -71,5 +71,11 @@ public class StackSymbolTable extends Stack<Scope> implements SymbolTable {
     return sb.toString();
   }
 
+  @Override
+  public boolean isInGlobalScopelScope(int addr) {
+    SemanticSymbol a = this.get(0).get(addr);
+    return a!=null;
+  }
+
 
 }

@@ -1,7 +1,6 @@
 head
-int a = 5; 
-int b;
+def f (in int op1, out bool c, inout int b) {
+	bool r;
+	if(r== true) then {}
+}
 start
-b = -a;
-"inserisci un numero"->;
-b->;

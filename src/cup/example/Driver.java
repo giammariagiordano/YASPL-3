@@ -14,6 +14,8 @@ import syntax.Program;
 import visitor.CodeVisitor;
 import visitor.SemanticVisitor;
 import visitor.SyntaxVisitor;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 class Driver {
@@ -45,5 +47,21 @@ class Driver {
       pw.write(codeVisitor.visit(program, symbolTable.getCurrentScope()));
       pw.close();
       sc.close();
+   //   ProcessBuilder processBuilder = new ProcessBuilder();
+      /*now run the program*/
+    //processBuilder.command("bash", "-c", "cd "+OUTPUT_PATH+"/ScriptCGenerati/"
+       //   + " && clang "+fileName+".c");
+      /*List<String> commands = new ArrayList<String>();
+      commands.add("cd "+OUTPUT_PATH+"/ScriptCGenerati/");
+      commands.add("clang "+fileName+".c");
+      commands.add("./a.out");
+      processBuilder.command(commands);
+      processBuilder.start();*/
+      //Process compile = new ProcessBuilder("bash", OUTPUT_PATH+"/ScriptCGenerati/").start();
+     /*  ProcessBuilder processBuilder = new ProcessBuilder();
+       processBuilder.command("bash", "-c", "cd "+OUTPUT_PATH+"/ScriptCGenerati/"
+            + " && clang "+fileName+".c");
+      Process execute = processBuilder.command("./a.out").start();*/
+      
 	}
 }
