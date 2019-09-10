@@ -32,7 +32,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       int col = CompatibilityType.getIndexFor(right);
       if (arithOperation.getOperation().equals("PLUS")) {
         arithOperation.setNodeType(CompatibilityType.ADDOP[row][col]);
-      } // end addop
+      } // end addop 
       else {
         arithOperation.setNodeType(CompatibilityType.ARITHOP[row][col]);
       }
@@ -381,7 +381,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     callWithParamsOperation.getArgs().forEach(a -> a.accept(this, param));
     if (this.isUndefined(callWithParamsOperation.getFunctionName())) {
       int addr = this.symbolTable.findAddr(callWithParamsOperation.getFunctionName().getName());
-      FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addr);
+      FunctionSymbol fs = (FunctionSymbol) this.symbolTable.lookup(addr).get(addr);
       if (fs.getInputDom().equals(callWithParamsOperation.getDomain())) {
         callWithParamsOperation.setNodeType(ReturnType.VOID);
       } else {

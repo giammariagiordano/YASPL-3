@@ -1,6 +1,4 @@
 head
-def f (in int op1, out bool c, inout int b) {
-	bool r;
-	if(r== true) then {}
-}
+
 start
+4.2%2->;

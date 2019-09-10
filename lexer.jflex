@@ -124,6 +124,7 @@ CHAR_CONST = '({any})?'
   	"-"         { return symbol("MINUS", sym.MINUS); 	}
   	"*"         { return symbol("TIMES", sym.TIMES); 	}
   	"/"		    { return symbol("DIV", sym.DIV);		}
+  	"%"			{ return symbol("MOD",sym.MOD);		}
   	">"         { return symbol("GT", sym.GT);		}
   	"<"         { return symbol("LT", sym.LT);		}
   	"="         { return symbol("ASSIGN", sym.ASSIGN);	}

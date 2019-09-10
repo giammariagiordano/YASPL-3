@@ -29,7 +29,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder builder = new StringBuilder();
     builder.append("(");
     builder.append(arithOperation.getLeftOperand().accept(this, param));
-    builder.append(mapOperand(arithOperation.getOperation()));
+    builder.append(mapOperand(arithOperation.getOperation())).append(" ");
     builder.append(arithOperation.getRightOperand().accept(this, param));
     builder.append(")");
     return builder.toString();
@@ -517,6 +517,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
         return "*";
       case "DIV":
         return "/";
+      case "MOD":
+        return "%";
       case "GT":
         return ">";
       case "LT":
