@@ -29,4 +29,4 @@ num2<-;
 MCD(num1,num2,res);
 "massimo comune divisore: "+res->;
 mcm(num1, num2, res);
-"minimo comune multiplo: "+res->;
+"minimo comune multiplo: "+ res->;

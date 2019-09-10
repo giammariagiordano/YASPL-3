@@ -88,9 +88,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   public ReturnType visit(RelopOperation relopOperation, Logger param) {
     relopOperation.getLeftOperand().accept(this, param);
     relopOperation.getRightOperand().accept(this, param);
-  /*  if (isInVar(relopOperation.getLeftOperand())) {
-      param.severe(GenerateError.ErrorGenerate("RelopOperation: "+StringError.inError,relopOperation));
-    }*/
     if (isOutVar(relopOperation.getRightOperand())) {
       param.severe(GenerateError.ErrorGenerate("RelopOperation "+StringError.outError,relopOperation));
     }
@@ -290,6 +287,9 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   @Override
   public ReturnType visit(ReadOperation readOperation, Logger param) {
     readOperation.getVars().accept(this, param);
+    if(readOperation.getVars().getVarsNames().stream().anyMatch(v -> isInVar(v))) {
+      param.severe(GenerateError.ErrorGenerate(StringError.inError,readOperation));
+    }
     if (this.checkAll(readOperation.getVars().getVarsNames())) {
       readOperation.setNodeType(readOperation.getVars().getNodeType());
     } else {
@@ -306,7 +306,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       vars.setNodeType(ReturnType.VOID);
     } else {
       vars.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate("Error Vars", vars));
+      param.severe(GenerateError.ErrorGenerate("Error Vars: Variable not declared", vars));
     }
     return vars.getNodeType();
   }
@@ -326,6 +326,9 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   @Override
   public ReturnType visit(WriteOperation writeOperation, Logger param) {
     writeOperation.getArgs().accept(this, param);
+    if((writeOperation.getArgs().getExprArgs().stream().anyMatch(e -> isOutVar(e)))) {
+      param.severe(GenerateError.ErrorGenerate(StringError.outError, writeOperation));
+    }
     if (this.checkAll(writeOperation.getArgs().getExprArgs())) {
       writeOperation.setNodeType(writeOperation.getArgs().getNodeType());
     } else {
@@ -348,9 +351,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       assignOperation.setNodeType(CompatibilityType.ASSIGNOOP[row][col]);
       int addrLeft = this.symbolTable.findAddr(assignOperation.getVarName().getName());
       Variable varLeft = (Variable) this.symbolTable.lookup(addrLeft).get(addrLeft);
-   //   System.out.println(varLeft.toString());
       // se ho una expr del tipo a = b dove a è in
-      
       if (varLeft.getVarType() == VariableType.IN) {
         param.severe(GenerateError.ErrorGenerate("AssignOperation: "+StringError.inError,
             assignOperation));
@@ -404,7 +405,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     callWithoutParamsOperation.getFunctionName().accept(this, param);
     if (this.isUndefined(callWithoutParamsOperation.getFunctionName())) {
       int addr = this.symbolTable.findAddr(callWithoutParamsOperation.getFunctionName().getName());
-      FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addr);
+      FunctionSymbol fs = (FunctionSymbol) this.symbolTable.lookup(addr).get(addr);
       if (fs.getInputDom().equals(callWithoutParamsOperation.getDomain())) {
         callWithoutParamsOperation.setNodeType(ReturnType.VOID);
       } else {
@@ -534,7 +535,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     parDeclsNode.getVarName().accept(this, param);
     if (isUndefined(parDeclsNode.getParType()) && isUndefined(parDeclsNode.getType())) {
       parDeclsNode.setNodeType(parDeclsNode.getType().getNodeType());
-      //int addr = this.symbolTable.findAddr(parDeclsNode.getVarName().getName());
     } else {
       parDeclsNode.setNodeType(ReturnType.UNDEFINED);
       param.severe(GenerateError.ErrorGenerate("Error ParDeclsNode", parDeclsNode));
@@ -547,7 +547,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (parType.getType().equals("in") || parType.getType().equals("out")
         || parType.getType().equals("inout") || parType.getType().equals("global")) {
       parType.setNodeType(ReturnType.getEnumFor(parType.getType()));
-      // parType.setVariableType(VariableType.getEnumFor(parType.getType()));
     } else {
       param.severe(GenerateError.ErrorGenerate("ParType: invalid parType", parType));
       parType.setNodeType(ReturnType.UNDEFINED);
@@ -586,12 +585,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       defFunctionWithParamsOperation.getdefListParams().forEach(p -> {
         int addr = this.symbolTable.findAddr(p.getVarName().getName());
         Variable var = new Variable(p.getReturnType());
-        // if (p.getParType().getType().equals("out") || p.getParType().getType().equals("inout")) {
         var.setVarType(VariableType.getEnumFor(p.getParType().getType()));
-        // }
-        /*
-         * this.symbolTable.add(addr, var); } else {
-         */
         this.symbolTable.add(addr, var);
       });
       defFunctionWithParamsOperation.getBody().accept(this, param);
@@ -605,8 +599,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
           app.append(p.getParType().accept(this, param).getValue() + "x");
 
         });
-        // List<String> partypes = Arrays.asList(app.toString().split("x"));
-
         fs.setOutputDom(app.toString());
         fs.setInputDom(defFunctionWithParamsOperation.getDomain());
       } else {

@@ -1,4 +1,8 @@
 head
+int a = 0;
+def f(inout int a){
+	a->;
+}
 
 start
-4.2%2->;
+f(a);

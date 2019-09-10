@@ -46,22 +46,6 @@ parser code {:
     }
 :}
 
-/* define how to connect to the scanner! */
-/*init with {:
-  ComplexSymbolFactory f = new ComplexSymbolFactory();
-  symbolFactory = f;
-  File file = new File("input.txt");
-  FileInputStream fis = null;
-  try {
-    fis = new FileInputStream(file);
-  } catch (IOException e) {
-    e.printStackTrace();
-  } 
-  lexer = new Lexer(f,fis);
-:};
-scan with {: return lexer.next_token(); :};*/
-
-
 /* Terminals (tokens returned by the scanner). */
 terminal String HEAD, START, INT, BOOL, DOUBLE, STRING, CHAR, DEF,  TRUE, FALSE, IF, THEN, ELSE, WHILE, DO, IN, OUT, INOUT, SEMI, RPAR, LGPAR,
 RGPAR, COMMA, PLUS, MINUS, TIMES, DIV, LT, GT, ASSIGN, EQ, LE, GE, UMINUS,
@@ -74,8 +58,6 @@ terminal Character CHAR_CONST;
 terminal String ID;
 
 /* Non terminals */
-//non terminal String Arith_op,Bool_op,Rel_op;
-
  // used to store evaluated subexpressions
 
 non terminal Program Programma;
@@ -213,41 +195,3 @@ Expr ::= Expr:expr1 PLUS Expr:expr2																{:RESULT = new ArithOperation
 		|CHAR_CONST:c																			{:RESULT = new CharConst(cxleft,cxright,c); :}
 		|STRING_CONST:s																			{:RESULT = new StringConst(sxleft,sxright,s); :}
 		;
-		
-		
-	/*			
-Expr ::=  Expr:expr1 Arith_op:ao Expr:expr2														{:RESULT = new ArithOperation(aoxleft,aoxright,expr1,expr2,ao);:} 		
-		| Expr:expr1 Bool_op:bo Expr:expr2														{:RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,bo);:} 
-		| Expr:expr1 Rel_op:ro Expr:expr2														{:RESULT = new RelopOperation(roxleft,roxright,expr1,expr2,ro);:} 		
-		//| Expr:be 																			{:RESULT = be; :}
-		|LPAR Expr:expr RPAR																	{:RESULT = expr;:}
-		| MINUS Expr:expr																		{:RESULT = new MinusExpression(exprxleft,exprxright,expr);:}					 
-		%prec UMINUS
-		| NOT Expr:expr																			{:RESULT = new NotExpression(exprxleft,exprxright,expr);:}
-		| TRUE:t																				{:RESULT = new TrueExpression(txleft,txright);:}								
-		| FALSE:f																				{:RESULT = new FalseExpression(fxleft,fxright);:}		 					
-		| ID: id																				{:RESULT = new IdentifierExpression(idxleft,idxright,id);:} 							 
-		| INT_CONST:i																			{:RESULT = new IntConst(ixleft,ixright,i);:} 						
-		| DOUBLE_CONST :d																		{:RESULT = new DoubleConst(dxleft,dxright,d);:}														
-		| CHAR_CONST:c 																			{:RESULT = new CharConst(cxleft,cxright,c);:} 					
-		| STRING_CONST:s 																		{:RESULT = new StringConst(sxleft,sxright,s);:}
-		;
-
-Arith_op ::= PLUS:s																				{:RESULT = "PLUS";:}													
-			|MINUS:s																			{:RESULT = "MINUS";:}
-			|TIMES:s 																			{:RESULT = "TIMES";:}									
-			|DIV:s  																			{:RESULT = "DIV";:}								
-			;
-		
-Bool_op ::= AND:s																				{:RESULT = "AND";:} 										
-		|	OR:s 																				{:RESULT = "OR";:}					
-		;
-		
-Rel_op	::= GE:s																				{:RESULT = "GE";:} 												
-		|	GT:s 																				{:RESULT = "GT";:}																					
-		|	LE:s    																			{:RESULT = "LE";:} 										
-		|	LT:s																				{:RESULT = "LT";:}									
-		| 	EQ:s																				{:RESULT = "EQ";:}
-		;
-       */
-	
