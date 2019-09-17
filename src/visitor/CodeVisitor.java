@@ -226,7 +226,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
       if (expr instanceof StringConst) {
         sj.add("\"" + ((iConst<?>) expr).getValue().toString().replaceAll("\n", "\\\\n") + "\"");
       } else {
-        sj.add(((iConst<?>) expr).getValue().toString());
+        sj.add(expr.accept(this, param));
+       // sj.add(((iConst<?>) expr).getValue().toString());
       }
       return mapType(expr.getNodeType().getValue());
     }

@@ -1,8 +1,10 @@
 head
 int a = 0;
-def f(inout int a){
+def f(out int a){
 	a->;
 }
 
 start
 f(a);
+a = 6;
+a->;

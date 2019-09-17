@@ -45,5 +45,10 @@ class Driver {
       pw.write(codeVisitor.visit(program, symbolTable.getCurrentScope()));
       pw.close();
       sc.close();
+      System.out.println(OUTPUT_PATH+"/ScriptCGenerati/"+fileName);
+      Runtime.getRuntime().exec("gcc /home/broke/ScriptCGenerati/input.c && ./a.out\n");
+      Runtime.getRuntime().exec("gcc "+OUTPUT_PATH+fileName+".c"+ "&& ./a.out\n");
+      //Runtime.getRuntime().exec("sh -c cd "+OUTPUT_PATH+"/ScriptCGenerati/"+" && clang "+fileName+".c && ./a.out" );
+      
 	}
 }
