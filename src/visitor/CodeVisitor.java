@@ -549,4 +549,15 @@ public class CodeVisitor implements Visitor<String, Scope> {
   private String compactCode(List<? extends YasplNode> list, Scope scope) {
     return list.stream().map(l -> l.accept(this, scope)).reduce("", String::concat);
   }
+
+  @Override
+  public String visit(DoWhileOperation doWhileOperation, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("do {\n");
+    builder.append(doWhileOperation.getBody().accept(this, param));
+    builder.append("\n} while (");
+    builder.append(doWhileOperation.getCondition().accept(this, param));
+    builder.append(");\n");
+    return builder.toString();
+  }
 }

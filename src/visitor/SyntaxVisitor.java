@@ -302,4 +302,13 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     compStat.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
+
+
+  @Override
+  public Element visit(DoWhileOperation doWhileOperation, Void param) {
+    Element el = this.xmlDocument.createElement("DoWhileNode");
+    el.appendChild(doWhileOperation.getBody().accept(this, param));
+    el.appendChild(doWhileOperation.getCondition().accept(this, param));
+    return el;
+  }
 }

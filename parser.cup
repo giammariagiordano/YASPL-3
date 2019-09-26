@@ -162,7 +162,8 @@ Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsx
  		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
  		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
 		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:} 
-			;	
+		| DO Body: body WHILE LPAR Expr: expr RPAR SEMI											{:RESULT = new DoWhileOperation(bodyxleft,bodyxright,body,expr);:} 
+		;	
 
 Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
 		| Expr:expr 																			{:RESULT = new ArrayList<>(); RESULT.add(expr);:}

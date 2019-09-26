@@ -735,4 +735,25 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return false;
   }
+
+  @Override
+  public ReturnType visit(DoWhileOperation doWhileOperation, Logger param) {
+    this.symbolTable.enterScope();
+    doWhileOperation.getBody().accept(this, param);
+    doWhileOperation.getCondition().accept(this, param);
+    if(isUndefined(doWhileOperation.getBody()) && isUndefined(doWhileOperation.getCondition())) {
+      if(doWhileOperation.getCondition().getNodeType() != ReturnType.BOOLEAN) {
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("DoWhileOperation: ", StringError.expectedBoolButFound,
+                doWhileOperation.getCondition().getNodeType().toString(),"'"), doWhileOperation));
+        doWhileOperation.setNodeType(ReturnType.UNDEFINED);
+      }
+      doWhileOperation.setNodeType(ReturnType.VOID);
+    } else  {
+      param.severe(GenerateError.ErrorGenerate("Error DoWhileOperation", doWhileOperation));
+      doWhileOperation.setNodeType(ReturnType.UNDEFINED);
+    }
+    this.symbolTable.exitScope();
+    return doWhileOperation.getNodeType();
+  }
 }
