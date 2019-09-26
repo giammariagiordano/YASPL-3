@@ -1,0 +1,32 @@
+head
+int num1,num2,res;
+
+def MCD(in int num1, in int num2, out int res){
+	int r;
+	int appNum1;
+	int appNum2;
+	appNum1 = num1;
+	appNum2 = num2;
+	while(not(appNum2)==0) do {
+		r = appNum1 % appNum2;
+		appNum1 = appNum2;
+		appNum2 = r;
+	}
+	res = appNum1;
+	
+}
+
+def mcm (in int num1, in int num2, out int res) {
+	int resMCD= res;
+	res= (num1 * num2)/resMCD;
+}
+
+start
+"inserisci il primo numero"->;
+num1<-;
+"inserisci il secondo numero"->;
+num2<-;
+MCD(num1,num2,res);
+"massimo comune divisore: "+res->;
+mcm(num1, num2, res);
+"minimo comune multiplo: "+ res->;

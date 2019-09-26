@@ -1,0 +1,217 @@
+
+package cup.example;
+
+import java_cup.runtime.*;
+import cup.example.Lexer;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileInputStream;
+import java.util.ArrayList;
+import syntax.*;
+import java_cup.runtime.ComplexSymbolFactory.ComplexSymbol;
+import java.util.logging.Logger;
+import java.util.LinkedList;
+import java.util.Iterator;
+import java.util.List;
+
+
+parser code {:
+   private static Logger logger = Logger.getLogger("Parser");
+
+   public void report_error(String message, Object info) {
+     if (info instanceof ComplexSymbol) {
+       ComplexSymbol cs = (ComplexSymbol)info;
+       logger.severe(message + " for input symbol \"" + cs.getName() + "\" spanning from " + cs.getLeft() + " to " + cs.getRight());
+     } else {
+         this.logger.severe(message);
+         if (info instanceof Symbol) {
+           if (((Symbol)info).left != -1) {
+             logger.severe(" at character " + ((Symbol)info).left + " of input");
+           } else {
+              this.logger.severe("");
+           }
+         }
+     }
+   }
+
+   protected void report_expected_token_ids() {
+     List<Integer> ids = this.expected_token_ids();
+     LinkedList<String> list = new LinkedList<>();
+     Iterator var3 = ids.iterator();
+     while(var3.hasNext()) {
+       Integer expected = (Integer)var3.next();
+       list.add(this.symbl_name_from_id(expected));
+      }
+       logger.severe("instead expected token classes are " + list);
+    }
+:}
+
+/* Terminals (tokens returned by the scanner). */
+terminal String HEAD, START, INT, BOOL, DOUBLE, STRING, CHAR, DEF,  TRUE, FALSE, IF, THEN, ELSE, WHILE, DO,FOR, IN, OUT, INOUT, SEMI, RPAR, LGPAR,
+RGPAR, COMMA, PLUS, MINUS, TIMES, DIV, LT, GT, ASSIGN, EQ, LE, GE, UMINUS,
+NOT, AND, OR, READ, WRITE, MOD;
+terminal String LPAR;
+terminal Integer INT_CONST;        // our scanner provides numbers as integers
+terminal Double DOUBLE_CONST;
+terminal String STRING_CONST;
+terminal Character CHAR_CONST;
+terminal String ID;
+
+/* Non terminals */
+ // used to store evaluated subexpressions
+
+non terminal Program Programma;
+non terminal ArrayList<DeclarationNode> Decls;
+non terminal ArrayList<StatementNode> Statements;
+non terminal VarDeclaration Var_decl;
+non terminal DefDeclaration Def_decl;
+non terminal StatementNode Stat;
+non terminal TypeNode Type;
+non terminal ArrayList<VarInitValueId> Var_decls_init;
+non terminal VarInitValue Var_init_value;
+non terminal Expression Expr;
+non terminal ArrayList<IdentifierExpression>Vars;
+non terminal ArrayList<ParDeclsNode> Par_decls;
+non terminal BodyNode Body;
+non terminal ArrayList<VarDeclaration>Var_decls;
+non terminal ParType Par_type;
+non terminal ArrayList<Expression>Args;
+non terminal Expression Bool_Expr;
+non terminal CompStat Comp_stat;
+non terminal ForOperation ForExpr;
+non terminal InitForOperation InitFor;
+non terminal ExprForOperation ExprFor;
+non terminal IncrForOperation IncrFor;
+non terminal RelopOperation ExprRelop;
+non terminal ArithOperation ArithOp; 
+
+/* Precedences */
+precedence left COMMA;
+precedence right ASSIGN;
+precedence left OR;
+precedence left AND;
+precedence left TIMES, DIV, MOD;
+precedence left PLUS, MINUS;
+precedence right NOT;
+precedence nonassoc GT, GE, LT, LE, EQ;
+
+
+/* The grammar rules */
+Programma ::= HEAD:h Decls:decls START Statements:statements 									{:RESULT = new Program(hxleft,hxright,decls,statements);:}		
+			;
+
+Decls ::= Var_decl:var_decl  Decls:decls 														{:decls.add(var_decl); RESULT = decls;:}													
+			| Def_decl:def_decl Decls:decls 													{:decls.add(def_decl); RESULT = decls;:}
+			| 																					{:RESULT = new ArrayList<>();:}										 
+			;
+			
+Statements ::= Stat:stat Statements:statements 													{:statements.add(stat); RESULT = statements;:}
+			|																					{:RESULT = new ArrayList<>();:}
+			;
+
+Var_decl ::= Type:t Var_decls_init:vdi SEMI 													{:RESULT = new VarDeclaration(txleft,txright,t,vdi);:}										
+			;
+		
+Type ::=  INT:i																					{:RESULT = new TypeNode(ixleft,ixright,"int");:}					
+		| BOOL:b																				{:RESULT = new TypeNode(bxleft,bxright,"bool");;:}						
+		| DOUBLE:d																				{:RESULT = new TypeNode(dxleft,dxright,"double");:}
+		| STRING:s																				{:RESULT = new TypeNode(sxleft,sxright,"string");:}
+		| CHAR:c																				{:RESULT = new TypeNode(cxleft,cxright,"char");:}
+		;
+			
+Var_decls_init ::= ID:id Var_init_value:viv  COMMA Var_decls_init:vdi 							{:vdi.add(new VarInitValueId(idxleft,idxright,id,viv)); RESULT =vdi;:}						
+				|  ID:id Var_init_value:viv										 				{:
+																									RESULT = new ArrayList<VarInitValueId>();
+																									RESULT.add(new VarInitValueId(idxleft,idxright,id,viv));
+																								:}				
+			 	;
+			 
+Var_init_value ::= ASSIGN  Expr:e																{:RESULT = new VarInitValue(exleft,exright,e);:}
+				|  																				{:RESULT = new VarInitValue(null,null);:}	//bomba							
+				;
+				
+Vars ::= ID:id COMMA Vars:vars 																	{:vars.add(new IdentifierExpression(idxleft,idxright,id)); RESULT = vars;:}						
+		| ID:id																					{:
+																								RESULT = new ArrayList<IdentifierExpression>();
+																								RESULT.add(new IdentifierExpression(idxleft,idxright,id));
+																								:}					
+		;
+		
+Def_decl ::= DEF ID:id LPAR Par_decls:pd RPAR Body:body 										{:RESULT = new DefFunctionWithParamsOperation(idxleft,idxright,id,pd,body);:}
+			|  DEF ID:id LPAR RPAR Body:body 													{:RESULT = new DefFunctionWithoutParamsOperation(idxleft,idxright,id,body);:}
+			;
+			
+Var_decls ::=  Var_decl:vd Var_decls:vds 														{:vds.add(vd); RESULT = vds;:}									
+			| 																					{:RESULT = new ArrayList<>();:}
+			;
+
+Par_decls ::= Par_type:pt Type:type ID:id COMMA Par_decls:pds									{:pds.add(new ParDeclsNode(ptxleft,ptxright,pt,type,new IdentifierExpression(idxleft,idxright,id))); RESULT = pds;:}
+			| 	 Par_type:pt Type:type ID:id 													{:
+																								RESULT = new ArrayList<>();
+																								RESULT.add(new ParDeclsNode(ptxleft,ptxright,pt,type,new IdentifierExpression(idxleft,idxright,id)));
+																								:}								
+			;
+
+Par_type ::= IN:i																				{:RESULT = new ParType(ixleft,ixright,"in");:}						
+			| OUT:i 																			{:RESULT = new ParType(ixleft,ixright,"out");:}
+			| INOUT:i 																			{:RESULT = new ParType(ixleft,ixright,"inout");:}
+			;
+
+Body ::= LGPAR Var_decls:vd Statements:statements RGPAR											{:RESULT = new BodyNode(vdxleft,vdxright,vd,statements);:} 
+		;
+		//for ( i=0; i<  x; i = i+1) {}
+Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsxleft,varsxright,vars);:}													
+		| Args:args WRITE SEMI 																	{:RESULT = new WriteOperation(argsxleft,argsxright,args);:}
+		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}							
+		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallWithParamsOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
+		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParamsOperation(idxleft,idxright,id);:}
+ 		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
+ 		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
+		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:} 
+		| FOR LPAR InitFor:initFor SEMI ExprFor: expr SEMI IncrFor: incrFor RPAR Body:body		{:RESULT = new ForOperation(initForxleft,initForxright,initFor,expr,incrFor,body);:}
+		;
+		
+InitFor ::= Type: t ID : id ASSIGN Expr:expr 													{:RESULT = new InitForOperation(txleft,txright,t,new IdentifierExpression(idxleft,idxright,id),expr);:}
+		| ID: id ASSIGN Expr:expr																{:RESULT = new InitForOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}
+		|																						{:RESULT = new InitForOperation(null,null);:}
+		;
+		
+ExprFor::= Expr: expr																		{:RESULT = new ExprForOperation(exprxleft,exprxright,expr);:}
+		|																						{:RESULT = new ExprForOperation(null,null);:}
+		;
+IncrFor::= ID: id ASSIGN Expr: expr																{:RESULT = new IncrForOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}
+		|																						{:RESULT = new IncrForOperation(null,null);:}
+		;
+
+
+Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
+		| Expr:expr 																			{:RESULT = new ArrayList<>(); RESULT.add(expr);:}
+		;
+		
+Comp_stat ::= LGPAR Statements:cs RGPAR															{:RESULT = new CompStat(csxleft,csxright,cs);:} 	
+			;
+
+Expr ::= Expr:expr1 PLUS Expr:expr2																{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "PLUS"); :}
+		|Expr:expr1 MINUS Expr:expr2 															{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "MINUS"); :}
+		|Expr:expr1 TIMES Expr:expr2 															{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "TIMES"); :}
+		|Expr:expr1 DIV Expr:expr2 																{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "DIV"); :}	
+		|Expr:expr1 MOD Expr: expr2																{:RESULT = new ArithOperation(expr1xleft,expr1xright,expr1, expr2, "MOD");:}
+		|Expr:expr1 AND Expr:expr2																{:RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"AND"); :}
+		|Expr:expr1 OR Expr:expr2 																{:RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"OR");:}
+		|Expr:expr1 GT Expr:expr2																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GT"); :}
+		|Expr:expr1 GE Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GE"); :}
+		|Expr:expr1 LT Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"LT"); :}
+		|Expr:expr1 LE Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"LE"); :}
+		|Expr:expr1 EQ Expr:expr2 																{:RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"EQ"); :}
+		|MINUS Expr:expr 																		{:RESULT = new MinusExpression(exprxleft,exprxright,expr); :} 
+		%prec UMINUS				
+		|NOT Expr:expr																			{:RESULT = new NotExpression(exprxleft,exprxright,expr); :}
+		|LPAR Expr:expr RPAR																	{:RESULT = expr; :}
+		|TRUE:t																					{:RESULT =  new TrueExpression(txleft,txright); :}
+		|FALSE:f																				{:RESULT = new FalseExpression(fxleft,fxright); :}
+		|ID:id																					{:RESULT = new IdentifierExpression(idxleft,idxright,id); :}							
+		|INT_CONST:i																			{:RESULT = new IntConst(ixleft,ixright,i); :}	
+		|DOUBLE_CONST:d																			{:RESULT = new  DoubleConst(dxleft,dxright,d);:}
+		|CHAR_CONST:c																			{:RESULT = new CharConst(cxleft,cxright,c); :}
+		|STRING_CONST:s																			{:RESULT = new StringConst(sxleft,sxright,s); :}
+		;

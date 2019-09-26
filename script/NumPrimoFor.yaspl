@@ -1,0 +1,25 @@
+head
+bool primo = true;
+int num;
+def numPrimo(in int num, out bool isPrimo){
+ int i = 2;
+if(num == 2 or num == 1) then {
+    isPrimo = true;
+} else {
+    for(i=2; i<=num; ){
+        if((num% i) == 0) then {
+            isPrimo = false;
+        }
+        i = i+1;
+    }
+}
+}
+start
+"Inserisci un numero intero positivo"->;
+num<-;
+numPrimo(num,primo);
+if(primo) then {
+    "il numero è primo"->;
+} else {
+    "il numero non è primo"->;
+}
