@@ -9,6 +9,7 @@ import syntax.*;
 
 public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   private final SymbolTable symbolTable;
+
   public SemanticVisitor(SymbolTable symbolTable) {
     this.symbolTable = symbolTable;
   }
@@ -18,12 +19,12 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     arithOperation.getLeftOperand().accept(this, param);
     arithOperation.getRightOperand().accept(this, param);
     if (isOutVar(arithOperation.getLeftOperand())) {
-      param.severe(
-          GenerateError.ErrorGenerate(StringError.setMes("ArithOperation: ", StringError.outError), arithOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("ArithOperation: ", StringError.outError), arithOperation));
     }
     if (isOutVar(arithOperation.getRightOperand())) {
-      param.severe(
-          GenerateError.ErrorGenerate(StringError.setMes("ArithOperation: ",StringError.outError), arithOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("ArithOperation: ", StringError.outError), arithOperation));
     }
     if (this.isUndefined(arithOperation.getLeftOperand())
         && this.isUndefined(arithOperation.getRightOperand())) {
@@ -38,16 +39,14 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         arithOperation.setNodeType(CompatibilityType.ARITHOP[row][col]);
       }
       if (arithOperation.getNodeType() == ReturnType.UNDEFINED) {
-        param
-            .severe(
-                GenerateError.ErrorGenerate(StringError.setMes(
-                    "ArithOperation: ",StringError.typeMismatch,left.toString(),"'right:'",right.toString() ,
-                    "' for ",arithOperation.getOperation()," expression"),
-                    arithOperation));
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("ArithOperation: ",
+            StringError.typeMismatch, left.toString(), "'right:'", right.toString(), "' for ",
+            arithOperation.getOperation(), " expression"), arithOperation));
 
       }
     } else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("ArithOperation ", StringError.notAllowed), arithOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("ArithOperation ", StringError.notAllowed), arithOperation));
       arithOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return arithOperation.getNodeType();
@@ -59,10 +58,11 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     booleanOperation.getRightOperand().accept(this, param);
     if (isOutVar(booleanOperation.getLeftOperand())) {
       param.severe(GenerateError.ErrorGenerate(
-          StringError.setMes("BooleanOpertion: ", StringError.outError),booleanOperation));
+          StringError.setMes("BooleanOpertion: ", StringError.outError), booleanOperation));
     }
     if (isOutVar(booleanOperation.getRightOperand())) {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("BooleanOpertion: ", StringError.outError),booleanOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("BooleanOpertion: ", StringError.outError), booleanOperation));
     }
 
     if (this.isUndefined(booleanOperation.getLeftOperand())
@@ -73,14 +73,13 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       int col = CompatibilityType.getIndexFor(right);
       booleanOperation.setNodeType(CompatibilityType.BOOLOP[row][col]);
       if (booleanOperation.getNodeType() == ReturnType.UNDEFINED) {
-        param
-            .severe(GenerateError.ErrorGenerate(StringError.setMes(
-                "BooleanOperation: ",StringError.typeMismatch,left.toString(),"'right:'",right.toString() ,
-                "' for ",booleanOperation.getOperation().toString()," expression"),
-                booleanOperation));
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("BooleanOperation: ",
+            StringError.typeMismatch, left.toString(), "'right:'", right.toString(), "' for ",
+            booleanOperation.getOperation().toString(), " expression"), booleanOperation));
       }
     } else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("BooleanOperation ", StringError.notAllowed), booleanOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("BooleanOperation ", StringError.notAllowed), booleanOperation));
       booleanOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return booleanOperation.getNodeType();
@@ -91,8 +90,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     relopOperation.getLeftOperand().accept(this, param);
     relopOperation.getRightOperand().accept(this, param);
     if (isOutVar(relopOperation.getRightOperand())) {
-      param.severe(
-          GenerateError.ErrorGenerate(StringError.setMes("RelopOpertion: ", StringError.outError), relopOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("RelopOpertion: ", StringError.outError), relopOperation));
     }
     if (this.isUndefined(relopOperation.getLeftOperand())
         && this.isUndefined(relopOperation.getRightOperand())) {
@@ -107,16 +106,13 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         relopOperation.setNodeType(CompatibilityType.RELOP[row][col]);
       }
       if (relopOperation.getNodeType() == ReturnType.UNDEFINED) {
-        param
-            .severe(
-                GenerateError.ErrorGenerate(
-                    StringError.setMes(
-                        "RelopOperation: ",StringError.typeMismatch,left.toString(),"'right:'",right.toString() ,
-                        "' for ",relopOperation.getOperation().toString()," expression"),
-                    relopOperation));
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("RelopOperation: ",
+            StringError.typeMismatch, left.toString(), "'right:'", right.toString(), "' for ",
+            relopOperation.getOperation().toString(), " expression"), relopOperation));
       }
     } else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("RelopOperation ", StringError.notAllowed),relopOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("RelopOperation ", StringError.notAllowed), relopOperation));
       relopOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return relopOperation.getNodeType();
@@ -126,20 +122,22 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   public ReturnType visit(MinusExpression minus, Logger param) {
     minus.getExpr().accept(this, param);
     if (isOutVar(minus.getExpr())) {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("MinusExpression: ", StringError.outError), minus));
+      param.severe(GenerateError
+          .ErrorGenerate(StringError.setMes("MinusExpression: ", StringError.outError), minus));
     }
     if (this.isUndefined(minus.getExpr())) {
       ReturnType type = minus.getExpr().getNodeType();
       int row = CompatibilityType.getIndexFor(type);
       minus.setNodeType(CompatibilityType.UMINUS[row]);
       if (minus.getNodeType() == ReturnType.UNDEFINED) {
-        param.severe(
-            GenerateError.ErrorGenerate("MinusExpression: Expected Integer or Double", minus));
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("MinusExpression: Expected Integer or Double"), minus));
         minus.setNodeType(ReturnType.UNDEFINED);
       }
     } // else isUndefined
     else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("MinusExpression ", StringError.notAllowed), minus));
+      param.severe(GenerateError
+          .ErrorGenerate(StringError.setMes("MinusExpression ", StringError.notAllowed), minus));
       minus.setNodeType(ReturnType.UNDEFINED);
 
     }
@@ -150,20 +148,22 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   public ReturnType visit(NotExpression notExpression, Logger param) {
     notExpression.getExpr().accept(this, param);
     if (isOutVar(notExpression.getExpr())) {
-      param.severe(
-          GenerateError.ErrorGenerate(StringError.setMes("NotExpression: ", StringError.outError), notExpression));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("NotExpression: ", StringError.outError), notExpression));
     }
     if (this.isUndefined(notExpression.getExpr())) {
       ReturnType type = notExpression.getExpr().getNodeType();
       int row = CompatibilityType.getIndexFor(type);
       notExpression.setNodeType(CompatibilityType.NOTOP[row]);
       if (notExpression.getNodeType() == ReturnType.UNDEFINED) {
-        param.severe(GenerateError.ErrorGenerate("NotExpression: Expected Boolean", notExpression));
+        param.severe(GenerateError
+            .ErrorGenerate(StringError.setMes("NotExpression: Expected Boolean"), notExpression));
         notExpression.setNodeType(ReturnType.UNDEFINED);
       }
     } // else isUndefined
     else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("NotExpression ", StringError.notAllowed), notExpression));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("NotExpression ", StringError.notAllowed), notExpression));
       notExpression.setNodeType(ReturnType.UNDEFINED);
 
     }
@@ -224,13 +224,17 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       if (whileOperation.getCondition().getNodeType() == ReturnType.BOOLEAN) {
         whileOperation.setNodeType(ReturnType.VOID);
       } else {
-        param.severe(GenerateError.ErrorGenerate(
-            StringError.setMes("WhileOperation: ", StringError.expectedBoolButFound,
-                whileOperation.getCondition().getNodeType().toString(),"'"), whileOperation));
+        param
+            .severe(
+                GenerateError.ErrorGenerate(
+                    StringError.setMes("WhileOperation: ", StringError.expectedBoolButFound,
+                        whileOperation.getCondition().getNodeType().toString(), "'"),
+                    whileOperation));
         whileOperation.setNodeType(ReturnType.UNDEFINED);
       }
     } else {
-      param.severe(GenerateError.ErrorGenerate("Error WhileOperation", whileOperation));
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("Error WhileOperation"), whileOperation));
       whileOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return whileOperation.getNodeType();
@@ -249,9 +253,10 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         ifThenOperation.setNodeType(ReturnType.VOID);
       } else {
         param
-            .severe(GenerateError.ErrorGenerate(StringError.setMes("IfThenOperation: ",
-                StringError.expectedBoolButFound,
-                ifThenOperation.getCondition().getNodeType().toString(),"'"), ifThenOperation));
+            .severe(GenerateError.ErrorGenerate(
+                StringError.setMes("IfThenOperation: ", StringError.expectedBoolButFound,
+                    ifThenOperation.getCondition().getNodeType().toString(), "'"),
+                ifThenOperation));
         ifThenOperation.setNodeType(ReturnType.UNDEFINED);
       }
     } else {
@@ -268,8 +273,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     ifThenElseOperation.getElseCompStat().accept(this, param);
     ifThenElseOperation.getCondition().accept(this, param);
     if (isOutVar(ifThenElseOperation.getCondition())) {
-      param.severe(GenerateError.ErrorGenerate("IfThenElseOperation: " + StringError.outError,
-          ifThenElseOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("IfThenElseOperation: ", StringError.outError), ifThenElseOperation));
     }
     if (this.isUndefined(ifThenElseOperation.getCondition())
         && this.isUndefined(ifThenElseOperation.getThenCompStat())
@@ -277,18 +282,17 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       if (ifThenElseOperation.getCondition().getNodeType() == ReturnType.BOOLEAN) {
         ifThenElseOperation.setNodeType(ReturnType.VOID);
       } else {
-        param
-            .severe(
-                GenerateError.ErrorGenerate(
-                    "IfThenElseOperation: expected 'BOOLEAN'" + " but I found: '"
-                        + ifThenElseOperation.getCondition().getNodeType() + "'",
-                    ifThenElseOperation));
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("IfThenElseOperation: expected 'BOOLEAN' but I found: '",
+                ifThenElseOperation.getCondition().getNodeType().toString(), "'"),
+            ifThenElseOperation));
         ifThenElseOperation.setNodeType(ReturnType.UNDEFINED);
       }
     } else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("IfThenElseOperation: ",
-          StringError.expectedBoolButFound,
-          ifThenElseOperation.getCondition().getNodeType().toString(),"'"), ifThenElseOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("IfThenElseOperation: ", StringError.expectedBoolButFound,
+              ifThenElseOperation.getCondition().getNodeType().toString(), "'"),
+          ifThenElseOperation));
       ifThenElseOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return ifThenElseOperation.getNodeType();
@@ -303,7 +307,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (this.checkAll(readOperation.getVars().getVarsNames())) {
       readOperation.setNodeType(readOperation.getVars().getNodeType());
     } else {
-      param.severe(GenerateError.ErrorGenerate("Error Read Operation", readOperation));
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("Error Read Operation"), readOperation));
       readOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return readOperation.getNodeType();
@@ -317,7 +322,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     } else {
       vars.setNodeType(ReturnType.UNDEFINED);
       param.severe(GenerateError.ErrorGenerate(
-          StringError.setMes("Error Vars: ",StringError.variableNotDeclared), vars));
+          StringError.setMes("Error Vars: ", StringError.variableNotDeclared), vars));
     }
     return vars.getNodeType();
   }
@@ -329,7 +334,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       args.setNodeType(ReturnType.VOID);
     } else {
       args.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate("Error Args", args));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error Args"), args));
     }
     return args.getNodeType();
   }
@@ -343,7 +348,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (this.checkAll(writeOperation.getArgs().getExprArgs())) {
       writeOperation.setNodeType(writeOperation.getArgs().getNodeType());
     } else {
-      param.severe(GenerateError.ErrorGenerate("Error WriteOperation", writeOperation));
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("Error WriteOperation"), writeOperation));
       writeOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return writeOperation.getNodeType();
@@ -364,24 +370,24 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       Variable varLeft = (Variable) this.symbolTable.lookup(addrLeft).get(addrLeft);
       // se ho una expr del tipo a = b dove a è in
       if (varLeft.getVarType() == VariableType.IN) {
-        param.severe(GenerateError.ErrorGenerate(StringError.setMes("AssignOperation: ", StringError.inError),
-            assignOperation));
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("AssignOperation: ", StringError.inError), assignOperation));
       }
       // se ho una expr del tipo a = b (dove b è out)
       if (isOutVar(assignOperation.getExpr())) {
-        param.severe(GenerateError.ErrorGenerate(StringError.setMes("AssignOperation: ", StringError.outError),
-            assignOperation));
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("AssignOperation: ", StringError.outError), assignOperation));
       }
       if (assignOperation.getNodeType() == ReturnType.UNDEFINED) {
         ReturnType identifier = assignOperation.getVarName().getNodeType();
         ReturnType expression = assignOperation.getExpr().getNodeType();
-        param.severe(GenerateError.ErrorGenerate(
-            "AssignOperation: expected " + identifier + " for variable '"
-                + assignOperation.getVarName().getName() + "' but I found " + expression,
-            assignOperation));
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("AssignOperation: expected ",
+            identifier.toString(), " for variable '", assignOperation.getVarName().getName(),
+            "' but I found ", expression.toString()), assignOperation));
       }
     } else {
-      param.severe(GenerateError.ErrorGenerate("Error AssignOperation", assignOperation));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error AssignOperation"),
+          assignOperation));
       assignOperation.setNodeType(ReturnType.UNDEFINED);
     }
     return assignOperation.getNodeType();
@@ -398,15 +404,16 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         callWithParamsOperation.setNodeType(ReturnType.VOID);
       } else {
         param.severe(GenerateError.ErrorGenerate(
-            "CallWithParamsOperation: invalid parameters " + "expected: '" + fs.getInputDom().replaceAll("x",", ")
-                + "' but I found: '" + callWithParamsOperation.getDomain().replaceAll("x", ", ") + "" + "'",
+            StringError.setMes("CallWithParamsOperation: invalid parameters expected: '",
+                fs.getInputDom().replaceAll("x", ", "), "' but I found: '",
+                callWithParamsOperation.getDomain().replaceAll("x", ", "), "", "'"),
             callWithParamsOperation));
         callWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
       }
     } else {
       callWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
-      param.severe(
-          GenerateError.ErrorGenerate("Error callWithParamsOperation", callWithParamsOperation));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error callWithParamsOperation"),
+          callWithParamsOperation));
     }
     return callWithParamsOperation.getNodeType();
   }
@@ -421,15 +428,16 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         callWithoutParamsOperation.setNodeType(ReturnType.VOID);
       } else {
         param.severe(GenerateError.ErrorGenerate(
-            "CallWithoutParamsOperation: invalid parameters" + "expected: " + fs.getInputDom().replaceAll("x", ", ")
-                + "but I found " + callWithoutParamsOperation.getDomain().replaceAll("x", ", "),
+            StringError.setMes("CallWithoutParamsOperation: invalid parameters expected: ",
+                fs.getInputDom().replaceAll("x", ", "), "but I found ",
+                callWithoutParamsOperation.getDomain().replaceAll("x", ", ")),
             callWithoutParamsOperation));
         callWithoutParamsOperation.setNodeType(ReturnType.UNDEFINED);
       }
     } else {
       callWithoutParamsOperation.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate("Error CallWithoutParamsOperation",
-          callWithoutParamsOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("Error CallWithoutParamsOperation"), callWithoutParamsOperation));
     }
     return callWithoutParamsOperation.getNodeType();
   }
@@ -443,7 +451,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       program.setNodeType(ReturnType.VOID);
     } else {
       program.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate("Error Program", program));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error Program"), program));
     }
     program.attachScope(this.symbolTable.getCurrentScope());
     return program.getNodeType();
@@ -456,7 +464,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         || type.getTypeName().equals("char")) {
       type.setNodeType(ReturnType.getEnumFor(type.getTypeName()));
     } else {
-      param.severe(GenerateError.ErrorGenerate("TypeNode: invalid type", type));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("TypeNode: invalid type"), type));
       type.setNodeType(ReturnType.UNDEFINED);
     }
     return type.getNodeType();
@@ -470,7 +478,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         varInitValue.setNodeType(ReturnType.VOID);
       } else {
         varInitValue.setNodeType(ReturnType.UNDEFINED);
-        param.severe(GenerateError.ErrorGenerate("Error VarInitValue", varInitValue));
+        param.severe(
+            GenerateError.ErrorGenerate(StringError.setMes("Error VarInitValue"), varInitValue));
       }
       return varInitValue.getNodeType();
     }
@@ -489,17 +498,18 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
             .equals(varInitValueId.getInitialValue().getExpr().getNodeType())) {
           varInitValueId.setNodeType(ReturnType.VOID);
         } else {
-          param
-              .severe(GenerateError.ErrorGenerate(
-                  "VarInitValueId: expected '" + varInitValueId.getVarName().getNodeType()
-                      + "' for variable '" + varInitValueId.getVarName().getName()
-                      + "' but I found " + varInitValueId.getInitialValue().getExpr().getNodeType(),
-                  varInitValueId));
+          param.severe(GenerateError.ErrorGenerate(
+              StringError.setMes("VarInitValueId: expected '",
+                  varInitValueId.getVarName().getNodeType().toString(), "' for variable '",
+                  varInitValueId.getVarName().getName(), "' but I found ",
+                  varInitValueId.getInitialValue().getExpr().getNodeType().toString()),
+              varInitValueId));
           varInitValueId.setNodeType(ReturnType.UNDEFINED);
         }
       } else {
         param.severe(GenerateError.ErrorGenerate(
-            StringError.setMes("Error in VarInitValueId: ", StringError.undefinedParameters),
+            StringError.setMes(
+                StringError.setMes("Error in VarInitValueId: ", StringError.undefinedParameters)),
             varInitValueId));
       }
     }
@@ -526,16 +536,18 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         if (!symbolTable.prob(tmpAddress))
           this.symbolTable.add(tmpAddress, new Variable(varType));
         else {
-          param.severe(GenerateError.ErrorGenerate(
-              StringError.setMes("Error in VariableDeclaration: ", StringError.variableAlreadyDeclared,
-                  v.getVarName().getName()), varDeclaration));
+          param
+              .severe(GenerateError.ErrorGenerate(
+                  StringError.setMes("Error in VariableDeclaration: ",
+                      StringError.variableAlreadyDeclared, v.getVarName().getName()),
+                  varDeclaration));
           varDeclaration.setNodeType(ReturnType.UNDEFINED);
         }
       });
     } else {
-      param.severe(GenerateError.ErrorGenerate(
-          StringError.setMes("Error in VariableDeclaration: ", StringError.variableAlreadyDeclared,
-              getAllNameVarUndefined(varDeclaration).toString()), varDeclaration));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error in VariableDeclaration: ",
+          StringError.variableAlreadyDeclared, getAllNameVarUndefined(varDeclaration).toString()),
+          varDeclaration));
       varDeclaration.setNodeType(ReturnType.UNDEFINED);
     }
     varDeclaration.getVariables().forEach(v -> v.accept(this, param));
@@ -562,7 +574,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         || parType.getType().equals("inout") || parType.getType().equals("global")) {
       parType.setNodeType(ReturnType.getEnumFor(parType.getType()));
     } else {
-      param.severe(GenerateError.ErrorGenerate("ParType: invalid parType", parType));
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("ParType: invalid parType"), parType));
       parType.setNodeType(ReturnType.UNDEFINED);
     }
     return parType.getNodeType();
@@ -579,7 +592,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       });
       varDecls.setNodeType(ReturnType.VOID);
     } else {
-      param.severe(GenerateError.ErrorGenerate("Error in VarDecls", varDecls));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error in VarDecls"), varDecls));
       varDecls.setNodeType(ReturnType.UNDEFINED);
     }
     return varDecls.getNodeType();
@@ -618,14 +631,16 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       } else {
         defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
         param.severe(GenerateError.ErrorGenerate(
-            "DefFunctionWithParamsOperation: invalid parameters", defFunctionWithParamsOperation));
+            StringError.setMes("DefFunctionWithParamsOperation: invalid parameters"),
+            defFunctionWithParamsOperation));
       }
       defFunctionWithParamsOperation.attachScope(this.symbolTable.getCurrentScope());
       this.symbolTable.exitScope();
     } else {
       defFunctionWithParamsOperation.setNodeType(ReturnType.UNDEFINED);
       param.severe(GenerateError.ErrorGenerate(
-          StringError.setMes("DefFunctionWithParamsOperation: ", StringError.functionAlreadyDeclared,
+          StringError.setMes("DefFunctionWithParamsOperation: ",
+              StringError.functionAlreadyDeclared,
               defFunctionWithParamsOperation.getFunctionName().getName()),
           defFunctionWithParamsOperation));
     }
@@ -639,7 +654,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (this.checkAll(body.getVarDecls()) && this.checkAll(body.getStatementsNode())) {
       body.setNodeType(ReturnType.VOID);
     } else {
-      param.severe(GenerateError.ErrorGenerate("BodyNode: invalid body", body));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("BodyNode: invalid body"), body));
       body.setNodeType(ReturnType.UNDEFINED);
     }
     return body.getNodeType();
@@ -661,16 +676,19 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         defFunctionWithoutParamsOperation.setNodeType(ReturnType.VOID);
       } else {
         defFunctionWithoutParamsOperation.setNodeType(ReturnType.UNDEFINED);
-        param.severe(
-            GenerateError.ErrorGenerate("DefFunctionWithoutParamsOperation: invalid parameters",
-                defFunctionWithoutParamsOperation));
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("DefFunctionWithoutParamsOperation: invalid parameters"),
+            defFunctionWithoutParamsOperation));
       }
       defFunctionWithoutParamsOperation.attachScope(this.symbolTable.getCurrentScope());
       this.symbolTable.exitScope();
     } else {
       defFunctionWithoutParamsOperation.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("DefFunctionWithoutParamsOperation: ", StringError.functionAlreadyDeclared,
-          defFunctionWithoutParamsOperation.getFunctionName().getName()), defFunctionWithoutParamsOperation));
+      param.severe(GenerateError.ErrorGenerate(
+          StringError.setMes("DefFunctionWithoutParamsOperation: ",
+              StringError.functionAlreadyDeclared,
+              defFunctionWithoutParamsOperation.getFunctionName().getName()),
+          defFunctionWithoutParamsOperation));
     }
     return defFunctionWithoutParamsOperation.getNodeType();
   }
@@ -682,7 +700,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       compStat.setNodeType(ReturnType.VOID);
     } else {
       compStat.setNodeType(ReturnType.UNDEFINED);
-      param.severe(GenerateError.ErrorGenerate("Error CompStat", compStat));
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error CompStat"), compStat));
     }
     return compStat.getNodeType();
   }
@@ -736,20 +754,24 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return false;
   }
 
+
+
   @Override
   public ReturnType visit(DoWhileOperation doWhileOperation, Logger param) {
     this.symbolTable.enterScope();
     doWhileOperation.getBody().accept(this, param);
     doWhileOperation.getCondition().accept(this, param);
-    if(isUndefined(doWhileOperation.getBody()) && isUndefined(doWhileOperation.getCondition())) {
-      if(doWhileOperation.getCondition().getNodeType() != ReturnType.BOOLEAN) {
-        param.severe(GenerateError.ErrorGenerate(
-            StringError.setMes("DoWhileOperation: ", StringError.expectedBoolButFound,
-                doWhileOperation.getCondition().getNodeType().toString(),"'"), doWhileOperation));
+    if (isUndefined(doWhileOperation.getBody()) && isUndefined(doWhileOperation.getCondition())) {
+      if (doWhileOperation.getCondition().getNodeType() != ReturnType.BOOLEAN) {
+        param
+            .severe(GenerateError.ErrorGenerate(
+                StringError.setMes("DoWhileOperation: ", StringError.expectedBoolButFound,
+                    doWhileOperation.getCondition().getNodeType().toString(), "'"),
+                doWhileOperation));
         doWhileOperation.setNodeType(ReturnType.UNDEFINED);
       }
       doWhileOperation.setNodeType(ReturnType.VOID);
-    } else  {
+    } else {
       param.severe(GenerateError.ErrorGenerate("Error DoWhileOperation", doWhileOperation));
       doWhileOperation.setNodeType(ReturnType.UNDEFINED);
     }
