@@ -19,8 +19,8 @@ import visitor.Visitor;
  * </pre>
  */
 
-public class VarDecls extends YasplNode {
-  private final List<VarDeclaration> varsDeclarations;
+public class VarDecls  {
+  /*private final List<VarDeclaration> varsDeclarations;
 
   /*
    * Create a new varDeclaration node
@@ -31,23 +31,24 @@ public class VarDecls extends YasplNode {
    *
    * @param varsDeclarations for list of variables
    */
-  public VarDecls(Location left, Location right, List<VarDeclaration> varsDeclarations) {
+ /* public VarDecls(Location left, Location right, List<VarDeclaration> varsDeclarations) {
     super(left, right);
     Collections.reverse(varsDeclarations);
     this.varsDeclarations = varsDeclarations;
-  }
+  }*/
 
   /*
    * Get the list of variable Declarations
    * 
    * @return Variable Declaration
    */
-  public List<VarDeclaration> getVarsDeclarations() {
+ /* public List<VarDeclaration> getVarsDeclarations() {
     return varsDeclarations;
-  }
+  }*/
 
-  @Override
+  /*@Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
-  }
+  }*/
 }
+

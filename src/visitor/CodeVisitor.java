@@ -427,10 +427,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
     return parType.getType();
   }
 
-  @Override
+ /* @Override
   public String visit(VarDecls varDecls, Scope param) {
     return compactCode(varDecls.getVarsDeclarations(), param);
-  }
+  }*/
 
   @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
