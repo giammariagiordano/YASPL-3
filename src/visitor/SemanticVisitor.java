@@ -580,7 +580,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return parType.getNodeType();
   }
-
+/*
   @Override
   public ReturnType visit(VarDecls varDecls, Logger param) {
     varDecls.getVarsDeclarations().forEach(v -> v.accept(this, param));
@@ -596,7 +596,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       varDecls.setNodeType(ReturnType.UNDEFINED);
     }
     return varDecls.getNodeType();
-  }
+  }*/
 
   @Override
   public ReturnType visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation,
@@ -754,28 +754,63 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return false;
   }
 
+  @Override
+  public ReturnType visit(SwitchBodyNode switchBodyNode, Logger param) {
 
+    switchBodyNode.getExpr().accept(this, param);
+    if(isUndefined(switchBodyNode.getExpr())) {
+      if(switchBodyNode.getExpr().getNodeType() != ReturnType.INTEGER) {
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("si nu scem, voglio int nel case"), switchBodyNode));
+        switchBodyNode.setNodeType(ReturnType.UNDEFINED);
+      }
+     }
+    switchBodyNode.getBody().accept(this, param);
+    this.symbolTable.enterScope();
+    if(!isUndefined(switchBodyNode.getBody())) {
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("body non definito"), switchBodyNode));
+      switchBodyNode.setNodeType(ReturnType.UNDEFINED);
+    }
+
+    switchBodyNode.setNodeType(ReturnType.VOID);
+    this.symbolTable.exitScope();
+    return switchBodyNode.getNodeType();
+  }
 
   @Override
-  public ReturnType visit(DoWhileOperation doWhileOperation, Logger param) {
-    this.symbolTable.enterScope();
-    doWhileOperation.getBody().accept(this, param);
-    doWhileOperation.getCondition().accept(this, param);
-    if (isUndefined(doWhileOperation.getBody()) && isUndefined(doWhileOperation.getCondition())) {
-      if (doWhileOperation.getCondition().getNodeType() != ReturnType.BOOLEAN) {
-        param
-            .severe(GenerateError.ErrorGenerate(
-                StringError.setMes("DoWhileOperation: ", StringError.expectedBoolButFound,
-                    doWhileOperation.getCondition().getNodeType().toString(), "'"),
-                doWhileOperation));
-        doWhileOperation.setNodeType(ReturnType.UNDEFINED);
-      }
-      doWhileOperation.setNodeType(ReturnType.VOID);
-    } else {
-      param.severe(GenerateError.ErrorGenerate("Error DoWhileOperation", doWhileOperation));
-      doWhileOperation.setNodeType(ReturnType.UNDEFINED);
-    }
-    this.symbolTable.exitScope();
-    return doWhileOperation.getNodeType();
+  public ReturnType visit(SwitchOperation switchOperation, Logger param) {
+    switchOperation.getExpr().accept(this, param);
+     if(switchOperation.getExpr().getNodeType() != ReturnType.INTEGER) {
+       param.severe(GenerateError.ErrorGenerate(StringError.setMes("si nu scem, voglio int"), switchOperation));
+       switchOperation.setNodeType(ReturnType.UNDEFINED);
+     } 
+     if(switchOperation.getSwitchBody()!=null) {
+       switchOperation.getSwitchBody().forEach(b -> {
+       b.accept(this, param);
+       if(!isUndefined(b)) {
+         param.severe(GenerateError.ErrorGenerate(StringError.setMes("body switch non valido"), switchOperation));
+         switchOperation.setNodeType(ReturnType.UNDEFINED);
+       }
+       });
+     }  
+     if(switchOperation.getDefBody()!=null) {
+       switchOperation.getDefBody().accept(this, param);
+       if(!isUndefined(switchOperation.getDefBody())) {
+         param.severe(GenerateError.ErrorGenerate(StringError.setMes("body switch non valido"), switchOperation));
+          switchOperation.setNodeType(ReturnType.UNDEFINED);
+       }
+     }
+     switchOperation.setNodeType(ReturnType.VOID);
+    return switchOperation.getNodeType();
+  }
+
+  @Override
+  public ReturnType visit(DefBodyNode defBodyNode, Logger param) {
+   defBodyNode.getBody().accept(this, param);
+   if(!isUndefined(defBodyNode.getBody())) {
+     param.severe(GenerateError.ErrorGenerate(StringError.setMes("body non definito"), defBodyNode));
+     defBodyNode.setNodeType(ReturnType.UNDEFINED);
+   }
+   defBodyNode.setNodeType(ReturnType.VOID);
+   return defBodyNode.getNodeType();
   }
 }

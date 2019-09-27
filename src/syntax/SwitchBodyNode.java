@@ -3,24 +3,27 @@ package syntax;
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
-public class DoWhileOperation extends StatementNode {
-  
+public class SwitchBodyNode extends StatementNode {
+  private final Expression expr;
   private final BodyNode body;
-  private final Expression condition;
 
-  public DoWhileOperation(Location left, Location right, BodyNode body, Expression condition) {
+  public SwitchBodyNode(Location left, Location right, Expression expr, BodyNode body ) {
     super(left, right);
-    this.body = body;
-    this.condition = condition;
+    this.expr=expr;
+    this.body=body;
   }
+
+  public Expression getExpr() {
+    return expr;
+  }
+
+
 
   public BodyNode getBody() {
     return body;
   }
 
-  public Expression getCondition() {
-    return condition;
-  }
+
 
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {

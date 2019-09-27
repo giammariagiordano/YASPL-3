@@ -109,14 +109,19 @@ CHAR_CONST = '({any})?'
   	"do"        { return symbol("DO", sym.DO);      }
   	"in"        { return symbol("IN", sym.IN);      }
   	"out"       { return symbol("OUT", sym.OUT);     }
-  	"inout"     { return symbol("INOUT", sym.INOUT);   }  
+  	"inout"     { return symbol("INOUT", sym.INOUT);   }
+  	"switch"	{ return symbol("SWITCH", sym.SWITCH); }
+  	"case" 		{ return symbol("CASE", sym.CASE);}
+  	"break" 	{ return symbol("BREAK", sym.BREAK);}
+  	"default"	{ return symbol("DEFAULT", sym.DEFAULT);}  
  						 //separators
 	";"         { return symbol("SEMI", sym.SEMI); 	}
   	"("         { return symbol("LPAR", sym.LPAR); 	}
   	")"         { return symbol("RPAR", sym.RPAR); 	}
   	"{"         { return symbol("LGPAR", sym.LGPAR);	}
-  	"}"         {  return symbol("RGPAR", sym.RGPAR);	} 
+  	"}"         { return symbol("RGPAR", sym.RGPAR);	} 
     ","         { return symbol("COMMA", sym.COMMA);}
+    ":"			{ return symbol ("COLON", sym.COLON);}
 							  //opts
   	"+"         { return symbol("PLUS", sym.PLUS); 	}
   	"<-"        { return symbol("READ", sym.READ);    }
@@ -134,7 +139,7 @@ CHAR_CONST = '({any})?'
   	"not"       { return symbol("NOT", sym.NOT);		}
   	"and"       { return symbol("AND", sym.AND);		}
   	"or"        { return symbol("OR", sym.OR);		}
-  //	"-"         { return symbol("UMINUS", sym.UMINUS);  }
+  	
 
 
 

@@ -49,7 +49,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
       StreamResult result = new StreamResult(
           new File(System.getProperty("user.home").concat("/AlberoSintattico/".concat(fileName))));
       String path = System.getProperty("user.home").concat("/AlberoSintattico/".concat(fileName));
-      System.out.println(fileName+".xml saved in: " + path);
+      System.out.println(fileName + ".xml saved in: " + path);
       transformer.transform(source, result);
     } catch (TransformerException e) {
       e.printStackTrace();
@@ -264,18 +264,19 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   }
 
 
-  @Override
+ /* @Override
   public Element visit(VarDecls varDecls, Void param) {
     Element el = this.xmlDocument.createElement("VarDecls");
     varDecls.getVarsDeclarations().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
-  }
+  }*/
 
   @Override
   public Element visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithParam");
     el.appendChild(defFunctionWithParamsOperation.getFunctionName().accept(this, param));
-    defFunctionWithParamsOperation.getdefListParams().forEach(i -> el.appendChild(i.accept(this, param)));
+    defFunctionWithParamsOperation.getdefListParams()
+        .forEach(i -> el.appendChild(i.accept(this, param)));
     el.appendChild(defFunctionWithParamsOperation.getBody().accept(this, param));
     return el;
   }
@@ -289,7 +290,8 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   }
 
   @Override
-  public Element visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation, Void param) {
+  public Element visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation,
+      Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithoutParams");
     el.appendChild(defFunctionWithoutParamsOperation.getFunctionName().accept(this, param));
     el.appendChild(defFunctionWithoutParamsOperation.getBody().accept(this, param));
@@ -305,10 +307,32 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
 
 
   @Override
-  public Element visit(DoWhileOperation doWhileOperation, Void param) {
-    Element el = this.xmlDocument.createElement("DoWhileNode");
-    el.appendChild(doWhileOperation.getBody().accept(this, param));
-    el.appendChild(doWhileOperation.getCondition().accept(this, param));
+  public Element visit(SwitchBodyNode switchBodyNode, Void param) {
+    Element el = this.xmlDocument.createElement("SwitchBodyNode");
+    el.appendChild(switchBodyNode.getExpr().accept(this, param));
+    el.appendChild(switchBodyNode.getBody().accept(this, param));
+    return el;
+  }
+
+
+  @Override
+  public Element visit(SwitchOperation switchOperation, Void param) {
+    Element el = this.xmlDocument.createElement("SwitchOperationNode");
+    el.appendChild(switchOperation.getExpr().accept(this, param));
+    if (switchOperation.getSwitchBody() != null) {
+      switchOperation.getSwitchBody().forEach(i -> el.appendChild(i.accept(this, param)));
+    }
+    if (switchOperation.getDefBody() != null) {
+      el.appendChild(switchOperation.getDefBody().accept(this, param));
+    }
+    return el;
+  }
+
+
+  @Override
+  public Element visit(DefBodyNode defBodyNode, Void param) {
+    Element el = this.xmlDocument.createElement("DefaultBodyNode");
+    el.appendChild(defBodyNode.getBody().accept(this, param));
     return el;
   }
 }

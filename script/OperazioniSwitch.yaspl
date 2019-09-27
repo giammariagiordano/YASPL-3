@@ -44,9 +44,4 @@ switch(scelta) {
 	} 
 	break;	
 }
-
-
-
-
-
 }

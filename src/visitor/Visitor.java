@@ -62,7 +62,7 @@ public interface Visitor<T, P> {
 
   T visit(ParType parType, P param);
 
-  T visit(VarDecls varDecls, P param);
+  //T visit(VarDecls varDecls, P param);
 
   T visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, P param);
 
@@ -72,6 +72,10 @@ public interface Visitor<T, P> {
 
   T visit(CompStat compStat, P param);
 
-  T visit(DoWhileOperation doWhileOperation, P param);
+  T visit(SwitchBodyNode switchBodyNode, P param);
+
+  T visit(SwitchOperation switchOperation, P param);
+
+  T visit(DefBodyNode defBodyNode, P param);
 
 }

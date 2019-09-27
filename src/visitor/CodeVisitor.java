@@ -426,12 +426,12 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(ParType parType, Scope param) {
     return parType.getType();
   }
-
+/*
   @Override
   public String visit(VarDecls varDecls, Scope param) {
     return compactCode(varDecls.getVarsDeclarations(), param);
   }
-
+*/
   @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
@@ -551,13 +551,40 @@ public class CodeVisitor implements Visitor<String, Scope> {
   }
 
   @Override
-  public String visit(DoWhileOperation doWhileOperation, Scope param) {
+  public String visit(SwitchBodyNode switchBodyNode, Scope param) {
     StringBuilder builder = new StringBuilder();
-    builder.append("do {\n");
-    builder.append(doWhileOperation.getBody().accept(this, param));
-    builder.append("\n} while (");
-    builder.append(doWhileOperation.getCondition().accept(this, param));
-    builder.append(");\n");
+    builder.append("case ");
+    builder.append(switchBodyNode.getExpr().accept(this, param));
+    builder.append(": \n");
+    builder.append(switchBodyNode.getBody().accept(this, param));
+    builder.append("break; \n");
+    return builder.toString();
+  }
+
+  @Override
+  public String visit(SwitchOperation switchOperation, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("switch (");
+    builder.append(switchOperation.getExpr().accept(this, param));
+    builder.append(") {\n");
+    if(switchOperation.getSwitchBody() != null) {
+      switchOperation.getSwitchBody().forEach(b -> {
+        builder.append(b.accept(this, param));
+      });
+    }
+    if(switchOperation.getDefBody()!=null) {
+    builder.append(switchOperation.getDefBody().accept(this, param));
+    }
+    builder.append("\n}\n");
+    return builder.toString();
+  }
+
+  @Override
+  public String visit(DefBodyNode defBodyNode, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("default: \n");
+    builder.append(defBodyNode.getBody().accept(this, param));
+    builder.append("break; \n");
     return builder.toString();
   }
 }
