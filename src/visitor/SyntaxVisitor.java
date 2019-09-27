@@ -263,13 +263,13 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
+/*
   @Override
   public Element visit(VarDecls varDecls, Void param) {
     Element el = this.xmlDocument.createElement("VarDecls");
     varDecls.getVarsDeclarations().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
-  }
+  }*/
 
   @Override
   public Element visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Void param) {
