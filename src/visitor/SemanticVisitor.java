@@ -580,7 +580,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return parType.getNodeType();
   }
-
+/*
   @Override
   public ReturnType visit(VarDecls varDecls, Logger param) {
     varDecls.getVarsDeclarations().forEach(v -> v.accept(this, param));
@@ -597,7 +597,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return varDecls.getNodeType();
   }
-
+*/
   @Override
   public ReturnType visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation,
       Logger param) {
