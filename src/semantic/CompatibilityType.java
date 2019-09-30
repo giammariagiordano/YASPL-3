@@ -61,7 +61,7 @@ public class CompatibilityType {
       { ReturnType.INTEGER,ReturnType.INTEGER,ReturnType.UNDEFINED, ReturnType.INTEGER,ReturnType.UNDEFINED},
       { ReturnType.DOUBLE,ReturnType.DOUBLE,ReturnType.UNDEFINED, ReturnType.UNDEFINED,ReturnType.UNDEFINED},
       { ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.STRING, ReturnType.UNDEFINED,ReturnType.UNDEFINED},
-      { ReturnType.INTEGER,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.CHAR,ReturnType.UNDEFINED},
+      { ReturnType.CHAR,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.CHAR,ReturnType.UNDEFINED},
       { ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.UNDEFINED,ReturnType.BOOLEAN}
   };
   
