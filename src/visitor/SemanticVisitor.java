@@ -754,7 +754,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return false;
   }
 
-
   @Override
   public ReturnType visit(ForOperation forOperation, Logger param) {
     this.symbolTable.enterScope();
@@ -769,6 +768,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       param.severe(GenerateError.ErrorGenerate("Error in For Statement", forOperation));
       forOperation.setNodeType(ReturnType.UNDEFINED);
     }
+    forOperation.attachScope(this.symbolTable.getCurrentScope());
     this.symbolTable.exitScope();
     return forOperation.getNodeType();
   }

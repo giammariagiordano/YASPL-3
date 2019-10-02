@@ -26,7 +26,7 @@ class Driver {
   public static void main(String[] args) throws Exception {
  
     ArrayList<String> inputs = new ArrayList<>();
-    inputs.add("Calcolatrice");
+   /* inputs.add("Calcolatrice");
     inputs.add("Es5");
     inputs.add("Es5For");
     inputs.add("esProf");
@@ -36,7 +36,8 @@ class Driver {
     inputs.add("MCD_mcm");
     inputs.add("NumPrimo");
     inputs.add("NumPrimoFor");
-    inputs.add("sqrt");
+    inputs.add("sqrt");*/
+    inputs.add("input");
 
     for (String fileName : inputs) {
       InputStream is = new FileInputStream(new File("script/" + fileName + ".yaspl"));

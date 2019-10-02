@@ -1,14 +1,17 @@
 package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
+import semantic.Scope;
+import semantic.Scopeable;
 import visitor.Visitor;
 
-public class ForOperation extends StatementNode {
+public class ForOperation extends StatementNode implements Scopeable {
  //  InitFor:initfor SEMI ExprFor: expr SEMI IncrFor: incrFor RPAR Body:body
    final InitForOperation initFor;
    final ExprForOperation exprFor;
    final IncrForOperation incrFor;
    final BodyNode body;
+   Scope scope;
    
 
   public ForOperation(Location left, Location right,InitForOperation initForOperation, ExprForOperation exprFor, IncrForOperation incrFor, BodyNode body) {
@@ -43,6 +46,19 @@ public class ForOperation extends StatementNode {
   @Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
+  }
+
+
+  @Override
+  public void attachScope(Scope sc) {
+    this.scope = sc;
+    
+  }
+
+
+  @Override
+  public Scope getAttachScope() {
+    return scope;
   }
 
 }
