@@ -775,6 +775,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       param.severe(GenerateError.ErrorGenerate("Error DoWhileOperation", doWhileOperation));
       doWhileOperation.setNodeType(ReturnType.UNDEFINED);
     }
+    doWhileOperation.attachScope(this.symbolTable.getCurrentScope());
     this.symbolTable.exitScope();
     return doWhileOperation.getNodeType();
   }

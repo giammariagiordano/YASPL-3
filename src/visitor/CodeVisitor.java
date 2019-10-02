@@ -601,9 +601,9 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(DoWhileOperation doWhileOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
     builder.append("do {\n");
-    builder.append(doWhileOperation.getBody().accept(this, param));
+    builder.append(doWhileOperation.getBody().accept(this, doWhileOperation.getAttachScope()));
     builder.append("\n} while (");
-    builder.append(doWhileOperation.getCondition().accept(this, param));
+    builder.append(doWhileOperation.getCondition().accept(this, doWhileOperation.getAttachScope()));
     builder.append(");\n");
     return builder.toString();
   }
