@@ -1,9 +1,16 @@
 head
-int b = 0;
+int g=0;
+int e;
+string c="coap";
+
 def f(out int a){
-a<-;
+string b="ciao";
+string d;
+b->;
+d="prova";
+d->;
 }
 
 start
-f(b)
-;
+c->;
+f(e);
