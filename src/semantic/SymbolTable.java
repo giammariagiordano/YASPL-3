@@ -11,6 +11,6 @@ public interface SymbolTable {
   int findAddr(String lexema);
   Scope getCurrentScope();
   StringTable getStringTable();
-  boolean isInGlobalScopelScope(int addr);
+  boolean equalGlobalScope (Scope scope);
 
 }
