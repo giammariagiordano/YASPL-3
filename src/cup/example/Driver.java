@@ -32,9 +32,11 @@ class Driver {
     inputs.add("fattoriale");
     inputs.add("fibonacci");
     inputs.add("MCD_mcm");
+    inputs.add("input");
     inputs.add("NumPrimo");
     inputs.add("sqrt");
     inputs.add("OperazioniSwitch");
+    //inputs.add("input");
 
     for (String fileName : inputs) {
       InputStream is = new FileInputStream(new File("script/" + fileName + ".yaspl"));

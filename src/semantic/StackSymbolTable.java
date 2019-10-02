@@ -70,12 +70,26 @@ public class StackSymbolTable extends Stack<Scope> implements SymbolTable {
     }
     return sb.toString();
   }
-
+  
   @Override
-  public boolean isInGlobalScopelScope(int addr) {
-    SemanticSymbol a = this.get(0).get(addr);
-    return a!=null;
+  public boolean equalGlobalScope (Scope scope) {
+    return this.get(0).equals(scope);
   }
 
-
+  @Override
+  public boolean equals(Object obj) {
+    if (this == obj)
+      return true;
+    if (!super.equals(obj))
+      return false;
+    if (getClass() != obj.getClass())
+      return false;
+    StackSymbolTable other = (StackSymbolTable) obj;
+    if (table == null) {
+      if (other.table != null)
+        return false;
+    } else if (!table.equals(other.table))
+      return false;
+    return true;
+  }
 }

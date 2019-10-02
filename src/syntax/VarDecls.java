@@ -20,7 +20,7 @@ import visitor.Visitor;
  */
 
 public class VarDecls  {
-  /*private final List<VarDeclaration> varsDeclarations;
+  //private final List<VarDeclaration> varsDeclarations;
 
   /*
    * Create a new varDeclaration node
@@ -42,7 +42,7 @@ public class VarDecls  {
    * 
    * @return Variable Declaration
    */
-  /*public List<VarDeclaration> getVarsDeclarations() {
+ /* public List<VarDeclaration> getVarsDeclarations() {
     return varsDeclarations;
   }
 

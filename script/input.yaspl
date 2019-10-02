@@ -1,52 +1,11 @@
-head 
-int num1, num2, risultato;
-int scelta=0;
-
-def somma(in int num1, in int num2, out int risultato) {
-risultato=num1+num2;
+head
+string a = "ciao";
+string b;
+def f(in string a, inout string b){
+string c;
+a->;
+"che"->;
+b<-;
 }
-
-def sottrazione (in int num1, in int num2, out int risultato) {
-risultato = num1-num2;
-}
-
 start
-while(not(scelta==3)) do {
-"1. Somma tra due interi\n2. Sottrazione tra due interi\n3. Esci"->;
-scelta<-;
-
-
-
-switch(scelta) {
-	case 1: {
-	"Inserisci due numeri interi"->;
-	num1, num2<-;
-	somma(num1, num2, risultato);
-	"Il risultato è: " + risultato ->;
-	}
-	break;
-	
-	case 2: {
-	"Inserisci due numeri interi"->;
-	num1, num2<-;
-	sottrazione(num1, num2, risultato);
-	"Il risultato è: " + risultato ->;
-	}
-	break;
-	
-	case 3: {
-	"Arrivederci"->;
-	}
-	break;
-	
-	default: {
-		"Operazione non consentita"->;
-	} 
-	break;	
-}
-
-
-
-
-
-}
+f(a,b);

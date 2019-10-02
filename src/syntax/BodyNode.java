@@ -27,6 +27,7 @@ public class BodyNode extends YasplNode {
   public BodyNode(Location left, Location right, List<VarDeclaration> vd,
       List<StatementNode> statements) {
     super(left, right);
+    Collections.reverse(vd);
     this.varDecls = vd;
     Collections.reverse(statements);
     this.statementsNode = statements;
