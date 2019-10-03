@@ -8,7 +8,7 @@ import java.util.logging.Logger;
 import java_cup.runtime.*;
 import lexical.ArrayStringTable;
 import lexical.StringTable;
-import semantic.StackSymbolTable;
+import semantic.TreeSymbolTable;
 import semantic.SymbolTable;
 import syntax.Program;
 import visitor.CodeVisitor;
@@ -45,7 +45,7 @@ class Driver {
       SyntaxVisitor syntaxVisitor = new SyntaxVisitor();
       syntaxVisitor.appendRoot(syntaxVisitor.visit(program, null));
       syntaxVisitor.toXml(fileName + ".xml");
-      SymbolTable symbolTable = new StackSymbolTable(stringTable);
+      SymbolTable symbolTable = new TreeSymbolTable(stringTable);
       SemanticVisitor semanticVisitor = new SemanticVisitor(symbolTable);
       semanticVisitor.visit(program, Logger.getLogger(Driver.class.getSimpleName()));
       CodeVisitor codeVisitor = new CodeVisitor(symbolTable);

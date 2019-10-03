@@ -96,9 +96,12 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(IdentifierExpression identifierExpression, Scope param) {
     int addr = symbolTable.findAddr(identifierExpression.getName());
+
+    param = this.symbolTable.lookup(addr);
     SemanticSymbol ss = param.get(addr);
     if (ss instanceof Variable) {
       Variable var = (Variable) ss;
+
       // add * if var is a string or var has partype = output or inout
       if (var.getReturnType() == ReturnType.STRING || var.getVarType() == VariableType.OUT
           || var.getVarType() == VariableType.INOUT) {
@@ -228,7 +231,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
         sj.add("\"" + ((iConst<?>) expr).getValue().toString().replaceAll("\n", "\\\\n") + "\"");
       } else {
         sj.add(expr.accept(this, param).replace("*", ""));
-        // sj.add(((iConst<?>) expr).getValue().toString());
       }
       return mapType(expr.getNodeType().getValue());
     }
@@ -293,7 +295,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
       builder.append(strcat(assignOperation.getExpr(), param, sj) + "\",");
       builder.append(sj.toString());
       builder.append(");\n");
-      builder.append(assignOperation.getVarName().getName()+" = malloc(sizeof(char) * LENGTH);\n");
+      builder
+          .append(assignOperation.getVarName().getName() + " = malloc(sizeof(char) * LENGTH);\n");
       builder.append("strcpy(" + assignOperation.getVarName().getName() + ",str1);\n");
     } else {
       builder.append(assignOperation.getVarName().accept(this, param));
@@ -317,11 +320,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
       if ((splitOutput[i].equals("out") || splitOutput[i].equals("inout"))
           && (!callWithParamsOperation.getArgs().get(i).getNodeType().getValue()
               .equals("string"))) {
-
         paramsCall
             .add("&" + callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
-
-        // paramsCall.add(callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
       } else {
         paramsCall.add(callWithParamsOperation.getArgs().get(i).accept(this, param).toString()
             .replace("*", ""));
@@ -342,6 +342,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
   @Override
   public String visit(Program program, Scope param) {
+    this.symbolTable.setCurrentScope(program.getAttachScope());
     String declarations = this.compactCode(program.getDeclsNode(), program.getAttachScope());
     String statements = this.compactCode(program.getStatementsNode(), program.getAttachScope());
     StringBuilder programBuilder = new StringBuilder();
@@ -371,59 +372,27 @@ public class CodeVisitor implements Visitor<String, Scope> {
   @Override
   public String visit(VarInitValueId varInitValueId, Scope param) {
     StringBuilder builder = new StringBuilder();
-   // String name = varInitValueId.getVarName().accept(this, param);
     builder.append(varInitValueId.getVarName().accept(this, param));
     String initialValue = varInitValueId.getInitialValue().accept(this, param);
     // if has a initial value into global scope (head) add in C a global variable with the value
     if (!initialValue.equals("")) {
-     // builder.append(" = malloc(sizeof(char)* LENGTH);\n");
-     // builder.append(varInitValueId.getVarName().getName());
       builder.append("=");
       builder.append(initialValue).append("");
     }
-    // if i found a string into global scope save the corrisponent malloc and strcpy
-    // for printing into main
-   // int addr = this.symbolTable.findAddr(varInitValueId.getVarName().getName());
-    /*
-     * if (this.symbolTable.isInGlobalScopelScope(addr) && varInitValueId.getVarName().getNodeType()
-     * == ReturnType.STRING) { mallocString .append(varInitValueId.getVarName().getName() +
-     * "= malloc(sizeof(char) * LENGTH);\n"); } else if
-     * (varInitValueId.getVarName().getNodeType().getValue().equals("string")) {
-     * builder.append(varInitValueId.getVarName().getName()+"=malloc(sizeof(char) * LENGTH);\n"); //
-     * se ha un valore del tipo head string a = "ciao"; if (!initialValue.equals("")) {
-     * builder.append( "strcpy(" + varInitValueId.getVarName().getName() + "," + initialValue +
-     * ");\n"); } }
-     */
-    /*
-     * if(!this.symbolTable.getCurrentScope().containsKey(addr) &&
-     * varInitValueId.getVarName().getNodeType() == ReturnType.STRING) { mallocString
-     * .append(varInitValueId.getVarName().getName() + "= malloc(sizeof(char) * LENGTH);\n"); } else
-     * if(varInitValueId.getVarName().getNodeType() == ReturnType.STRING){
-     * builder.append(varInitValueId.getVarName().getName()+"=malloc(sizeof(char) * LENGTH);\n"); }
-     */
-    // se sto nello scope globale
     if (this.symbolTable.equalGlobalScope(param)) {
       if (varInitValueId.getVarName().getNodeType() == ReturnType.STRING) {
         mallocString
-        .append(varInitValueId.getVarName().getName() + "= malloc(sizeof(char) * LENGTH);\n");
+            .append(varInitValueId.getVarName().getName() + "= malloc(sizeof(char) * LENGTH);\n");
         if (!initialValue.equals("")) {
-          mallocString
-              .append("strcpy(" + varInitValueId.getVarName().getName() + "," + initialValue + ");\n");
+          mallocString.append(
+              "strcpy(" + varInitValueId.getVarName().getName() + "," + initialValue + ");\n");
         }
-       /* else {
-          mallocString
-          .append(varInitValueId.getVarName().getName() + "= malloc(sizeof(char) * LENGTH);\n");
-          mallocString
-          .append("strcpy(" + varInitValueId.getVarName().getName() + "," + initialValue + ")");
-        }*/
       }
     } // close eq global scope
-
-      else if (varInitValueId.getVarName().getNodeType() == ReturnType.STRING && initialValue.equals("")) {
-        //varInitValueId.getVarName().getName()+
-        builder.append("=malloc(sizeof(char) * LENGTH);\n");
-      }
-
+    else if (varInitValueId.getVarName().getNodeType() == ReturnType.STRING
+        && initialValue.equals("")) {
+      builder.append("=malloc(sizeof(char) * LENGTH)");
+    }
     return builder.toString();
   }
 
@@ -468,11 +437,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
     return parType.getType();
   }
 
-  /*@Override
-  public String visit(VarDecls varDecls, Scope param) {
-    return compactCode(varDecls.getVarsDeclarations(), param);
-  }*/
-
   @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
@@ -480,6 +444,10 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder strcpyVarToReturn = new StringBuilder();
     List<String> varName = new ArrayList<String>();
     String FunctionName = defFunctionWithParamsOperation.getFunctionName().accept(this, param);
+    int addrFunction =
+        this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
+    FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addrFunction);
+    this.symbolTable.setCurrentScope(defFunctionWithParamsOperation.getAttachScope());
     defFunctionWithParamsOperation.getdefListParams().forEach(p -> {
       listParams.add(p.accept(this, defFunctionWithParamsOperation.getAttachScope()));
       varName.add(p.getVarName().getName());
@@ -489,21 +457,19 @@ public class CodeVisitor implements Visitor<String, Scope> {
     builder.append("void").append(" ");
     builder.append(FunctionName).append("(");
     builder.append(listParams).append(") {\n");
-    int addrFunction =
-        this.symbolTable.findAddr(defFunctionWithParamsOperation.getFunctionName().getName());
-    FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addrFunction);
+
     List<String> varType = Arrays.asList(fs.getInputDom().split("x"));
     List<String> parType = Arrays.asList(fs.getOutputDom().split("x"));
     for (int i = 0; i < varType.size(); i++) {
       if (varType.get(i).equals("string") && !parType.get(i).equals("in")) {
         builder.append("char* _" + varName.get(i) + " = " + varName.get(i) + ";\n");
-        strcpyVarToReturn.append("strcpy(_"+varName.get(i)+","+varName.get(i)+");\n");
+        strcpyVarToReturn.append("strcpy(_" + varName.get(i) + "," + varName.get(i) + ");\n");
       }
     }
     builder.append(body);
     builder.append(strcpyVarToReturn.toString());
-   builder.append("\n}\n");
-   
+    builder.append("\n}\n");
+    this.symbolTable.exitScope();
     return builder.toString();
   }
 
@@ -513,10 +479,12 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringBuilder builder = new StringBuilder();
     builder.append("void").append(" ");
     builder.append(defFunctionWithoutParamsOperation.getFunctionName().accept(this, param));
+    this.symbolTable.setCurrentScope(defFunctionWithoutParamsOperation.getAttachScope());
     builder.append("() {\n");
     builder.append(defFunctionWithoutParamsOperation.getBody().accept(this,
         defFunctionWithoutParamsOperation.getAttachScope()));
     builder.append("\n}");
+    this.symbolTable.exitScope();
     return builder.toString();
   }
 
@@ -526,7 +494,6 @@ public class CodeVisitor implements Visitor<String, Scope> {
     body.getVarDecls().forEach(v -> {
       builder.append(v.accept(this, param));
     });
-    // builder.append(mallocString);
     body.getStatementsNode().forEach(s -> {
       builder.append(s.accept(this, param));
     });
@@ -599,12 +566,14 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
   @Override
   public String visit(DoWhileOperation doWhileOperation, Scope param) {
+    this.symbolTable.setCurrentScope(doWhileOperation.getAttachScope());
     StringBuilder builder = new StringBuilder();
     builder.append("do {\n");
     builder.append(doWhileOperation.getBody().accept(this, doWhileOperation.getAttachScope()));
     builder.append("\n} while (");
     builder.append(doWhileOperation.getCondition().accept(this, doWhileOperation.getAttachScope()));
     builder.append(");\n");
+    this.symbolTable.exitScope();
     return builder.toString();
   }
 }

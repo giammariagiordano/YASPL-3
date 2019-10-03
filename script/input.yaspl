@@ -1,19 +1,17 @@
 head
-int a = 0;
-int c=0;
-bool d=true;
-start
+int input;
+bool ris = true;
+
+def function (inout int input,out bool ris ) {
 do {
-string b = "ciao";
-b=b+1;
-b->;
+	input = input -1;
+		if(input == 1) then{
+			ris = false;
+		}
+	}while(input>0);
 
-if(d) then {
-"prova"->;
 }
-a=a+1;
-
-
-} while (a<10);
-
-a->;
+start
+input = 5;
+function(input,ris);
+ris->;

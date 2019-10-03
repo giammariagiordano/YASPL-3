@@ -10,6 +10,7 @@ public interface SymbolTable {
   Scope lookup(int addr);
   int findAddr(String lexema);
   Scope getCurrentScope();
+  void setCurrentScope(Scope sc);
   StringTable getStringTable();
   boolean equalGlobalScope (Scope scope);
 
