@@ -45,7 +45,6 @@ def moltiplicazione (in int op1, in int op2, out int res){
 def potenza (in int b, in int e, out int res){
     int i = 1;
     int app = 1;
-    
     while(i<=e)do{
         app = app * b;
         i = i +1;

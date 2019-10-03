@@ -49,7 +49,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
       StreamResult result = new StreamResult(
           new File(System.getProperty("user.home").concat("/AlberoSintattico/".concat(fileName))));
       String path = System.getProperty("user.home").concat("/AlberoSintattico/".concat(fileName));
-      System.out.println(fileName+".xml saved in: " + path);
+      System.out.println(fileName + ".xml saved in: " + path);
       transformer.transform(source, result);
     } catch (TransformerException e) {
       e.printStackTrace();
@@ -263,19 +263,12 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-
- /* @Override
-  public Element visit(VarDecls varDecls, Void param) {
-    Element el = this.xmlDocument.createElement("VarDecls");
-    varDecls.getVarsDeclarations().forEach(i -> el.appendChild(i.accept(this, param)));
-    return el;
-  }*/
-
   @Override
   public Element visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithParam");
     el.appendChild(defFunctionWithParamsOperation.getFunctionName().accept(this, param));
-    defFunctionWithParamsOperation.getdefListParams().forEach(i -> el.appendChild(i.accept(this, param)));
+    defFunctionWithParamsOperation.getdefListParams()
+        .forEach(i -> el.appendChild(i.accept(this, param)));
     el.appendChild(defFunctionWithParamsOperation.getBody().accept(this, param));
     return el;
   }
@@ -289,7 +282,8 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   }
 
   @Override
-  public Element visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation, Void param) {
+  public Element visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation,
+      Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithoutParams");
     el.appendChild(defFunctionWithoutParamsOperation.getFunctionName().accept(this, param));
     el.appendChild(defFunctionWithoutParamsOperation.getBody().accept(this, param));

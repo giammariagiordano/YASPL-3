@@ -5,11 +5,7 @@ import semantic.ReturnType;
 import visitor.Visitor;
 
 /*
- * This class represent a callFunction without parameters, for example: 
- * def f() {} 
- * ... 
- * start 
- * f()
+ * This class represent a callFunction without parameters, for example: def f() {} ... start f()
  */
 public class CallWithoutParamsOperation extends StatementNode {
   private final IdentifierExpression functionName;

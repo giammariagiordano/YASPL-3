@@ -56,12 +56,12 @@ public class CompatibilityType {
       { ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.UNDEFINED,ReturnType.BOOLEAN}
   };
   
-  //ANDOP and OROP
+  //ASSIGN OPERATION
   public static ReturnType ASSIGNOOP [][] = {
       { ReturnType.INTEGER,ReturnType.INTEGER,ReturnType.UNDEFINED, ReturnType.INTEGER,ReturnType.UNDEFINED},
       { ReturnType.DOUBLE,ReturnType.DOUBLE,ReturnType.UNDEFINED, ReturnType.UNDEFINED,ReturnType.UNDEFINED},
       { ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.STRING, ReturnType.UNDEFINED,ReturnType.UNDEFINED},
-      { ReturnType.INTEGER,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.CHAR,ReturnType.UNDEFINED},
+      { ReturnType.CHAR,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.CHAR,ReturnType.UNDEFINED},
       { ReturnType.UNDEFINED,ReturnType.UNDEFINED,ReturnType.UNDEFINED, ReturnType.UNDEFINED,ReturnType.BOOLEAN}
   };
   

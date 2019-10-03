@@ -1,0 +1,8 @@
+head
+int a = 0;
+def fun(in int a) {
+	"la var a nella funz è: "+a->;
+} 
+start
+fun(10);
+"a nel main vale: "+a->;

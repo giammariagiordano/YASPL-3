@@ -1136,7 +1136,7 @@ RESULT = new BooleanOperation(expr1xleft,expr1xright,expr1,expr2,"OR");
 		Location expr2xright = ((java_cup.runtime.ComplexSymbolFactory.ComplexSymbol)CUP$Parser$stack.peek()).xright;
 		Expression expr2 = (Expression)((java_cup.runtime.Symbol) CUP$Parser$stack.peek()).value;
 		//@@CUPDBG47
- RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GT"); 
+RESULT = new RelopOperation(expr1xleft,expr1xright,expr1,expr2,"GT"); 
               CUP$Parser$result = parser.getSymbolFactory().newSymbol("Expr",9, ((java_cup.runtime.Symbol)CUP$Parser$stack.elementAt(CUP$Parser$top-2)), ((java_cup.runtime.Symbol)CUP$Parser$stack.peek()), RESULT);
             }
           return CUP$Parser$result;

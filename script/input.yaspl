@@ -1,16 +1,10 @@
 head
-int g=0;
-int e;
-string c="coap";
+bool f = false;
+def numPrimo(inout bool isPrimo){
 
-def f(out int a){
-string b="ciao";
-string d;
-b->;
-d="prova";
-d->;
 }
 
 start
-c->;
-f(e);
+numPrimo(f);
+f->;
+
