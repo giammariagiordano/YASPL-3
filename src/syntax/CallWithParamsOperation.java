@@ -7,11 +7,8 @@ import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
 
 /*
- * This class represent a callFunction with parameters(list of expressions), for example: 
- * def f(parameters) {} 
- * ... 
- * start
- * f(parameters)
+ * This class represent a callFunction with parameters(list of expressions), for example: def
+ * f(parameters) {} ... start f(parameters)
  */
 public class CallWithParamsOperation extends StatementNode {
   private final IdentifierExpression functionName;

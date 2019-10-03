@@ -1,16 +1,27 @@
 package semantic;
 
 import lexical.StringTable;
-/*Usata durante l'analisi semantica e la generazione del codice*/
+
+/* Usata durante l'analisi semantica e la generazione del codice */
 public interface SymbolTable {
   void enterScope();
+
   void exitScope();
+
   boolean prob(int addr);
+
   void add(int addr, SemanticSymbol semanticSymbol);
+
   Scope lookup(int addr);
+
   int findAddr(String lexema);
+
   Scope getCurrentScope();
+
+  void setCurrentScope(Scope sc);
+
   StringTable getStringTable();
-  boolean equalGlobalScope (Scope scope);
+
+  boolean equalGlobalScope(Scope scope);
 
 }

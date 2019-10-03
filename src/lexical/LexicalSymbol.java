@@ -1,12 +1,13 @@
 package lexical;
 
 import java.util.Objects;
-/*Simbolo lessicale usato per inserire i dati all'interno della stringTable*/
+
+/* Simbolo lessicale usato per inserire i dati all'interno della stringTable */
 public class LexicalSymbol {
 
   private final String lexema;
   private final int code;
-  
+
   public LexicalSymbol(String lexema, int code) {
     this.lexema = lexema;
     this.code = code;
@@ -22,7 +23,7 @@ public class LexicalSymbol {
 
   @Override
   public int hashCode() {
-   return Objects.hash(this.lexema,this.code);
+    return Objects.hash(this.lexema, this.code);
   }
 
   @Override
@@ -48,5 +49,5 @@ public class LexicalSymbol {
   public String toString() {
     return "LexicalSymbol [lexema=" + lexema + ", code=" + code + "]";
   }
-  
+
 }

@@ -1,0 +1,13 @@
+head
+int a = 0;
+def fun(in int a) {
+	"la var a nella funz è: "+a->;
+	for(int i = 0 ; i<3; i = i+1){
+		int c = 2;
+		string a = "ciao";
+		"la variabile a vale "+a->;
+	}
+} 
+start
+fun(10);
+"a nel main vale: "+a->;

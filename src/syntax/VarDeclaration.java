@@ -9,9 +9,10 @@ import visitor.Visitor;
  * Represent a single variable for declaration node. For example:
  * 
  * <pre>
- *     {@code
- *     int a; 
- *     }
+ * {
+ *   &#64;code
+ *   int a;
+ * }
  * </pre>
  */
 

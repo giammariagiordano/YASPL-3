@@ -1,8 +1,8 @@
 package semantic;
 
-/*traccia quando la una funzione è aggiunta alla tabella dei simboli*/
+/* traccia quando la una funzione è aggiunta alla tabella dei simboli */
 public class FunctionSymbol extends SemanticSymbol {
-  private  String inputDom, outputDom;
+  private String inputDom, outputDom;
 
   public FunctionSymbol(ReturnType returnType, String inputDom, String outputDom) {
     super(returnType);
@@ -28,9 +28,9 @@ public class FunctionSymbol extends SemanticSymbol {
 
   @Override
   public String toString() {
-    return "Type:".concat(this.getReturnType().getValue()).concat("\n").concat("Domain:").concat(this.inputDom)
-        .concat(" Codomain:").concat(this.outputDom);
-    }
-  
+    return "Type:".concat(this.getReturnType().getValue()).concat("\n").concat("Domain:")
+        .concat(this.inputDom).concat(" Codomain:").concat(this.outputDom);
+  }
+
 
 }

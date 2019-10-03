@@ -29,7 +29,7 @@ public interface Visitor<T, P> {
   T visit(StringConst stringConst, P param);
 
   T visit(WhileOperation whileOperation, P param);
-  
+
   T visit(ForOperation forOperation, P param);
 
   T visit(IfThenOperation ifThenOperation, P param);
@@ -64,11 +64,11 @@ public interface Visitor<T, P> {
 
   T visit(ParType parType, P param);
 
- // T visit(VarDecls varDecls, P param);
-
   T visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, P param);
 
   T visit(BodyNode body, P param);
+
+  T visit(BodyNodeFor bodyFor, P param);
 
   T visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation, P param);
 
@@ -77,7 +77,7 @@ public interface Visitor<T, P> {
   T visit(InitForOperation initForOperation, P param);
 
   T visit(ExprForOperation exprForOperation, P param);
-  
+
   T visit(IncrForOperation incrForOperation, P param);
 
 }

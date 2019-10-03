@@ -2,11 +2,9 @@ package syntax;
 
 import java_cup.runtime.ComplexSymbolFactory.Location;
 import visitor.Visitor;
+
 /*
- * It represents a node for if then, for example: 
- * if(condition)
- *  then {
- * }
+ * It represents a node for if then, for example: if(condition) then { }
  */
 public class IfThenOperation extends StatementNode {
   private final Expression condition;

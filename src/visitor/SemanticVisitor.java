@@ -444,7 +444,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
   @Override
   public ReturnType visit(Program program, Logger param) {
-    this.symbolTable.enterScope();
+    // this.symbolTable.enterScope();
     program.getDeclsNode().forEach(d -> d.accept(this, param));
     program.getStatementsNode().forEach(s -> s.accept(this, param));
     if (checkAll(program.getDeclsNode()) && (checkAll(program.getStatementsNode()))) {
@@ -580,24 +580,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return parType.getNodeType();
   }
-/*
-  @Override
-  public ReturnType visit(VarDecls varDecls, Logger param) {
-    varDecls.getVarsDeclarations().forEach(v -> v.accept(this, param));
-    if (checkAll(varDecls.getVarsDeclarations())) {
-      varDecls.getVarsDeclarations().forEach(v -> {
-        int varAddr = this.symbolTable.findAddr(v.getVariables().get(0).getVarName().getName());
-        SemanticSymbol s = new Variable(v.getVariables().get(0).getVarName().getReturnType());
-        this.symbolTable.add(varAddr, s);
-      });
-      varDecls.setNodeType(ReturnType.VOID);
-    } else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error in VarDecls"), varDecls));
-      varDecls.setNodeType(ReturnType.UNDEFINED);
-    }
-    return varDecls.getNodeType();
-  }
-*/
+
   @Override
   public ReturnType visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation,
       Logger param) {
@@ -736,7 +719,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (expr instanceof IdentifierExpression) {
       IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
       int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
-      Variable varLeft = (Variable) this.symbolTable.getCurrentScope().get(leftAddr);
+      Variable varLeft = (Variable) this.symbolTable.lookup(leftAddr).get(leftAddr);
       if (varLeft != null)
         return varLeft.getVarType() == VariableType.IN;
     }
@@ -747,7 +730,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (expr instanceof IdentifierExpression) {
       IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
       int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
-      Variable varRight = (Variable) this.symbolTable.getCurrentScope().get(rightAddr);
+      Variable varRight = (Variable) this.symbolTable.lookup(rightAddr).get(rightAddr);
       if (varRight != null)
         return varRight.getVarType() == VariableType.OUT;
     }
@@ -762,7 +745,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     forOperation.getIncrFor().accept(this, param);
     if (isUndefined(forOperation.getInitFor()) && isUndefined(forOperation.getExprFor())
         && isUndefined(forOperation.getIncrFor())) {
-      forOperation.getBody().accept(this, param);
+      forOperation.getBodyFor().accept(this, param);
       forOperation.setNodeType(ReturnType.VOID);
     } else {
       param.severe(GenerateError.ErrorGenerate("Error in For Statement", forOperation));
@@ -788,8 +771,10 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
     if (initForOperation.getId() != null && initForOperation.getExpr() != null) {
       if (initForOperation.getType() == null && !isUndefined(initForOperation.getId())) {
-        param.severe(GenerateError.ErrorGenerate(StringError.setMes("InitForOperation: ",StringError.variableNotDeclared,
-            initForOperation.getId().getName(),initForOperation.getId().getName()), initForOperation));
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("InitForOperation: ", StringError.variableNotDeclared,
+                initForOperation.getId().getName(), initForOperation.getId().getName()),
+            initForOperation));
       }
       // se non sono dello stesso tipo
       ReturnType left = initForOperation.getId().getNodeType();
@@ -798,8 +783,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       int col = CompatibilityType.getIndexFor(right);
       initForOperation.setNodeType(CompatibilityType.ASSIGNOOP[row][col]);
       if (initForOperation.getNodeType() != ReturnType.INTEGER) {
-        param.severe(GenerateError.ErrorGenerate("InitForOperation: expected Integer but found "+initForOperation.getExpr().getNodeType(),
-            initForOperation));
+        param.severe(GenerateError.ErrorGenerate("InitForOperation: expected Integer but found "
+            + initForOperation.getExpr().getNodeType(), initForOperation));
       }
       if (initForOperation.getType() != null) {
         int addrVar = this.symbolTable.findAddr(initForOperation.getId().getName());
@@ -818,9 +803,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (exprForOperation.getExpr() != null) {
       exprForOperation.setNodeType(exprForOperation.getExpr().accept(this, param));
       if (exprForOperation.getNodeType() != ReturnType.BOOLEAN) {
-        param.severe(GenerateError.ErrorGenerate(
-            StringError.setMes("Error ExprForOperation",
-                StringError.expectedBoolButFound, exprForOperation.getExpr().getNodeType().toString()),
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error ExprForOperation",
+            StringError.expectedBoolButFound, exprForOperation.getExpr().getNodeType().toString()),
             exprForOperation));
       }
     } else {
@@ -850,5 +834,20 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
     }
     return incrForOperation.getNodeType();
+  }
+
+  @Override
+  public ReturnType visit(BodyNodeFor bodyFor, Logger param) {
+    bodyFor.getVarDecls().forEach(v -> v.accept(this, param));
+    bodyFor.getStatementsNode().forEach(s -> s.accept(this, param));
+    if (this.checkAll(bodyFor.getVarDecls()) && this.checkAll(bodyFor.getStatementsNode())) {
+      bodyFor.setNodeType(ReturnType.VOID);
+    } else {
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("BodyForNode: invalid body"), bodyFor));
+      bodyFor.setNodeType(ReturnType.UNDEFINED);
+    }
+    return bodyFor.getNodeType();
+
   }
 }

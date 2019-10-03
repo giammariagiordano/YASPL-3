@@ -5,11 +5,12 @@ import visitor.Visitor;
 
 public class ExprForOperation extends Expression {
   final Expression expr;
+
   public ExprForOperation(Location left, Location right, Expression expr) {
     super(left, right);
     this.expr = expr;
   }
-  
+
   public Expression getExpr() {
     return expr;
   }

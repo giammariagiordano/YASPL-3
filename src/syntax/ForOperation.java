@@ -6,22 +6,22 @@ import semantic.Scopeable;
 import visitor.Visitor;
 
 public class ForOperation extends StatementNode implements Scopeable {
- //  InitFor:initfor SEMI ExprFor: expr SEMI IncrFor: incrFor RPAR Body:body
-   final InitForOperation initFor;
-   final ExprForOperation exprFor;
-   final IncrForOperation incrFor;
-   final BodyNode body;
-   Scope scope;
-   
+  // InitFor:initfor SEMI ExprFor: expr SEMI IncrFor: incrFor RPAR Body:body
+  final InitForOperation initFor;
+  final ExprForOperation exprFor;
+  final IncrForOperation incrFor;
+  final BodyNodeFor body;
+  Scope scope;
 
-  public ForOperation(Location left, Location right,InitForOperation initForOperation, ExprForOperation exprFor, IncrForOperation incrFor, BodyNode body) {
+
+  public ForOperation(Location left, Location right, InitForOperation initForOperation,
+      ExprForOperation exprFor, IncrForOperation incrFor, BodyNodeFor body) {
     super(left, right);
     this.initFor = initForOperation;
     this.exprFor = exprFor;
     this.incrFor = incrFor;
     this.body = body;
   }
-
 
   public InitForOperation getInitFor() {
     return initFor;
@@ -38,7 +38,7 @@ public class ForOperation extends StatementNode implements Scopeable {
   }
 
 
-  public BodyNode getBody() {
+  public BodyNodeFor getBodyFor() {
     return body;
   }
 
@@ -52,7 +52,7 @@ public class ForOperation extends StatementNode implements Scopeable {
   @Override
   public void attachScope(Scope sc) {
     this.scope = sc;
-    
+
   }
 
 

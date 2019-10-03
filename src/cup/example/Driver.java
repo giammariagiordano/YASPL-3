@@ -8,14 +8,13 @@ import java.util.logging.Logger;
 import java_cup.runtime.*;
 import lexical.ArrayStringTable;
 import lexical.StringTable;
-import semantic.StackSymbolTable;
 import semantic.SymbolTable;
+import semantic.TreeSymbolTable;
 import syntax.Program;
 import visitor.CodeVisitor;
 import visitor.SemanticVisitor;
 import visitor.SyntaxVisitor;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 class Driver {
   private static StringTable stringTable = new ArrayStringTable();
@@ -24,21 +23,23 @@ class Driver {
   private static StringBuilder pathBuilder = new StringBuilder();
 
   public static void main(String[] args) throws Exception {
- 
+
     ArrayList<String> inputs = new ArrayList<>();
-   /* inputs.add("Calcolatrice");
+    inputs.add("Calcolatrice");
     inputs.add("Es5");
     inputs.add("Es5For");
-    inputs.add("esProf");
     inputs.add("fattoriale");
     inputs.add("fibonacci");
     inputs.add("fibonacciFor");
     inputs.add("MCD_mcm");
     inputs.add("NumPrimo");
     inputs.add("NumPrimoFor");
-    inputs.add("sqrt");*/
-    inputs.add("input");
-
+    inputs.add("sqrt");
+    // inputs.add("input");
+    inputs.add("esProf");
+    inputs.add("facile");
+    // inputs.add("stringhe");
+    // inputs.add("provaFor");
     for (String fileName : inputs) {
       InputStream is = new FileInputStream(new File("script/" + fileName + ".yaspl"));
       Lexer lexer = new Lexer(complexSymbolFactory, is, stringTable);
@@ -47,7 +48,7 @@ class Driver {
       SyntaxVisitor syntaxVisitor = new SyntaxVisitor();
       syntaxVisitor.appendRoot(syntaxVisitor.visit(program, null));
       syntaxVisitor.toXml(fileName + ".xml");
-      SymbolTable symbolTable = new StackSymbolTable(stringTable);
+      SymbolTable symbolTable = new TreeSymbolTable(stringTable);
       SemanticVisitor semanticVisitor = new SemanticVisitor(symbolTable);
       semanticVisitor.visit(program, Logger.getLogger(Driver.class.getSimpleName()));
       CodeVisitor codeVisitor = new CodeVisitor(symbolTable);
@@ -58,8 +59,7 @@ class Driver {
       System.out.println(generatedOutput + " saved in: " + pathBuilder.toString());
       pw.write(codeVisitor.visit(program, symbolTable.getCurrentScope()));
       pw.close();
-     pathBuilder = new StringBuilder();
+      pathBuilder = new StringBuilder();
     }
-    // sc.close();
   }
 }

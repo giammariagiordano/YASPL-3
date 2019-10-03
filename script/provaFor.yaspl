@@ -1,0 +1,15 @@
+head
+int a = 0;
+string end = "";
+def decr(in int num, out string end) {
+	string saluto = "ciao";
+for (int i = num; i>= 0; i = i-1) {
+	if(i == a) then {
+		end = "ho finito "+saluto;
+	}
+
+}
+}
+start
+decr(5,end);
+end->;

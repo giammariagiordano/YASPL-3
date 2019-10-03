@@ -263,14 +263,6 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     return el;
   }
 
-/*
-  @Override
-  public Element visit(VarDecls varDecls, Void param) {
-    Element el = this.xmlDocument.createElement("VarDecls");
-    varDecls.getVarsDeclarations().forEach(i -> el.appendChild(i.accept(this, param)));
-    return el;
-  }
-*/
   @Override
   public Element visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Void param) {
     Element el = this.xmlDocument.createElement("defFunctionWithParam");
@@ -312,7 +304,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     el.appendChild(forOperation.getInitFor().accept(this, param));
     el.appendChild(forOperation.getExprFor().accept(this, param));
     el.appendChild(forOperation.getIncrFor().accept(this, param));
-    el.appendChild(forOperation.getBody().accept(this, param));
+    el.appendChild(forOperation.getBodyFor().accept(this, param));
     return el;
 
   }
@@ -370,6 +362,18 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
       nameNode = "ForWithoutIncr";
       el = this.xmlDocument.createElement(nameNode);
     }
+    return el;
+  }
+
+
+  @Override
+  public Element visit(BodyNodeFor bodyFor, Void param) {
+    String nameNode;
+    Element el;
+    nameNode = "ForBodyNode";
+    el = this.xmlDocument.createElement(nameNode);
+    bodyFor.getVarDecls().forEach(i -> el.appendChild(i.accept(this, param)));
+    bodyFor.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));;
     return el;
   }
 }

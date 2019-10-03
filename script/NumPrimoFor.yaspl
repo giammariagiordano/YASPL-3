@@ -6,7 +6,7 @@ def numPrimo(in int num, out bool isPrimo){
 if(num == 2 or num == 1) then {
     isPrimo = true;
 } else {
-    for(i=2; i<=num; ){
+    for(i=2; i<num; ){
         if((num% i) == 0) then {
             isPrimo = false;
         }

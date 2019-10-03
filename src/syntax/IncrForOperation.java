@@ -6,7 +6,8 @@ import visitor.Visitor;
 public class IncrForOperation extends YasplNode {
   final IdentifierExpression id;
   final Expression expr;
-  public IncrForOperation(Location left, Location right,IdentifierExpression id, Expression expr) {
+
+  public IncrForOperation(Location left, Location right, IdentifierExpression id, Expression expr) {
     super(left, right);
     this.id = id;
     this.expr = expr;
@@ -29,8 +30,8 @@ public class IncrForOperation extends YasplNode {
 
 
   @Override
-   public <T, P> T accept(Visitor<T, P> visitor, P param) {
-    return  visitor.visit(this, param);
+  public <T, P> T accept(Visitor<T, P> visitor, P param) {
+    return visitor.visit(this, param);
   }
 
 }
