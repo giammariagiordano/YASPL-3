@@ -444,7 +444,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
   @Override
   public ReturnType visit(Program program, Logger param) {
-    this.symbolTable.enterScope();
+    // this.symbolTable.enterScope();
     program.getDeclsNode().forEach(d -> d.accept(this, param));
     program.getStatementsNode().forEach(s -> s.accept(this, param));
     if (checkAll(program.getDeclsNode()) && (checkAll(program.getStatementsNode()))) {
@@ -580,23 +580,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return parType.getNodeType();
   }
-/*
-  @Override
-  public ReturnType visit(VarDecls varDecls, Logger param) {
-    varDecls.getVarsDeclarations().forEach(v -> v.accept(this, param));
-    if (checkAll(varDecls.getVarsDeclarations())) {
-      varDecls.getVarsDeclarations().forEach(v -> {
-        int varAddr = this.symbolTable.findAddr(v.getVariables().get(0).getVarName().getName());
-        SemanticSymbol s = new Variable(v.getVariables().get(0).getVarName().getReturnType());
-        this.symbolTable.add(varAddr, s);
-      });
-      varDecls.setNodeType(ReturnType.VOID);
-    } else {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error in VarDecls"), varDecls));
-      varDecls.setNodeType(ReturnType.UNDEFINED);
-    }
-    return varDecls.getNodeType();
-  }*/
 
   @Override
   public ReturnType visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation,
@@ -736,7 +719,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (expr instanceof IdentifierExpression) {
       IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
       int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
-      Variable varLeft = (Variable) this.symbolTable.getCurrentScope().get(leftAddr);
+      Variable varLeft = (Variable) this.symbolTable.lookup(leftAddr).get(leftAddr);
       if (varLeft != null)
         return varLeft.getVarType() == VariableType.IN;
     }
@@ -747,7 +730,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     if (expr instanceof IdentifierExpression) {
       IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
       int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
-      Variable varRight = (Variable) this.symbolTable.getCurrentScope().get(rightAddr);
+      Variable varRight = (Variable) this.symbolTable.lookup(rightAddr).get(rightAddr);
       if (varRight != null)
         return varRight.getVarType() == VariableType.OUT;
     }

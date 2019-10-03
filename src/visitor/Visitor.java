@@ -62,8 +62,6 @@ public interface Visitor<T, P> {
 
   T visit(ParType parType, P param);
 
-//  T visit(VarDecls varDecls, P param);
-
   T visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, P param);
 
   T visit(BodyNode body, P param);
