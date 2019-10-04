@@ -9,6 +9,7 @@ import syntax.*;
 
 public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   private final SymbolTable symbolTable;
+  private static int LENGTH = 2048;
 
   public SemanticVisitor(SymbolTable symbolTable) {
     this.symbolTable = symbolTable;
@@ -688,6 +689,88 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return compStat.getNodeType();
   }
 
+  @Override
+  public ReturnType visit(ArrayDeclaration arrayDeclaration, Logger param) {
+    arrayDeclaration.getVarName().accept(this, param);
+    if ((isUndefined(arrayDeclaration.getVarName()))) {
+      arrayDeclaration.setNodeType(ReturnType.VOID);
+    } else {
+      arrayDeclaration.setNodeType(ReturnType.UNDEFINED);
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error arrayDeclaration"),
+          arrayDeclaration));
+    }
+    return arrayDeclaration.getNodeType();
+  }
+
+  @Override
+  public ReturnType visit(AssignArraySingleValue assignArraySingleValue, Logger param) {
+    // a[i] = b;
+    assignArraySingleValue.getId().accept(this, param);
+    assignArraySingleValue.getIndex().accept(this, param);
+    assignArraySingleValue.getValue().accept(this, param);
+    if (isUndefined(assignArraySingleValue.getId())
+        && isUndefined(assignArraySingleValue.getIndex())
+        && isUndefined(assignArraySingleValue.getValue())) {
+      if (assignArraySingleValue.getId().getNodeType() != assignArraySingleValue.getValue()
+          .getNodeType()) {
+        assignArraySingleValue.setNodeType(ReturnType.UNDEFINED);
+        param
+            .severe(GenerateError.ErrorGenerate(
+                StringError.setMes("Error AssignArraySingleValue: " + StringError.typeMismatch
+                    + assignArraySingleValue.getId().getNodeType() + "' and right: '"
+                    + assignArraySingleValue.getValue().getNodeType() + "'"),
+                assignArraySingleValue));
+      }
+      if (assignArraySingleValue.getIndex().getNodeType() == ReturnType.INTEGER) {
+        checkIndex(assignArraySingleValue, param);
+        assignArraySingleValue.setNodeType(ReturnType.VOID);
+      } else {
+        assignArraySingleValue.setNodeType(ReturnType.UNDEFINED);
+      }
+    } else {
+      assignArraySingleValue.setNodeType(ReturnType.UNDEFINED);
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error assignArraySingleValue"),
+          assignArraySingleValue));
+    }
+    return assignArraySingleValue.getNodeType();
+  }
+
+
+  @Override
+  public ReturnType visit(IdAssignArraySingleValue idAssignArraySingleValue, Logger param) {
+    // b = a[i];
+    idAssignArraySingleValue.getIdLeft().accept(this, param);
+    idAssignArraySingleValue.getIdRight().accept(this, param);
+    idAssignArraySingleValue.getIndex().accept(this, param);
+    if (isUndefined(idAssignArraySingleValue.getIdLeft())
+        && isUndefined(idAssignArraySingleValue.getIdRight())
+        && isUndefined(idAssignArraySingleValue.getIndex())) {
+      if (idAssignArraySingleValue.getIdLeft().getNodeType() != idAssignArraySingleValue
+          .getIdRight().getNodeType()) {
+        param.severe(GenerateError.ErrorGenerate(
+            StringError.setMes("Error idAssignArraySingleValue: " + StringError.typeMismatch
+                + idAssignArraySingleValue.getIdLeft().getNodeType() + "' and right: '"
+                + idAssignArraySingleValue.getIdRight().getNodeType() + "'"),
+            idAssignArraySingleValue));
+      }
+
+      if (idAssignArraySingleValue.getIndex().getReturnType() == ReturnType.INTEGER) {
+        checkIndex(idAssignArraySingleValue, param);
+        idAssignArraySingleValue.setNodeType(ReturnType.VOID);
+      } else {
+        idAssignArraySingleValue.setNodeType(ReturnType.UNDEFINED);
+      }
+
+    } else {
+
+      idAssignArraySingleValue.setNodeType(ReturnType.UNDEFINED);
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error idAssignArraySingleValue"),
+          idAssignArraySingleValue));
+    }
+    return idAssignArraySingleValue.getNodeType();
+  }
+
+
   private boolean checkAll(List<? extends YasplNode> list) {
     return list.stream().allMatch(node -> node.getNodeType() != ReturnType.UNDEFINED);
   }
@@ -736,4 +819,49 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return false;
   }
+
+  @Override
+  public ReturnType visit(ReadOperationArray readOperationArray, Logger param) {
+    readOperationArray.getId().accept(this, param);
+    readOperationArray.getIndex().accept(this, param);
+    if (isUndefined(readOperationArray.getId()) && isUndefined(readOperationArray.getIndex())) {
+      checkIndex(readOperationArray, param);
+      readOperationArray.setNodeType(readOperationArray.getId().getNodeType());
+    } else {
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error Read Operation Array"),
+          readOperationArray));
+      readOperationArray.setNodeType(ReturnType.UNDEFINED);
+    }
+    return readOperationArray.getNodeType();
+  }
+
+  @Override
+  public ReturnType visit(WriteOperationArray writeOperationArray, Logger param) {
+    writeOperationArray.getId().accept(this, param);
+    writeOperationArray.getIndex().accept(this, param);
+    if (isUndefined(writeOperationArray.getId()) && isUndefined(writeOperationArray.getIndex())) {
+      checkIndex(writeOperationArray, param);
+      writeOperationArray.setNodeType(writeOperationArray.getId().getNodeType());
+    } else {
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("Error Write Operation Array"),
+          writeOperationArray));
+      writeOperationArray.setNodeType(ReturnType.UNDEFINED);
+    }
+    return writeOperationArray.getNodeType();
+  }
+
+  private void checkIndex(ArrayInterface expr, Logger param) {
+    if (expr.getIndex() instanceof IntConst) {
+      int index = ((IntConst) expr.getIndex()).getValue();
+      if (index > LENGTH) {
+        param
+            .severe(
+                GenerateError.ErrorGenerate(
+                    StringError.setMes("Error " + expr.getClass() + ": "
+                        + StringError.indexOutOfBound + LENGTH + " actual value: " + index),
+                    ((YasplNode) expr)));
+      }
+    }
+  }
+
 }

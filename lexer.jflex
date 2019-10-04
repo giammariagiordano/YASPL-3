@@ -90,51 +90,53 @@ CHAR_CONST = '({any})?'
 
 <YYINITIAL> {
 							//keywords
-    {Whitespace} {/*ignore*/}   
-    {Comment}   {                                                   }                                      
-	"head"      { return symbol("HEAD", sym.HEAD);    }
-    "start"     { return symbol("START", sym.START);   }
-    "int"       { return symbol("INT", sym.INT);     }
-    "double"    { return symbol("DOUBLE", sym.DOUBLE);}
-    "bool"      { return symbol("BOOL", sym.BOOL);    }
-    "string"	{ return symbol("STRING", sym.STRING);}
+    {Whitespace} {/*ignore*/							}   
+    {Comment}   {										}                                      
+	"head"      { return symbol("HEAD", sym.HEAD);    	}
+    "start"     { return symbol("START", sym.START);   	}
+    "int"       { return symbol("INT", sym.INT);     	}
+    "double"    { return symbol("DOUBLE", sym.DOUBLE);	}
+    "bool"      { return symbol("BOOL", sym.BOOL);    	}
+    "string"	{ return symbol("STRING", sym.STRING);	}
     "char"		{ return symbol("CHAR",sym.CHAR);}
-    "def"       { return symbol("DEF", sym.DEF);     }
-    "true"      { return symbol("TRUE", sym.TRUE);    }
-    "false"     { return symbol("FALSE", sym.FALSE);   }
-  	"if"        { return symbol("IF", sym.IF);		}
-  	"then"      { return symbol("THEN", sym.THEN);	}
-  	"else"      { return symbol("ELSE", sym.ELSE);	}
+    "def"       { return symbol("DEF", sym.DEF);     	}
+    "true"      { return symbol("TRUE", sym.TRUE);    	}
+    "false"     { return symbol("FALSE", sym.FALSE);   	}
+  	"if"        { return symbol("IF", sym.IF);			}
+  	"then"      { return symbol("THEN", sym.THEN);		}
+  	"else"      { return symbol("ELSE", sym.ELSE);		}
   	"while"     { return symbol("WHILE", sym.WHILE);	}
-  	"do"        { return symbol("DO", sym.DO);      }
-  	"in"        { return symbol("IN", sym.IN);      }
-  	"out"       { return symbol("OUT", sym.OUT);     }
-  	"inout"     { return symbol("INOUT", sym.INOUT);   }  
+  	"do"        { return symbol("DO", sym.DO);      	}
+  	"in"        { return symbol("IN", sym.IN);      	}
+  	"out"       { return symbol("OUT", sym.OUT);     	}
+  	"inout"     { return symbol("INOUT", sym.INOUT);	}  
  						 //separators
-	";"         { return symbol("SEMI", sym.SEMI); 	}
-  	"("         { return symbol("LPAR", sym.LPAR); 	}
-  	")"         { return symbol("RPAR", sym.RPAR); 	}
+	";"         { return symbol("SEMI", sym.SEMI); 		}
+  	"("         { return symbol("LPAR", sym.LPAR); 		}
+  	")"         { return symbol("RPAR", sym.RPAR); 		}
+  	"["			{ return symbol("LBRACK", sym.LBRACK); 	}
+  	"]"			{ return symbol("RBRACK", sym.RBRACK);	}
   	"{"         { return symbol("LGPAR", sym.LGPAR);	}
   	"}"         {  return symbol("RGPAR", sym.RGPAR);	} 
     ","         { return symbol("COMMA", sym.COMMA);}
 							  //opts
-  	"+"         { return symbol("PLUS", sym.PLUS); 	}
-  	"<-"        { return symbol("READ", sym.READ);    }
-  	"->"        { return symbol("WRITE", sym.WRITE);   }
+  	"+"         { return symbol("PLUS", sym.PLUS); 		}
+  	"<-"        { return symbol("READ", sym.READ);    	}
+  	"->"        { return symbol("WRITE", sym.WRITE);   	}
   	"-"         { return symbol("MINUS", sym.MINUS); 	}
   	"*"         { return symbol("TIMES", sym.TIMES); 	}
   	"/"		    { return symbol("DIV", sym.DIV);		}
-  	"%"			{ return symbol("MOD",sym.MOD);		}
-  	">"         { return symbol("GT", sym.GT);		}
-  	"<"         { return symbol("LT", sym.LT);		}
+  	"%"			{ return symbol("MOD",sym.MOD);			}
+  	">"         { return symbol("GT", sym.GT);			}
+  	"<"         { return symbol("LT", sym.LT);			}
   	"="         { return symbol("ASSIGN", sym.ASSIGN);	}
-  	"=="        { return symbol("EQ", sym.EQ);		}
-  	"<="        {  return symbol("LE", sym.LE);		}
-  	">="        { return symbol("GE", sym.GE);		}
+  	"=="        { return symbol("EQ", sym.EQ);			}
+  	"<="        {  return symbol("LE", sym.LE);			}
+  	">="        { return symbol("GE", sym.GE);			}
   	"not"       { return symbol("NOT", sym.NOT);		}
   	"and"       { return symbol("AND", sym.AND);		}
-  	"or"        { return symbol("OR", sym.OR);		}
-  //	"-"         { return symbol("UMINUS", sym.UMINUS);  }
+  	"or"        { return symbol("OR", sym.OR);			}
+  // "-"     { return symbol("UMINUS", sym.UMINUS);  	}
 
 
 

@@ -21,6 +21,8 @@ public class StringError {
   public static String expectedIntButFound = "expected Integer but I found: '";
 
   public static String undefinedParameters = "undefined parameters";
+  
+  public static String indexOutOfBound= " index out of bound, max size: ";
 
   public static String setMes(String... errorMessage) {
     String toReturn = "";

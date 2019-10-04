@@ -69,5 +69,15 @@ public interface Visitor<T, P> {
   T visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation, P param);
 
   T visit(CompStat compStat, P param);
+  
+  T visit(ArrayDeclaration arrayDeclaration, P param);
+
+  T visit(AssignArraySingleValue assignArraySingleValue, P param);
+
+  T visit(IdAssignArraySingleValue idAssignArraySingleValue, P param);
+
+  T visit(ReadOperationArray readOperationArray, P param);
+
+  T visit(WriteOperationArray writeOperationArray, P param);
 
 }

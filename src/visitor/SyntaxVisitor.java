@@ -296,4 +296,48 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     compStat.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
+
+  @Override
+  public Element visit(ArrayDeclaration arrayDeclaration, Void param) {
+    Element el = this.xmlDocument.createElement("ArrayDecratation");
+    return el;
+  }
+
+
+  @Override
+  public Element visit(AssignArraySingleValue assignArraySingleValue, Void param) {
+     Element el = this.xmlDocument.createElement("AssignSingleValueArray");
+     el.appendChild(assignArraySingleValue.getId().accept(this, param));
+     el.appendChild(assignArraySingleValue.getIndex().accept(this, param));
+     el.appendChild(assignArraySingleValue.getValue().accept(this, param));
+     return el;
+  }
+
+
+  @Override
+  public Element visit(IdAssignArraySingleValue idAssignArraySingleValue, Void param) {
+    Element el = this.xmlDocument.createElement("IdAssignSingleValueArray");
+    el.appendChild(idAssignArraySingleValue.getIdLeft().accept(this, param));
+    el.appendChild(idAssignArraySingleValue.getIdRight().accept(this, param));
+    el.appendChild(idAssignArraySingleValue.getIndex().accept(this, param));
+    return el;
+  }
+
+
+  @Override
+  public Element visit(ReadOperationArray readOperationArray, Void param) {
+    Element el = this.xmlDocument.createElement("ReadOperationArray");
+    el.appendChild(readOperationArray.getId().accept(this, param));
+    el.appendChild(readOperationArray.getIndex().accept(this, param));
+    return el;
+  }
+
+
+  @Override
+  public Element visit(WriteOperationArray writeOperationArray, Void param) {
+    Element el = this.xmlDocument.createElement("WriteOperationArray");
+    el.appendChild(writeOperationArray.getId().accept(this, param));
+    el.appendChild(writeOperationArray.getIndex().accept(this, param));
+    return el;
+  }
 }

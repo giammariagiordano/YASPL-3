@@ -49,7 +49,7 @@ parser code {:
 /* Terminals (tokens returned by the scanner). */
 terminal String HEAD, START, INT, BOOL, DOUBLE, STRING, CHAR, DEF,  TRUE, FALSE, IF, THEN, ELSE, WHILE, DO, IN, OUT, INOUT, SEMI, RPAR, LGPAR,
 RGPAR, COMMA, PLUS, MINUS, TIMES, DIV, LT, GT, ASSIGN, EQ, LE, GE, UMINUS,
-NOT, AND, OR, READ, WRITE, MOD;
+NOT, AND, OR, READ, WRITE, MOD,LBRACK,RBRACK;
 terminal String LPAR;
 terminal Integer INT_CONST;        // our scanner provides numbers as integers
 terminal Double DOUBLE_CONST;
@@ -105,7 +105,8 @@ Statements ::= Stat:stat Statements:statements 													{:statements.add(sta
 			|																					{:RESULT = new ArrayList<>();:}
 			;
 
-Var_decl ::= Type:t Var_decls_init:vdi SEMI 													{:RESULT = new VarDeclaration(txleft,txright,t,vdi);:}										
+// int nomeVar[INT NUM], a;
+Var_decl ::= Type:t Var_decls_init:vdi SEMI 													{:RESULT = new VarDeclaration(txleft,txright,t,vdi);:}   								
 			;
 		
 Type ::=  INT:i																					{:RESULT = new TypeNode(ixleft,ixright,"int");:}					
@@ -119,9 +120,17 @@ Var_decls_init ::= ID:id Var_init_value:viv  COMMA Var_decls_init:vdi 							{:v
 				|  ID:id Var_init_value:viv										 				{:
 																									RESULT = new ArrayList<VarInitValueId>();
 																									RESULT.add(new VarInitValueId(idxleft,idxright,id,viv));
-																								:}				
+																								:}
+
+			 	| ID: id LBRACK  RBRACK  COMMA Var_decls_init: vdi		    		{: 		vdi.add(new ArrayDeclaration(idxleft,idxright, new IdentifierExpression(idxleft,idxright,id))); RESULT = vdi;:}																											
+			 	| ID: id LBRACK  RBRACK												{: 		RESULT = new ArrayList<VarInitValueId>();
+																								 		RESULT.add(new ArrayDeclaration(idxleft,idxright, new IdentifierExpression(idxleft,idxright,id)));
+																								:}
+				|
+			 	
+			 								
 			 	;
-			 
+			 	
 Var_init_value ::= ASSIGN  Expr:e																{:RESULT = new VarInitValue(exleft,exright,e);:}
 				|  																				{:RESULT = new VarInitValue(null,null);:}	//bomba							
 				;
@@ -159,10 +168,15 @@ Body ::= LGPAR Var_decls:vd Statements:statements RGPAR											{:RESULT = new
 
 Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsxleft,varsxright,vars);:}													
 		| Args:args WRITE SEMI 																	{:RESULT = new WriteOperation(argsxleft,argsxright,args);:}
+		| ID:id LBRACK Expr:index RBRACK READ SEMI												{:RESULT = new ReadOperationArray(idxleft,idxright, new IdentifierExpression(idxleft,idxright,id),index);:}
+		| ID:id LBRACK Expr:index RBRACK WRITE SEMI												{:RESULT = new WriteOperationArray(idxleft,idxright, new IdentifierExpression(idxleft,idxright,id),index);:}
 		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}							
 		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallWithParamsOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
 		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParamsOperation(idxleft,idxright,id);:}
- 		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
+		| ID: id LBRACK Expr: index RBRACK ASSIGN Expr:value SEMI								{:RESULT = new AssignArraySingleValue(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),index,value);:}
+		| ID: id ASSIGN ID: nameArray LBRACK Expr: index RBRACK SEMI 							{:RESULT = new IdAssignArraySingleValue(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),
+																									new IdentifierExpression(nameArrayxleft, nameArrayxright,nameArray),index);:}
+		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
  		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
 		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:}
 		;

@@ -1,0 +1,14 @@
+head
+int a;
+string nome[];
+int b;
+string c;
+int i = 10000;
+start
+"come ti chiami?"->;
+nome[0]<-;
+"quanti anni hai?"->;
+b<-;
+c = nome[0];
+nome[0] = c+b;
+nome[0]->;

@@ -1,5 +1,6 @@
 package visitor;
 
+import java.lang.module.ModuleDescriptor.Builder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -438,6 +439,19 @@ public class CodeVisitor implements Visitor<String, Scope> {
   }
 
   @Override
+  public String visit(ArrayDeclaration arrayDeclaration, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(arrayDeclaration.getVarName().getName());
+    builder.append("[");
+    builder.append("LENGTH");
+    builder.append("]");
+    if (arrayDeclaration.getVarName().getNodeType() == ReturnType.STRING) {
+      builder.append("[LENGTH]");
+    }
+    return builder.toString();
+  }
+
+  @Override
   public String visit(DefFunctionWithParamsOperation defFunctionWithParamsOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
     StringJoiner listParams = new StringJoiner(",");
@@ -502,9 +516,50 @@ public class CodeVisitor implements Visitor<String, Scope> {
   }
 
   @Override
+  public String visit(AssignArraySingleValue assignArraySingleValue, Scope param) {
+    StringBuilder builder = new StringBuilder();
+
+
+    if (assignArraySingleValue.getId().getNodeType() == ReturnType.STRING) {
+      //sprintf(a[0],"%s%s","ciao","a tutti");
+      builder.append("sprintf(" + assignArraySingleValue.getId().getName());
+      builder.append("[");
+      builder.append(assignArraySingleValue.getIndex().accept(this, param));
+      builder.append("],");
+      StringJoiner sj = new StringJoiner(",");
+      builder.append("\"");
+      builder.append(strcat(assignArraySingleValue.getValue(), param, sj));
+      builder.append("\",");
+      builder.append(assignArraySingleValue.getValue().accept(this, param).replaceAll("\\+", ",").replaceAll("\\(", "").replaceAll("\\)", "").replaceAll("\\*", ""));
+      builder.append(");\n");
+    } else {
+      builder.append(assignArraySingleValue.getId().getName());
+      builder.append("[");
+      builder.append(assignArraySingleValue.getIndex().accept(this, param));
+      builder.append("]");
+      builder.append(" = ");
+      builder.append(assignArraySingleValue.getValue().accept(this, param) + ";\n");
+    }
+    return builder.toString();
+  }
+
+  @Override
+  public String visit(IdAssignArraySingleValue idAssignArraySingleValue, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append(idAssignArraySingleValue.getIdLeft().getName());
+    builder.append("=");
+    builder.append(idAssignArraySingleValue.getIdRight().getName());
+    builder.append("[");
+    builder.append(idAssignArraySingleValue.getIndex().accept(this, param));
+    builder.append("];\n");
+    return builder.toString();
+  }
+
+  @Override
   public String visit(CompStat compStat, Scope param) {
     return "    " + compactCode(compStat.getStatementsNode(), param);
   }
+
 
   private static String mapType(String type) {
     switch (type) {
@@ -563,5 +618,38 @@ public class CodeVisitor implements Visitor<String, Scope> {
   private String compactCode(List<? extends YasplNode> list, Scope scope) {
     return list.stream().map(l -> l.accept(this, scope)).reduce("", String::concat);
   }
+
+  // scanf("%d", a[1]);
+  @Override
+  public String visit(ReadOperationArray readOperationArray, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("scanf(\"");
+    builder.append(mapType(readOperationArray.getId().getNodeType().getValue()));
+    builder.append("\",");
+    if(readOperationArray.getId().getNodeType() != ReturnType.STRING) {
+      builder.append("&");
+    }
+    builder.append(readOperationArray.getId().getName());
+    builder.append("[");
+    builder.append(readOperationArray.getIndex().accept(this, param));
+    builder.append("]);\n");
+    return builder.toString();
+  }
+
+  // printf()
+  @Override
+  public String visit(WriteOperationArray writeOperationArray, Scope param) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("printf(\"");
+    builder.append(mapType(writeOperationArray.getId().getNodeType().getValue()));
+    builder.append("\\n\",");
+    builder.append(writeOperationArray.getId().getName());
+    builder.append("[");
+    builder.append(writeOperationArray.getIndex().accept(this, param));
+    builder.append("]);\n");
+    return builder.toString();
+  }
+
+
 
 }
