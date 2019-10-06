@@ -313,7 +313,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringJoiner paramsCall = new StringJoiner(", ");
     int addrFunction =
         this.symbolTable.findAddr(callWithParamsOperation.getFunctionName().getName());
-    FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addrFunction);
+    FunctionSymbol fs = (FunctionSymbol) this.symbolTable.lookup(addrFunction).get(addrFunction);
     String[] splitOutput = fs.getOutputDom().split("x");
     builder.append(NameFunction).append("(");
     for (int i = 0; i < callWithParamsOperation.getArgs().size(); i++) {

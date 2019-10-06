@@ -26,7 +26,7 @@ class Driver {
 
     ArrayList<String> inputs = new ArrayList<>();
     inputs.add("Calcolatrice");
-   inputs.add("Es5");
+    inputs.add("Es5");
     inputs.add("fattoriale");
     inputs.add("fibonacci");
     inputs.add("MCD_mcm");
