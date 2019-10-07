@@ -45,17 +45,24 @@ public class CodeVisitor implements Visitor<String, Scope> {
     builder.append(")");
     return builder.toString();
   }
-
   @Override
   public String visit(RelopOperation relopOperation, Scope param) {
     StringBuilder builder = new StringBuilder();
     builder.append("(");
     if ((relopOperation.getLeftOperand().getNodeType() == ReturnType.STRING)
         && (relopOperation.getRightOperand().getNodeType() == ReturnType.STRING)) {
-      // create string like strcmp(a,b)>0
-      builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param) + ","
-          + relopOperation.getRightOperand().accept(this, param) + ")" + ""
-          + mapOperand(relopOperation.getOperation()) + "0");
+      if(relopOperation.getLeftOperand() instanceof StringConst) {
+      builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param)+ ",");
+      } else {
+        builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param).replaceAll("\\*", "")+ ",");
+
+      }if(relopOperation.getRightOperand() instanceof StringConst) {
+        builder.append(relopOperation.getRightOperand().accept(this, param) + ")" + "");
+      } else {
+        builder.append(relopOperation.getRightOperand().accept(this, param).replaceAll("\\*", " ") + ")" + "");
+
+      }
+          builder.append(mapOperand(relopOperation.getOperation()) + "0");
     } else {
       builder.append(relopOperation.getLeftOperand().accept(this, param)).append(" ");
       builder.append(mapOperand(relopOperation.getOperation())).append(" ");
