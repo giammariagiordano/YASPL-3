@@ -155,15 +155,15 @@ Par_type ::= IN:i																				{:RESULT = new ParType(ixleft,ixright,"in")
 
 Body ::= LGPAR Var_decls:vd Statements:statements RGPAR											{:RESULT = new BodyNode(vdxleft,vdxright,vd,statements);:} 
 		;
-
+		
 
 Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsxleft,varsxright,vars);:}													
 		| Args:args WRITE SEMI 																	{:RESULT = new WriteOperation(argsxleft,argsxright,args);:}
 		| ID:id ASSIGN Expr:expr SEMI 															{:RESULT = new AssignOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),expr);:}							
 		| ID:id LPAR Args:args RPAR SEMI														{:RESULT = new CallWithParamsOperation(idxleft,idxright,new IdentifierExpression(idxleft,idxright,id),args);:} 							
 		| ID:id LPAR RPAR SEMI 																	{:RESULT = new CallWithoutParamsOperation(idxleft,idxright,id);:}
- 		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen ELSE Comp_stat:csElse					{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,csThen,csElse);:}
- 		| IF  LPAR Expr:expr RPAR THEN Comp_stat:csThen											{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,csThen);:} 															
+ 		| IF  LPAR Expr:expr RPAR THEN Body: bdThen ELSE Body: bdelse							{:RESULT = new IfThenElseOperation(exprxleft,exprxright,expr,bdThen,bdelse);:}
+ 		| IF  LPAR Expr:expr RPAR THEN Body: bdThen												{:RESULT = new IfThenOperation(exprxleft,exprxright,expr,bdThen);:} 															
 		| WHILE LPAR Expr:expr RPAR DO Comp_stat:cs												{:RESULT = new WhileOperation(exprxleft,exprxright,expr,cs);:}
 		;
 

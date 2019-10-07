@@ -242,13 +242,14 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
 
   @Override
   public ReturnType visit(IfThenOperation ifThenOperation, Logger param) {
+    this.symbolTable.enterScope();
     ifThenOperation.getCondition().accept(this, param);
     if (isOutVar(ifThenOperation.getCondition())) {
       param.severe(GenerateError.ErrorGenerate(StringError.outError, ifThenOperation));
     }
-    ifThenOperation.getThenCompStat().accept(this, param);
+    ifThenOperation.getBody().accept(this, param);
     if (this.isUndefined(ifThenOperation.getCondition())
-        && this.isUndefined(ifThenOperation.getThenCompStat())) {
+        && this.isUndefined(ifThenOperation.getBody())) {
       if (ifThenOperation.getCondition().getNodeType() == ReturnType.BOOLEAN) {
         ifThenOperation.setNodeType(ReturnType.VOID);
       } else {
@@ -263,22 +264,25 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
       param.severe(GenerateError.ErrorGenerate("Error IfThenOperation", ifThenOperation));
       ifThenOperation.setNodeType(ReturnType.UNDEFINED);
     }
+    ifThenOperation.attachScope(this.symbolTable.getCurrentScope());
+    this.symbolTable.exitScope();
     return ifThenOperation.getNodeType();
   }
 
   @Override
   public ReturnType visit(IfThenElseOperation ifThenElseOperation, Logger param) {
+    this.symbolTable.enterScope();
     ifThenElseOperation.getCondition().accept(this, param);
-    ifThenElseOperation.getThenCompStat().accept(this, param);
-    ifThenElseOperation.getElseCompStat().accept(this, param);
+    ifThenElseOperation.getBody().accept(this, param);
+    ifThenElseOperation.getBodyElse().accept(this, param);
     ifThenElseOperation.getCondition().accept(this, param);
     if (isOutVar(ifThenElseOperation.getCondition())) {
       param.severe(GenerateError.ErrorGenerate(
           StringError.setMes("IfThenElseOperation: ", StringError.outError), ifThenElseOperation));
     }
     if (this.isUndefined(ifThenElseOperation.getCondition())
-        && this.isUndefined(ifThenElseOperation.getThenCompStat())
-        && this.isUndefined(ifThenElseOperation.getElseCompStat())) {
+        && this.isUndefined(ifThenElseOperation.getBody())
+        && this.isUndefined(ifThenElseOperation.getBodyElse())) {
       if (ifThenElseOperation.getCondition().getNodeType() == ReturnType.BOOLEAN) {
         ifThenElseOperation.setNodeType(ReturnType.VOID);
       } else {
@@ -295,6 +299,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
           ifThenElseOperation));
       ifThenElseOperation.setNodeType(ReturnType.UNDEFINED);
     }
+    ifThenElseOperation.attachScope(this.symbolTable.getCurrentScope());
+    this.symbolTable.exitScope();
     return ifThenElseOperation.getNodeType();
   }
 
@@ -736,4 +742,6 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     }
     return false;
   }
+
+
 }

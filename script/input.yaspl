@@ -1,10 +1,31 @@
 head
 bool f = false;
-def numPrimo(inout bool isPrimo){
+int a=4;
+int c=0;
+
+def function() {
+	int e=4;
+	if(e>6) then {
+int c=0;
+c->;
+} else {
+int b=6;
+b=b+c+1;
+b->;
 
 }
 
+}
+
+
 start
-numPrimo(f);
-f->;
+
+if(a>3) then {
+
+function();
+
+} else {
+c->;
+}
+
 

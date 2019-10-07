@@ -144,25 +144,29 @@ public class CodeVisitor implements Visitor<String, Scope> {
 
   @Override
   public String visit(IfThenOperation ifThenOperation, Scope param) {
+    this.symbolTable.setCurrentScope(ifThenOperation.getAttachScope());
     StringBuilder builder = new StringBuilder();
     builder.append("if(");
-    String condiction = ifThenOperation.getCondition().accept(this, param);
-    String thenCompStat = ifThenOperation.getThenCompStat().accept(this, param);
+    String condiction = ifThenOperation.getCondition().accept(this, ifThenOperation.getAttachScope());
+    String thenCompStat = ifThenOperation.getBody().accept(this, ifThenOperation.getAttachScope());
     builder.append(condiction).append(") {\n");
     builder.append(thenCompStat).append("\n}\n");
+    this.symbolTable.exitScope();
     return builder.toString();
   }
 
   @Override
   public String visit(IfThenElseOperation ifThenElseOperation, Scope param) {
+    this.symbolTable.setCurrentScope(ifThenElseOperation.getAttachScope());
     StringBuilder builder = new StringBuilder();
     builder.append("if(");
-    String condiction = ifThenElseOperation.getCondition().accept(this, param);
-    String thenCompStat = ifThenElseOperation.getThenCompStat().accept(this, param);
-    String elseCompStat = ifThenElseOperation.getElseCompStat().accept(this, param);
+    String condiction = ifThenElseOperation.getCondition().accept(this, ifThenElseOperation.getAttachScope());
+    String thenCompStat = ifThenElseOperation.getBody().accept(this, ifThenElseOperation.getAttachScope());
+    String elseCompStat = ifThenElseOperation.getBodyElse().accept(this, ifThenElseOperation.getAttachScope());
     builder.append(condiction).append(") {\n");
     builder.append(thenCompStat).append("\n} else {\n");
     builder.append(elseCompStat).append("\n}\n");
+    this.symbolTable.exitScope();
     return builder.toString();
   }
 
@@ -313,7 +317,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     StringJoiner paramsCall = new StringJoiner(", ");
     int addrFunction =
         this.symbolTable.findAddr(callWithParamsOperation.getFunctionName().getName());
-    FunctionSymbol fs = (FunctionSymbol) this.symbolTable.getCurrentScope().get(addrFunction);
+    FunctionSymbol fs = (FunctionSymbol) this.symbolTable.lookup(addrFunction).get(addrFunction);
     String[] splitOutput = fs.getOutputDom().split("x");
     builder.append(NameFunction).append("(");
     for (int i = 0; i < callWithParamsOperation.getArgs().size(); i++) {

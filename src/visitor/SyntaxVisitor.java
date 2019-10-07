@@ -145,15 +145,15 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
   public Element visit(IfThenOperation ifThenOperation, Void param) {
     Element el = this.xmlDocument.createElement("IfThen");
     el.appendChild(ifThenOperation.getCondition().accept(this, param));
-    el.appendChild(ifThenOperation.getThenCompStat().accept(this, param));
+    el.appendChild(ifThenOperation.getBody().accept(this, param));
     return el;
   }
 
   public Element visit(IfThenElseOperation ifThenElseOperation, Void param) {
     Element el = this.xmlDocument.createElement("IfThenElse");
     el.appendChild(ifThenElseOperation.getCondition().accept(this, param));
-    el.appendChild(ifThenElseOperation.getThenCompStat().accept(this, param));
-    el.appendChild(ifThenElseOperation.getElseCompStat().accept(this, param));
+    el.appendChild(ifThenElseOperation.getBody().accept(this, param));
+    el.appendChild(ifThenElseOperation.getBodyElse().accept(this, param));
     return el;
   }
 
@@ -296,4 +296,5 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     compStat.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));
     return el;
   }
+
 }
