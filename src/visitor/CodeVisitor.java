@@ -52,10 +52,18 @@ public class CodeVisitor implements Visitor<String, Scope> {
     builder.append("(");
     if ((relopOperation.getLeftOperand().getNodeType() == ReturnType.STRING)
         && (relopOperation.getRightOperand().getNodeType() == ReturnType.STRING)) {
-      // create string like strcmp(a,b)>0
-      builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param) + ","
-          + relopOperation.getRightOperand().accept(this, param) + ")" + ""
-          + mapOperand(relopOperation.getOperation()) + "0");
+      if(relopOperation.getLeftOperand() instanceof StringConst) {
+      builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param)+ ",");
+      } else {
+        builder.append("strcmp(" + relopOperation.getLeftOperand().accept(this, param).replaceAll("\\*", "")+ ",");
+
+      }if(relopOperation.getRightOperand() instanceof StringConst) {
+        builder.append(relopOperation.getRightOperand().accept(this, param) + ")" + "");
+      } else {
+        builder.append(relopOperation.getRightOperand().accept(this, param).replaceAll("\\*", " ") + ")" + "");
+
+      }
+          builder.append(mapOperand(relopOperation.getOperation()) + "0");
     } else {
       builder.append(relopOperation.getLeftOperand().accept(this, param)).append(" ");
       builder.append(mapOperand(relopOperation.getOperation())).append(" ");
@@ -147,8 +155,8 @@ public class CodeVisitor implements Visitor<String, Scope> {
     this.symbolTable.setCurrentScope(ifThenOperation.getAttachScope());
     StringBuilder builder = new StringBuilder();
     builder.append("if(");
-    String condiction = ifThenOperation.getCondition().accept(this, ifThenOperation.getAttachScope());
-    String thenCompStat = ifThenOperation.getBody().accept(this, ifThenOperation.getAttachScope());
+    String condiction = ifThenOperation.getCondition().accept(this, param);
+    String thenCompStat = ifThenOperation.getBody().accept(this, param);
     builder.append(condiction).append(") {\n");
     builder.append(thenCompStat).append("\n}\n");
     this.symbolTable.exitScope();
@@ -160,9 +168,9 @@ public class CodeVisitor implements Visitor<String, Scope> {
     this.symbolTable.setCurrentScope(ifThenElseOperation.getAttachScope());
     StringBuilder builder = new StringBuilder();
     builder.append("if(");
-    String condiction = ifThenElseOperation.getCondition().accept(this, ifThenElseOperation.getAttachScope());
-    String thenCompStat = ifThenElseOperation.getBody().accept(this, ifThenElseOperation.getAttachScope());
-    String elseCompStat = ifThenElseOperation.getBodyElse().accept(this, ifThenElseOperation.getAttachScope());
+    String condiction = ifThenElseOperation.getCondition().accept(this, param);
+    String thenCompStat = ifThenElseOperation.getBody().accept(this, param);
+    String elseCompStat = ifThenElseOperation.getBodyElse().accept(this, param);
     builder.append(condiction).append(") {\n");
     builder.append(thenCompStat).append("\n} else {\n");
     builder.append(elseCompStat).append("\n}\n");

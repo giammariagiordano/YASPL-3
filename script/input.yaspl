@@ -1,31 +1,20 @@
 head
-bool f = false;
-int a=4;
-int c=0;
+string a, b;
 
-def function() {
-	int e=4;
-	if(e>6) then {
-int c=0;
-c->;
-} else {
-int b=6;
-b=b+c+1;
-b->;
+def compare(in string a, in string b) {
+	if(a == "ciao") then {
+		string c = "sono uguali";
+		c->;
+	} else {
+		string d = "sono diverse";
+		d->;
+	}
 
 }
-
-}
-
 
 start
-
-if(a>3) then {
-
-function();
-
-} else {
-c->;
-}
-
-
+"inserisci la prima stringa"->;
+a<-;
+"inserisci la seconda stringa"->;
+b<-;
+compare(a,b);
