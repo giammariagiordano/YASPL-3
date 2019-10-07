@@ -335,8 +335,12 @@ public class CodeVisitor implements Visitor<String, Scope> {
         paramsCall
             .add("&" + callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
       } else {
+        if(callWithParamsOperation.getArgs().get(i) instanceof StringConst) {
+          paramsCall.add(callWithParamsOperation.getArgs().get(i).accept(this, param).toString());
+        }else {
         paramsCall.add(callWithParamsOperation.getArgs().get(i).accept(this, param).toString()
             .replace("*", ""));
+        }
       }
     }
     builder.append(paramsCall);
