@@ -1,10 +1,14 @@
 head
-bool f = false;
-def numPrimo(inout bool isPrimo){
-
+string a, b;
+def confronto(inout string a, inout string b){
+if(a == b ) then {
+	"sono uguali"->;
+} else {
+	"sono diversi"->;
+}
 }
 
 start
-numPrimo(f);
-f->;
-
+a ="*ciao*";
+b = "*ciao*";
+confronto(a,b);
