@@ -715,26 +715,36 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return toReturn;
   }
 
+
   private boolean isInVar(Expression expr) {
-    if (expr instanceof IdentifierExpression) {
-      IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
-      int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
-      Variable varLeft = (Variable) this.symbolTable.lookup(leftAddr).get(leftAddr);
-      if (varLeft != null)
-        return varLeft.getVarType() == VariableType.IN;
+    try {
+      if (expr instanceof IdentifierExpression) {
+        IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
+        int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
+        Variable varLeft = (Variable) this.symbolTable.lookup(leftAddr).get(leftAddr);
+        if (varLeft != null)
+          return varLeft.getVarType() == VariableType.IN;
+      }
+      return false;
+    } catch (NullPointerException e) {
+      return false;
     }
-    return false;
   }
 
+
   private boolean isOutVar(Expression expr) {
-    if (expr instanceof IdentifierExpression) {
-      IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
-      int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
-      Variable varRight = (Variable) this.symbolTable.lookup(rightAddr).get(rightAddr);
-      if (varRight != null)
-        return varRight.getVarType() == VariableType.OUT;
+    try {
+      if (expr instanceof IdentifierExpression) {
+        IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
+        int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
+        Variable varRight = (Variable) this.symbolTable.lookup(rightAddr).get(rightAddr);
+        if (varRight != null)
+          return varRight.getVarType() == VariableType.OUT;
+      }
+      return false;
+    } catch (NullPointerException e) {
+      return false;
     }
-    return false;
   }
 
   @Override
