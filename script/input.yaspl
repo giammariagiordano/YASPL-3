@@ -1,14 +1,5 @@
 head
-string a, b;
-def confronto(inout string a, inout string b){
-if(a == b ) then {
-	"sono uguali"->;
-} else {
-	"sono diversi"->;
-}
-}
-
+int x=x+2;
+int y;
 start
-a ="*ciao*";
-b = "*ciao*";
-confronto(a,b);
+y->;

@@ -716,6 +716,7 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   }
 
   private boolean isInVar(Expression expr) {
+    try {
     if (expr instanceof IdentifierExpression) {
       IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
       int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
@@ -724,9 +725,14 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         return varLeft.getVarType() == VariableType.IN;
     }
     return false;
+    }catch (NullPointerException e) {
+      return false;
+    }
   }
+    
 
   private boolean isOutVar(Expression expr) {
+    try {
     if (expr instanceof IdentifierExpression) {
       IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
       int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
@@ -735,5 +741,8 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
         return varRight.getVarType() == VariableType.OUT;
     }
     return false;
+    }catch (NullPointerException e) {
+      return false;
+    }
   }
 }
