@@ -715,42 +715,54 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
     return toReturn;
   }
 
+
   private boolean isInVar(Expression expr) {
-    if (expr instanceof IdentifierExpression) {
-      IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
-      int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
-      Variable varLeft = (Variable) this.symbolTable.lookup(leftAddr).get(leftAddr);
-      if (varLeft != null)
-        return varLeft.getVarType() == VariableType.IN;
+    try {
+      if (expr instanceof IdentifierExpression) {
+        IdentifierExpression leftIdentifier = (IdentifierExpression) expr;
+        int leftAddr = this.symbolTable.findAddr(leftIdentifier.getName());
+        Variable varLeft = (Variable) this.symbolTable.lookup(leftAddr).get(leftAddr);
+        if (varLeft != null)
+          return varLeft.getVarType() == VariableType.IN;
+      }
+      return false;
+    } catch (NullPointerException e) {
+      return false;
     }
-    return false;
   }
 
+
   private boolean isOutVar(Expression expr) {
-    if (expr instanceof IdentifierExpression) {
-      IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
-      int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
-      Variable varRight = (Variable) this.symbolTable.lookup(rightAddr).get(rightAddr);
-      if (varRight != null)
-        return varRight.getVarType() == VariableType.OUT;
+    try {
+      if (expr instanceof IdentifierExpression) {
+        IdentifierExpression rightIdentifier = (IdentifierExpression) expr;
+        int rightAddr = this.symbolTable.findAddr(rightIdentifier.getName());
+        Variable varRight = (Variable) this.symbolTable.lookup(rightAddr).get(rightAddr);
+        if (varRight != null)
+          return varRight.getVarType() == VariableType.OUT;
+      }
+      return false;
+    } catch (NullPointerException e) {
+      return false;
     }
-    return false;
   }
 
   @Override
   public ReturnType visit(SwitchBodyNode switchBodyNode, Logger param) {
 
     switchBodyNode.getExpr().accept(this, param);
-    if(isUndefined(switchBodyNode.getExpr())) {
-      if(switchBodyNode.getExpr().getNodeType() != ReturnType.INTEGER) {
-        param.severe(GenerateError.ErrorGenerate(StringError.setMes("si nu scem, voglio int nel case"), switchBodyNode));
+    if (isUndefined(switchBodyNode.getExpr())) {
+      if (switchBodyNode.getExpr().getNodeType() != ReturnType.INTEGER) {
+        param.severe(GenerateError
+            .ErrorGenerate(StringError.setMes("si nu scem, voglio int nel case"), switchBodyNode));
         switchBodyNode.setNodeType(ReturnType.UNDEFINED);
       }
-     }
+    }
     switchBodyNode.getBody().accept(this, param);
     this.symbolTable.enterScope();
-    if(!isUndefined(switchBodyNode.getBody())) {
-      param.severe(GenerateError.ErrorGenerate(StringError.setMes("body non definito"), switchBodyNode));
+    if (!isUndefined(switchBodyNode.getBody())) {
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("body non definito"), switchBodyNode));
       switchBodyNode.setNodeType(ReturnType.UNDEFINED);
     }
 
@@ -762,38 +774,42 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   @Override
   public ReturnType visit(SwitchOperation switchOperation, Logger param) {
     switchOperation.getExpr().accept(this, param);
-     if(switchOperation.getExpr().getNodeType() != ReturnType.INTEGER) {
-       param.severe(GenerateError.ErrorGenerate(StringError.setMes("si nu scem, voglio int"), switchOperation));
-       switchOperation.setNodeType(ReturnType.UNDEFINED);
-     } 
-     if(switchOperation.getSwitchBody()!=null) {
-       switchOperation.getSwitchBody().forEach(b -> {
-       b.accept(this, param);
-       if(!isUndefined(b)) {
-         param.severe(GenerateError.ErrorGenerate(StringError.setMes("body switch non valido"), switchOperation));
-         switchOperation.setNodeType(ReturnType.UNDEFINED);
-       }
-       });
-     }  
-     if(switchOperation.getDefBody()!=null) {
-       switchOperation.getDefBody().accept(this, param);
-       if(!isUndefined(switchOperation.getDefBody())) {
-         param.severe(GenerateError.ErrorGenerate(StringError.setMes("body switch non valido"), switchOperation));
+    if (switchOperation.getExpr().getNodeType() != ReturnType.INTEGER) {
+      param.severe(GenerateError.ErrorGenerate(StringError.setMes("si nu scem, voglio int"),
+          switchOperation));
+      switchOperation.setNodeType(ReturnType.UNDEFINED);
+    }
+    if (switchOperation.getSwitchBody() != null) {
+      switchOperation.getSwitchBody().forEach(b -> {
+        b.accept(this, param);
+        if (!isUndefined(b)) {
+          param.severe(GenerateError.ErrorGenerate(StringError.setMes("body switch non valido"),
+              switchOperation));
           switchOperation.setNodeType(ReturnType.UNDEFINED);
-       }
-     }
-     switchOperation.setNodeType(ReturnType.VOID);
+        }
+      });
+    }
+    if (switchOperation.getDefBody() != null) {
+      switchOperation.getDefBody().accept(this, param);
+      if (!isUndefined(switchOperation.getDefBody())) {
+        param.severe(GenerateError.ErrorGenerate(StringError.setMes("body switch non valido"),
+            switchOperation));
+        switchOperation.setNodeType(ReturnType.UNDEFINED);
+      }
+    }
+    switchOperation.setNodeType(ReturnType.VOID);
     return switchOperation.getNodeType();
   }
 
   @Override
   public ReturnType visit(DefBodyNode defBodyNode, Logger param) {
-   defBodyNode.getBody().accept(this, param);
-   if(!isUndefined(defBodyNode.getBody())) {
-     param.severe(GenerateError.ErrorGenerate(StringError.setMes("body non definito"), defBodyNode));
-     defBodyNode.setNodeType(ReturnType.UNDEFINED);
-   }
-   defBodyNode.setNodeType(ReturnType.VOID);
-   return defBodyNode.getNodeType();
+    defBodyNode.getBody().accept(this, param);
+    if (!isUndefined(defBodyNode.getBody())) {
+      param.severe(
+          GenerateError.ErrorGenerate(StringError.setMes("body non definito"), defBodyNode));
+      defBodyNode.setNodeType(ReturnType.UNDEFINED);
+    }
+    defBodyNode.setNodeType(ReturnType.VOID);
+    return defBodyNode.getNodeType();
   }
 }
