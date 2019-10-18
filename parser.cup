@@ -170,6 +170,7 @@ Stat ::= Vars:vars READ SEMI 																	{:RESULT = new ReadOperation(varsx
 
 Args ::= Expr:expr COMMA Args:args 																{:args.add(expr);RESULT = args;:}			
 		| Expr:expr 																			{:RESULT = new ArrayList<>(); RESULT.add(expr);:}
+		| ID:id COMMA Args:args																	{:args.add(new IdentifierExpression(idxleft,idxright,id)); RESULT=args;:}
 		;
 		
 Comp_stat ::= LGPAR Statements:cs RGPAR															{:RESULT = new CompStat(csxleft,csxright,cs);:} 	
