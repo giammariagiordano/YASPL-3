@@ -1,5 +1,6 @@
 head
-int x=x+2;
-int y;
+string c="ciao";
+
 start
-y->;
+
+c,"ppp",c->;

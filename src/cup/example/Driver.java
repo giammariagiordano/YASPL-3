@@ -25,17 +25,17 @@ class Driver {
   public static void main(String[] args) throws Exception {
 
     ArrayList<String> inputs = new ArrayList<>();
-    /*inputs.add("Calcolatrice");
+    inputs.add("Calcolatrice");
     inputs.add("Es5");
     inputs.add("fattoriale");
     inputs.add("fibonacci");
     inputs.add("MCD_mcm");
     inputs.add("NumPrimo");
-    inputs.add("sqrt");*/
+    inputs.add("sqrt");
     inputs.add("input");
-    //inputs.add("esProf");
-    //inputs.add("facile");
-    //inputs.add("stringhe");
+    inputs.add("esProf");
+    inputs.add("facile");
+    inputs.add("stringhe");
     for (String fileName : inputs) {
       InputStream is = new FileInputStream(new File("script/" + fileName + ".yaspl"));
       Lexer lexer = new Lexer(complexSymbolFactory, is, stringTable);
