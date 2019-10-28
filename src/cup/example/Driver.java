@@ -32,10 +32,11 @@ class Driver {
     inputs.add("MCD_mcm");
     inputs.add("NumPrimo");
     inputs.add("sqrt");
-    inputs.add("input");
     inputs.add("esProf");
-    inputs.add("facile");
     inputs.add("stringhe");
+    inputs.add("eulero1");
+    inputs.add("firstNPrimeNumber");
+    inputs.add("tabellina");
     for (String fileName : inputs) {
       InputStream is = new FileInputStream(new File("script/" + fileName + ".yaspl"));
       Lexer lexer = new Lexer(complexSymbolFactory, is, stringTable);

@@ -1,0 +1,22 @@
+//Dato un numero, stampa la sua tabellina
+
+head
+int number;
+int i=1;
+int res;
+
+def tables (in int number, in int i, out int res) {
+res = number * i;
+
+}
+
+start
+
+"Inserisci un numero"->;
+number<-;
+
+while(i<=10) do {
+tables(number, i, res);
+number+"x"+i+"="+res->;
+i=i+1;
+}

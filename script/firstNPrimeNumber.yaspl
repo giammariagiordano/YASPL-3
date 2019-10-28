@@ -1,0 +1,26 @@
+//stampa i primi n numeri primi
+
+head
+int i = 1;
+bool ris;
+def isPrimo(in int number, out bool primo) {
+	int i=2;
+	primo=true;
+	
+	while(i<number) do {
+	if((number%i)==0) then {
+	primo=false;
+	}
+	i=i+1;
+	} 
+
+}
+
+start
+while(i<1000) do {
+	isPrimo(i,ris);
+	if(ris == true) then {
+		i->;
+	}
+i = i+1;
+}

@@ -1,0 +1,21 @@
+//somma dei multipli di 3 e 5 sotto 1000
+head
+
+int num;
+int sum = 0;
+
+def eulero(in int iteration, out int result) {
+	int number=0;
+	
+	while(number<iteration) do {
+	if((number%3)==0 or (number%5)==0) then{
+	sum=sum+number;
+	}
+	number=number+1;
+	}
+	
+} 
+
+start
+eulero(1000, sum);
+sum ->;
