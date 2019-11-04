@@ -1,0 +1,55 @@
+head
+string a;
+string b;
+string c;
+string d;
+string nome;
+string ris;
+string app = "stringa dichiarata nell'head";
+
+def concat(in string a, in string b, out string ris){
+ris = a+b;
+}
+
+def concatGlobal(){
+c = c+d;
+}
+def printHead(){
+app->;
+}
+def declLocalString(){
+string a;
+a = "testo";
+a = a+a;
+a->; 
+}
+def localString2(in string a, out string ris) {
+string f = "bella";
+ris = f+a;
+}
+start
+"come ti chiami?"->;
+nome<-;
+a = "sono a";
+b = "sono b";
+c = "sono c";
+d = "sono d";
+"chiamo concat su input: "+a+" "+b->;
+concat(a,b,ris);
+"risultato concat: "+ris->; 
+"chiamo concatGlobal su input: "+c+" "+d->;
+concatGlobal();
+"risultato: "+c->;
+"chiamo printHead che stampa una stringa dichiarata  nell'head: "+app->;
+printHead();
+"pulisco la string a che attualmente contiene: "+a->;
+a = "";
+a = "casa";
+"nuovo valore di a: "+a->;
+"chiamo la funzione declLocalString() che stampa testotesto"->;
+declLocalString();
+"chiamo localString2(string string) che concatena   bellacasa"->;
+localString2(a, ris);
+"risultato: "+ris->;
+"ciao "+nome->;
+

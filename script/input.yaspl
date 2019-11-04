@@ -1,0 +1,6 @@
+head
+string c="ciao";
+
+start
+
+c,"ppp",c->;
