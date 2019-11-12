@@ -14,6 +14,7 @@ import visitor.Visitor;
 public class BodyNode extends YasplNode {
   private final List<VarDeclaration> varDecls;
   private final List<StatementNode> statementsNode;
+  private final Expression exprReturn;
 
   /**
    * Create a new Body node
@@ -25,18 +26,20 @@ public class BodyNode extends YasplNode {
    */
 
   public BodyNode(Location left, Location right, List<VarDeclaration> vd,
-      List<StatementNode> statements) {
+      List<StatementNode> statements,Expression expr) {
     super(left, right);
     Collections.reverse(vd);
     this.varDecls = vd;
     Collections.reverse(statements);
     this.statementsNode = statements;
+    this.exprReturn = expr;
   }
 
-  public BodyNode(Location left, Location right, List<StatementNode> statementsNode) {
+  public BodyNode(Location left, Location right, List<StatementNode> statementsNode,Expression expr) {
     super(left, right);
     this.statementsNode = statementsNode;
     varDecls = new ArrayList<VarDeclaration>();
+    this.exprReturn = expr;
   }
 
   public List<VarDeclaration> getVarDecls() {
@@ -46,8 +49,13 @@ public class BodyNode extends YasplNode {
   public List<StatementNode> getStatementsNode() {
     return statementsNode;
   }
+  
 
-  @Override
+  public Expression getExprReturn() {
+	return exprReturn;
+}
+
+@Override
   public <T, P> T accept(Visitor<T, P> visitor, P param) {
     return visitor.visit(this, param);
   }

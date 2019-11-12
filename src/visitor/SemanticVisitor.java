@@ -634,8 +634,14 @@ public class SemanticVisitor implements Visitor<ReturnType, Logger> {
   public ReturnType visit(BodyNode body, Logger param) {
     body.getVarDecls().forEach(v -> v.accept(this, param));
     body.getStatementsNode().forEach(s -> s.accept(this, param));
-    if (this.checkAll(body.getVarDecls()) && this.checkAll(body.getStatementsNode())) {
-      body.setNodeType(ReturnType.VOID);
+    body.getExprReturn().accept(this, param);
+    if (this.checkAll(body.getVarDecls()) && this.checkAll(body.getStatementsNode()) && isUndefined(body.getExprReturn())) {
+    	if(body.getExprReturn().getReturnType() == ReturnType.INTEGER)
+    	body.setNodeType(ReturnType.VOID);
+    	else {
+    		param.severe(GenerateError.ErrorGenerate(StringError.setMes("BodyNode: expected integer, but found: "+body.getExprReturn().getReturnType()), body));
+    	      body.setNodeType(ReturnType.UNDEFINED);
+    	}
     } else {
       param.severe(GenerateError.ErrorGenerate(StringError.setMes("BodyNode: invalid body"), body));
       body.setNodeType(ReturnType.UNDEFINED);

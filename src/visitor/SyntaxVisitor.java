@@ -278,6 +278,7 @@ public class SyntaxVisitor implements Visitor<Element, Void> {
     Element el = this.xmlDocument.createElement("body");
     body.getVarDecls().forEach(i -> el.appendChild(i.accept(this, param)));
     body.getStatementsNode().forEach(i -> el.appendChild(i.accept(this, param)));;
+    el.appendChild(body.getExprReturn().accept(this, param));
     return el;
   }
 

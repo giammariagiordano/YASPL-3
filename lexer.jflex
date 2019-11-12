@@ -95,6 +95,7 @@ CHAR_CONST = '({any})?'
 	"head"      { return symbol("HEAD", sym.HEAD);    }
     "start"     { return symbol("START", sym.START);   }
     "int"       { return symbol("INT", sym.INT);     }
+    "return"	{ return symbol("RETURN",sym.RETURN);}
     "double"    { return symbol("DOUBLE", sym.DOUBLE);}
     "bool"      { return symbol("BOOL", sym.BOOL);    }
     "string"	{ return symbol("STRING", sym.STRING);}

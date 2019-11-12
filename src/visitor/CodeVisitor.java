@@ -465,7 +465,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     });
     String body = defFunctionWithParamsOperation.getBody().accept(this,
         defFunctionWithParamsOperation.getAttachScope());
-    builder.append("void").append(" ");
+    builder.append("int").append(" ");
     builder.append(FunctionName).append("(");
     builder.append(listParams).append(") {\n");
 
@@ -488,7 +488,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
   public String visit(DefFunctionWithoutParamsOperation defFunctionWithoutParamsOperation,
       Scope param) {
     StringBuilder builder = new StringBuilder();
-    builder.append("void").append(" ");
+    builder.append("int").append(" ");
     builder.append(defFunctionWithoutParamsOperation.getFunctionName().accept(this, param));
     this.symbolTable.setCurrentScope(defFunctionWithoutParamsOperation.getAttachScope());
     builder.append("() {\n");
@@ -508,6 +508,7 @@ public class CodeVisitor implements Visitor<String, Scope> {
     body.getStatementsNode().forEach(s -> {
       builder.append(s.accept(this, param));
     });
+    builder.append("return "+body.getExprReturn().accept(this, param)+";");
     builder.toString();
     return builder.toString();
   }

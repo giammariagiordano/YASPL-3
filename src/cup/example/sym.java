@@ -37,6 +37,7 @@ public interface sym {
   public static final int ID = 47;
   public static final int LE = 33;
   public static final int EOF = 0;
+  public static final int RETURN = 48;
   public static final int INT_CONST = 43;
   public static final int TRUE = 10;
   public static final int error = 1;
@@ -104,7 +105,8 @@ public interface sym {
   "DOUBLE_CONST",
   "STRING_CONST",
   "CHAR_CONST",
-  "ID"
+  "ID",
+  "RETURN"
   };
 }
 

@@ -1,6 +1,11 @@
 head
 string c="ciao";
+int a;
+
+def f() {
+return a;
+}
 
 start
-
-c,"ppp",c->;
+a->;
+f();
