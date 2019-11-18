@@ -133,3 +133,7 @@ Expr : Expr PLUS Expr
 3. Java Cup
 
 ## How to install
+Create two empty folder (AlberoSintattico and ScriptCGenerati) under /home.
+Now go into Driver.java and run the project.
+In the folder 'AlberoSintattico' you can see the syntax tree of the program and in the folder 'ScriptCGenerati' you can see the file .c of the program. 
+You can find some examples of yaspl file into the folder 'script'. 
