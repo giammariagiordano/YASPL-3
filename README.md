@@ -130,9 +130,9 @@ Expr : Expr PLUS Expr
 ## Technologies
 1. Java
 2. JFlex
-3. Java Cup
+3. Java Cup v. 11b
 
-## How to install
+## How to run
 Create two empty folder (AlberoSintattico and ScriptCGenerati) under /home.
 Now go into Driver.java and run the project.
 In the folder 'AlberoSintattico' you can see the syntax tree of the program and in the folder 'ScriptCGenerati' you can see the file .c of the program. 
